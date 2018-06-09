@@ -101,8 +101,8 @@
     "subId": "[subscription().id]",
     "randomInfix": "[parameters('studentRandomInfix')]",
     "baseUrl": "[parameters('_artifactsLocation')]",
-    "nestedBaseUrl": "[concat(variables('baseUrl'),'master/nested')]",
-    "createPublicIPUri": "[concat(variables('nestedBaseUrl'),'/04.36.00.createPublicIP.json',parameters('_artifactsLocationSasToken'))]",
+    "nestedBaseUrl": "[concat(variables('baseUrl'),'nested')]",
+    "createPublicIPUri": "[uri(variables('nestedBaseUrl'),concat('/04.36.00.createPublicIP.json',parameters('_artifactsLocationSasToken')))]",
     "devPublicIPAddressName": "[toLower(concat(variables('devPrefix'),'1-pip'))]",
     "devDomainNameLabelPrefix": "[concat(variables('devPublicIPAddressName'),parameters('studentRandomInfix'))]",
     "devPublicIPAddressType": "Static",
@@ -116,7 +116,7 @@
       "[concat(variables('AvSetPrefix'),'DEV',parameters('studentNumber'))]",
       "[concat(variables('AvSetPrefix'),'LNX',parameters('studentNumber'))]"
     ],
-    "createAvSetUri": "[concat(variables('nestedBaseUrl'),'/05.08.00.createAvSet.json',parameters('_artifactsLocationSasToken'))]",
+    "createAvSetUri": "[uri(variables('nestedBaseUrl'),concat('/05.08.00.createAvSet.json',parameters('_artifactsLocationSasToken')))]",
     "nsgPrefix": "NSG-",
     "subnet01": "ADDS",
     "subnet02": "SRVS",
@@ -126,7 +126,7 @@
       "[variables('nsgADDS')]",
       "[variables('nsgSRVS')]"
     ],
-    "createNSGUri": "[concat(variables('nestedBaseUrl'),'/06.06.00.createNSG.json',parameters('_artifactsLocationSasToken'))]",
+    "createNSGUri": "[uri(variables('nestedBaseUrl'),concat('/06.06.00.createNSG.json',parameters('_artifactsLocationSasToken')))]",
     "netPrefix": "10.20.",
     "netSuffixVNET": ".0/26",
     "netSuffixADDS": ".0/28",
@@ -138,8 +138,8 @@
     "subnet1Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixADDS'))]",
     "subnet2Name": "[concat(variables('subnet02'),parameters('studentNumber'))]",
     "subnet2Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixSRVS'))]",
-    "createVnetUri": "[concat(variables('nestedBaseUrl'),'/07.03.00.createVnet.json',parameters('_artifactsLocationSasToken'))]",
-    "vnet": {
+    "createVnetUri": "[uri(variables('nestedBaseUrl'),concat('/07.03.00.createVnet.json',parameters('_artifactsLocationSasToken')))]",
+     "vnet": {
       "name": "[variables('vnet1Name')]",
       "location": "[variables('vnet1Location')]",
       "addressPrefix": "[variables('vnet1AddressPrefix')]"
@@ -152,17 +152,17 @@
       "[variables('subnet1Prefix')]",
       "[variables('subnet2Prefix')]"
     ],
-    "createStorageAccountUri": "[concat(variables('nestedBaseUrl'),'/08.11.00.createStorageAccount.json',parameters('_artifactsLocationSasToken'))]",
+    "createStorageAccountUri": "[uri(variables('nestedBaseUrl'),concat('/08.11.00.createStorageAccount.json',parameters('_artifactsLocationSasToken')))]",
     "saPrefix": "storage",
     "saInfix": "[uniqueString(resourceGroup().id)]",
     "saName": "[concat(variables('saPrefix'),variables('saInfix'),parameters('studentNumber'))]",
     "saKind": "Storage",
     "saSku": "Standard_LRS",
     "autoAcctName": "[concat('aaa',variables('randomInfix'),parameters('studentNumber'))]",
-    "createAutoAcctUri": "[concat(variables('nestedBaseUrl'),'/09.12.00.createAutoAcct.json',parameters('_artifactsLocationSasToken'))]",
+    "createAutoAcctUri": "[uri(variables('nestedBaseUrl'),concat('/09.12.00.createAutoAcct.json',parameters('_artifactsLocationSasToken')))]",
     "omsWorkspaceName": "[concat('oms',variables('randomInfix'),parameters('studentNumber'))]",
-    "createOmsWorkspaceUri": "[concat(variables('nestedBaseUrl'),'/10.13.00.createOmsWorkspace.json',parameters('_artifactsLocationSasToken'))]",
-    "createRsvUri": "[concat(variables('nestedBaseUrl'),'/11.14.00.createRecoveryServicesVault.json',parameters('_artifactsLocationSasToken'))]",
+    "createOmsWorkspaceUri": "[uri(variables('nestedBaseUrl'),concat('/10.13.00.createOmsWorkspace.json',parameters('_artifactsLocationSasToken')))]",
+    "createRsvUri": "[uri(variables('nestedBaseUrl'),concat('/11.14.00.createRecoveryServicesVault.json',parameters('_artifactsLocationSasToken')))]",
     "rsvName": "[concat('rsv',variables('randomInfix'),parameters('studentNumber'))]",
     "cspPrefix": "AZR",
     "roleCodeAds": "ADS",
@@ -189,7 +189,7 @@
     "devSqlVmSize": "Standard_D1_v2",
     "vmInstance": 2,
     "logAnalyticsAccountName": "[concat('oms',variables('randomInfix'),parameters('studentNumber'))]",
-    "createNetworkInterfacesUri": "[concat(variables('nestedBaseUrl'),'/11.14.01.createNetworkInterfaces.json',parameters('_artifactsLocationSasToken'))]",
+    "createNetworkInterfacesUri": "[uri(variables('nestedBaseUrl'),concat('/11.14.01.createNetworkInterfaces.json',parameters('_artifactsLocationSasToken')))]",
     "nicSuffix": "-nic",
     "nicCollection": {
       "ads01nic": {
@@ -220,15 +220,15 @@
         "name": "[toLower(concat(substring(variables('lnxPrefix'),0,6),'02',variables('nicSuffix')))]"
       }
     },
-    "createAds01Uri": "[concat(variables('nestedBaseUrl'),'/03.15.00.createDomainController.json',parameters('_artifactsLocationSasToken'))]",
+    "createAds01Uri": "[uri(variables('nestedBaseUrl'),concat('/03.15.00.createDomainController.json',parameters('_artifactsLocationSasToken')))]",
     "dscModulesURL": "[concat(variables('baseUrl'),'/dsc/dsc.zip')]",
     "rsvAccountName": "[concat('rsv',variables('randomInfix'),parameters('studentNumber'))]",
-    "createDev01Uri": "[concat(variables('nestedBaseUrl'),'/14.17.00.createDevServer.json',parameters('_artifactsLocationSasToken'))]",
-    "createWebServersUri": "[concat(variables('nestedBaseUrl'),'/15.21.00.createWebServers.json',parameters('_artifactsLocationSasToken'))]",
-    "createSqlServersUri": "[concat(variables('nestedBaseUrl'),'/16.23.00.createSqlServers.json',parameters('_artifactsLocationSasToken'))]",
-    "createAdsServersUri": "[concat(variables('nestedBaseUrl'),'/17.25.00.createAdsServers.json',parameters('_artifactsLocationSasToken'))]",
-    "createLnx01Uri": "[concat(variables('nestedBaseUrl'),'/18.26.01.createLnxServer.json',parameters('_artifactsLocationSasToken'))]",
-    "updateVnetWithDNSuri": "[concat(variables('nestedBaseUrl'),'/03.16.00.updateVnetWithDNS.json',parameters('_artifactsLocationSasToken'))]"
+    "createDev01Uri": "[uri(variables('nestedBaseUrl'),concat('/14.17.00.createDevServer.json',parameters('_artifactsLocationSasToken')))]",
+    "createWebServersUri": "[uri(variables('nestedBaseUrl'),concat('/15.21.00.createWebServers.json',parameters('_artifactsLocationSasToken')))]",
+    "createSqlServersUri": "[uri(variables('nestedBaseUrl'),concat('/16.23.00.createSqlServers.json',parameters('_artifactsLocationSasToken')))]",
+    "createAdsServersUri": "[uri(variables('nestedBaseUrl'),concat('/17.25.00.createAdsServers.json',parameters('_artifactsLocationSasToken')))]",
+    "createLnx01Uri": "[uri(variables('nestedBaseUrl'),concat('/18.26.01.createLnxServer.json',parameters('_artifactsLocationSasToken')))]",
+    "updateVnetWithDNSuri": "[uri(variables('nestedBaseUrl'),concat('/03.16.00.updateVnetWithDNS.json',parameters('_artifactsLocationSasToken')))]"
   },
   "resources": [
     {
