@@ -742,7 +742,7 @@
       "apiVersion": "2017-05-10",
       "dependsOn": [
         "03.16.00.linkedDeploymentUpdateVnetWithDNS",
-        "08.11.00.linkedDeploymentCreateStorageAccount",
+        "08.11.00.linkedDeploymentCreateStorageAccount"
       ],
       "properties": {
         "templateLink": {
