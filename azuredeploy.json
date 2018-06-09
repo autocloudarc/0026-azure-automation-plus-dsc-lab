@@ -352,8 +352,8 @@
       }
     },
     {
-      "comments": "01.11.00.createStorageAccount",
-      "name": "01.11.00.linkedDeploymentCreateStorageAccount",
+      "comments": "08.11.00.createStorageAccount",
+      "name": "08.11.00.linkedDeploymentCreateStorageAccount",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [],
@@ -505,7 +505,7 @@
       "dependsOn": [
         "05.08.00.linkedDeploymentCreateAvSet",
         "07.03.00.linkedDeploymentCreateVnet",
-        "01.11.00.linkedDeploymentCreateStorageAccount",
+        "08.11.00.linkedDeploymentCreateStorageAccount",
         "11.14.01.linkedDeploymentCreateNetworkInterfaces"
       ],
       "properties": {
@@ -840,11 +840,11 @@
     },
     "priSaKeyFromLinkedTemplate": {
       "type": "string",
-      "value": "[reference('01.11.00.linkedDeploymentCreateStorageAccount').outputs.priSaKey.value]"
+      "value": "[reference('08.11.00.linkedDeploymentCreateStorageAccount').outputs.priSaKey.value]"
     },
     "secSaKeyFromLinkedTemplate": {
       "type": "string",
-      "value": "[reference('01.11.00.linkedDeploymentCreateStorageAccount').outputs.secSaKey.value]"
+      "value": "[reference('08.11.00.linkedDeploymentCreateStorageAccount').outputs.secSaKey.value]"
     },
     "autoAcctIdFromLinkedTemplate": {
       "type": "string",
@@ -852,7 +852,7 @@
     },
     "saResourceIdFromLinkedTemplate": {
       "type": "string",
-      "value": "[reference('01.11.00.linkedDeploymentCreateStorageAccount').outputs.saResourceId.value]"
+      "value": "[reference('08.11.00.linkedDeploymentCreateStorageAccount').outputs.saResourceId.value]"
     }
   }
 }
