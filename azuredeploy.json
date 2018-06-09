@@ -7,7 +7,7 @@
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive DSC scripts. Use public githubusercontent location."
       },
-      "defaultValue": "https://raw.githubusercontent.com/autocloudarc/master/0026-azure-automation-plus-dsc-lab/"
+      "defaultValue": "https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
