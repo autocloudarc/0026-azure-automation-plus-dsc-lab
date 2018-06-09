@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUserName": {
-      "value": "GEN-UNIQUE"
+      "value": "adm.infra.user"
     },
     "adminPassword": {
       "value": "GEN-PASSWORD"
