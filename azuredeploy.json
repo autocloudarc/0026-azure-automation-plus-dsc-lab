@@ -557,7 +557,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
-        "03.15.00.linkedDeploymentCreateDomainController"
+        "03.15.00.linkedDeploymentCreateDomainController",
+        "08.11.00.linkedDeploymentCreateStorageAccount"
       ],
       "properties": {
         "templateLink": {
@@ -590,7 +591,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
-        "03.16.00.linkedDeploymentUpdateVnetWithDNS"
+        "03.16.00.linkedDeploymentUpdateVnetWithDNS",
+        "08.11.00.linkedDeploymentCreateStorageAccount"
       ],
       "properties": {
         "templateLink": {
@@ -641,7 +643,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
-        "03.16.00.linkedDeploymentUpdateVnetWithDNS"
+        "03.16.00.linkedDeploymentUpdateVnetWithDNS",
+        "08.11.00.linkedDeploymentCreateStorageAccount"
       ],
       "properties": {
         "templateLink": {
@@ -689,7 +692,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
-        "03.16.00.linkedDeploymentUpdateVnetWithDNS"
+        "03.16.00.linkedDeploymentUpdateVnetWithDNS",
+        "08.11.00.linkedDeploymentCreateStorageAccount",
       ],
       "properties": {
         "templateLink": {
@@ -737,7 +741,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
-        "03.16.00.linkedDeploymentUpdateVnetWithDNS"
+        "03.16.00.linkedDeploymentUpdateVnetWithDNS",
+        "08.11.00.linkedDeploymentCreateStorageAccount",
       ],
       "properties": {
         "templateLink": {
@@ -785,7 +790,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
-        "03.16.00.linkedDeploymentUpdateVnetWithDNS"
+        "03.16.00.linkedDeploymentUpdateVnetWithDNS",
+        "08.11.00.linkedDeploymentCreateStorageAccount"
       ],
       "properties": {
         "templateLink": {
