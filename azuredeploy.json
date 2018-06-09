@@ -101,7 +101,7 @@
     "subId": "[subscription().id]",
     "randomInfix": "[parameters('studentRandomInfix')]",
     "baseUrl": "[concat(parameters('_artifactsLocation'))]",
-    "nestedBaseUrl": "[concat(variables('baseUrl'),'master/nested')]",
+    "nestedBaseUrl": "[concat(variables('baseUrl'),'nested')]",
     "createPublicIPUri": "[concat(variables('nestedBaseUrl'),'/04.36.00.createPublicIP.json',parameters('_artifactsLocationSasToken'))]",
     "devPublicIPAddressName": "[toLower(concat(variables('devPrefix'),'1-pip'))]",
     "devDomainNameLabelPrefix": "[concat(variables('devPublicIPAddressName'),parameters('studentRandomInfix'))]",
