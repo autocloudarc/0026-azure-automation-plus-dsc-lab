@@ -7,7 +7,7 @@
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive DSC scripts. Use public githubusercontent location."
       },
-      "defaultValue": "https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/"
+      "defaultValue": "https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
@@ -101,7 +101,7 @@
     "subId": "[subscription().id]",
     "randomInfix": "[parameters('studentRandomInfix')]",
     "baseUrl": "[concat(parameters('_artifactsLocation'))]",
-    "nestedBaseUrl": "[concat(variables('baseUrl'),'nested')]",
+    "nestedBaseUrl": "[concat(variables('baseUrl'),'tree/master/nested')]",
     "createPublicIPUri": "[concat(variables('nestedBaseUrl'),'/04.36.00.createPublicIP.json',parameters('_artifactsLocationSasToken'))]",
     "devPublicIPAddressName": "[toLower(concat(variables('devPrefix'),'1-pip'))]",
     "devDomainNameLabelPrefix": "[concat(variables('devPublicIPAddressName'),parameters('studentRandomInfix'))]",
