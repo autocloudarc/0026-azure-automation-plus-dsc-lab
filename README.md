@@ -1,12 +1,5 @@
 # Azure Automation Plus DSC lab
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fautocloudarc%2Fmaster%2Fazure-automation-plus-dsc-lab%2Fazuredeploy.json" target="_blank">
-<img src="http://azuredeploy.net/deploybutton.png"/>
-</a>
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fautocloudarc%2Fmaster%2Fazure-automation-plus-dsc-lab%2Fazuredeploy.json" target="_blank">
-<img src="http://armviz.io/visualizebutton.png"/>
-</a>
-
 This template deploys a new lab environment that can be used for training, practice and demonstrations of the following technologies:
 1. Azure Automation
 2. Azure Automation Desired State Configuration
