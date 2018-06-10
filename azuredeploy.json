@@ -846,10 +846,6 @@
     "autoAcctIdFromLinkedTemplate": {
       "type": "string",
       "value": "[reference('09.12.00.linkedDeploymentCreateAutoAcct').outputs.autoAcctId.value]"
-    },
-    "saResourceIdFromLinkedTemplate": {
-      "type": "string",
-      "value": "[reference('08.11.00.linkedDeploymentCreateStorageAccount').outputs.saResourceId.value]"
     }
   }
 }
