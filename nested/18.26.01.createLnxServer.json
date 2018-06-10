@@ -82,12 +82,6 @@
             }
           ]
         },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": false,
-            "storageUri": ""
-          }
-        },
         "availabilitySet": {
           "id": "[parameters('lnxAvSetId')]"
         }

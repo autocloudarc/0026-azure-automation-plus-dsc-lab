@@ -104,7 +104,7 @@
     }
   },
     {
-      "comments": "17.25.01.joinDomainSqlServers",
+      "comments": "17.25.01.joinDomainAdsServers",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('adsPrefix'),copyIndex(1),'/joindomain')]",
       "copy": {
