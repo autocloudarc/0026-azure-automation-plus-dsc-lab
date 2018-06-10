@@ -777,14 +777,6 @@
       "type": "string",
       "value": "[reference('06.06.00.linkedDeploymentCreateNSG').outputs.nsgResourceId2.value]"
     },
-    "priSaKeyFromLinkedTemplate": {
-      "type": "string",
-      "value": "[reference('08.11.00.linkedDeploymentCreateStorageAccount').outputs.priSaKey.value]"
-    },
-    "secSaKeyFromLinkedTemplate": {
-      "type": "string",
-      "value": "[reference('08.11.00.linkedDeploymentCreateStorageAccount').outputs.secSaKey.value]"
-    },
     "autoAcctIdFromLinkedTemplate": {
       "type": "string",
       "value": "[reference('09.12.00.linkedDeploymentCreateAutoAcct').outputs.autoAcctId.value]"
