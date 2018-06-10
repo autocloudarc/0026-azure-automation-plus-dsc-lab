@@ -149,12 +149,6 @@
       "[variables('subnet1Prefix')]",
       "[variables('subnet2Prefix')]"
     ],
-    "createStorageAccountUri": "[uri(parameters('_artifactsLocation'),concat('nested/08.11.00.createStorageAccount.json',parameters('_artifactsLocationSasToken')))]",
-    "saPrefix": "storage",
-    "saInfix": "[uniqueString(resourceGroup().id)]",
-    "saName": "[concat(variables('saPrefix'),variables('saInfix'),parameters('studentNumber'))]",
-    "saKind": "Storage",
-    "saSku": "Standard_LRS",
     "autoAcctName": "[concat('aaa',variables('randomInfix'),parameters('studentNumber'))]",
     "createAutoAcctUri": "[uri(parameters('_artifactsLocation'),concat('nested/09.12.00.createAutoAcct.json',parameters('_artifactsLocationSasToken')))]",
     "omsWorkspaceName": "[concat('oms',variables('randomInfix'),parameters('studentNumber'))]",
@@ -343,37 +337,6 @@
       }
     },
     {
-      "comments": "08.11.00.createStorageAccount",
-      "name": "08.11.00.linkedDeploymentCreateStorageAccount",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
-      "dependsOn": [],
-      "properties": {
-        "templateLink": {
-          "uri": "[variables('createStorageAccountUri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "saName": {
-            "value": "[variables('saName')]"
-          },
-          "saSku": {
-            "value": "[variables('saSku')]"
-          },
-          "saKind": {
-            "value": "[variables('saKind')]"
-          },
-          "location": {
-            "value": "[parameters('location')]"
-          }
-        },
-        "mode": "Incremental",
-        "debugSetting": {
-          "detailLevel": "requestContent, responseContent"
-        }
-      }
-    },
-    {
       "comments": "09.12.00.createAutoAcct",
       "name": "09.12.00.linkedDeploymentCreateAutoAcct",
       "type": "Microsoft.Resources/deployments",
@@ -496,7 +459,6 @@
       "dependsOn": [
         "05.08.00.linkedDeploymentCreateAvSet",
         "07.03.00.linkedDeploymentCreateVnet",
-        "08.11.00.linkedDeploymentCreateStorageAccount",
         "11.14.01.linkedDeploymentCreateNetworkInterfaces"
       ],
       "properties": {
@@ -523,9 +485,6 @@
           "ads03nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.ads03nicId.value]"
           },
-          "saName": {
-            "value": "[variables('saName')]"
-          },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
@@ -548,8 +507,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
-        "03.15.00.linkedDeploymentCreateDomainController",
-        "08.11.00.linkedDeploymentCreateStorageAccount"
+        "03.15.00.linkedDeploymentCreateDomainController"
       ],
       "properties": {
         "templateLink": {
@@ -582,8 +540,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
-        "03.16.00.linkedDeploymentUpdateVnetWithDNS",
-        "08.11.00.linkedDeploymentCreateStorageAccount"
+        "03.16.00.linkedDeploymentUpdateVnetWithDNS"
       ],
       "properties": {
         "templateLink": {
@@ -608,9 +565,6 @@
           },
           "dev01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.dev01nicId.value]"
-          },
-          "saName": {
-            "value": "[variables('saName')]"
           },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
@@ -661,9 +615,6 @@
           "webNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.webNicIds.value]"
           },
-          "saName": {
-            "value": "[variables('saName')]"
-          },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
@@ -709,9 +660,6 @@
           },
           "sqlNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.sqlNicIds.value]"
-          },
-          "saName": {
-            "value": "[variables('saName')]"
           },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
@@ -759,9 +707,6 @@
           "adsNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.adsNicIds.value]"
           },
-          "saName": {
-            "value": "[variables('saName')]"
-          },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
@@ -807,9 +752,6 @@
           },
           "lnx01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.lnx01nicId.value]"
-          },
-          "saName": {
-            "value": "[variables('saName')]"
           },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
