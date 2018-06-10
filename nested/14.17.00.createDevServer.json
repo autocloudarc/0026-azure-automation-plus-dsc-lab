@@ -23,9 +23,6 @@
     "domainName": {
       "type": "string"
     },
-    "domainToJoin": {
-      "type": "string"
-    },
     "domainJoinOptions": {
       "type": "string"
     }

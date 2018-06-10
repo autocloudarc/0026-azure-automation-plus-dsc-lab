@@ -101,7 +101,8 @@
           "id": "[parameters('adsAvSetId')]"
         }
       }
-    },
+    }
+  },
     {
       "comments": "17.25.01.joinDomainSqlServers",
       "type": "Microsoft.Compute/virtualMachines/extensions",

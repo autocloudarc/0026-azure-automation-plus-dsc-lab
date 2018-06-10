@@ -168,7 +168,6 @@
     "devPrefix": "[concat(variables('cspPrefix'),variables('roleCodeDev'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "lnxPrefix": "[concat(variables('cspPrefix'),variables('roleCodeLnx'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "fqdnAdatumDev": "dev.adatum.com",
-    "netbios": "[split(variables('fqdnAdatumDev'),'.')[0]]",
     "domainJoinOptions": "3",
     "dcNicIpPrefix": "[concat(variables('netPrefix'),parameters('studentNumber'))]",
     "adsPrivateIps": {
@@ -568,9 +567,6 @@
           },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
-          },
-          "domainToJoin": {
-            "value": "[variables('netbios')]"
           },
           "domainJoinOptions": {
             "value": "[variables('domainJoinOptions')]"
