@@ -98,10 +98,7 @@
     }
   },
   "variables": {
-    "rgName": "[resourceGroup().name]",
-    "subId": "[subscription().id]",
     "randomInfix": "[parameters('studentRandomInfix')]",
-    "baseUrl": "[parameters('_artifactsLocation')]",
     "createPublicIPUri": "[uri(parameters('_artifactsLocation'),concat('nested/04.36.00.createPublicIP.json',parameters('_artifactsLocationSasToken')))]",
     "devPublicIPAddressName": "[toLower(concat(variables('devPrefix'),'1-pip'))]",
     "devDomainNameLabelPrefix": "[concat(variables('devPublicIPAddressName'),parameters('studentRandomInfix'))]",
@@ -176,7 +173,6 @@
     "sqlPrefix": "[concat(variables('cspPrefix'),variables('roleCodeSql'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "devPrefix": "[concat(variables('cspPrefix'),variables('roleCodeDev'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "lnxPrefix": "[concat(variables('cspPrefix'),variables('roleCodeLnx'),parameters('studentNumber'),variables('seriesPrefix'))]",
-    "adsWebVmSize": "Standard_A1_v2",
     "fqdnAdatumDev": "dev.adatum.com",
     "netbios": "[split(variables('fqdnAdatumDev'),'.')[0]]",
     "domainJoinOptions": "3",
@@ -186,9 +182,6 @@
       "ads01PrivIp": "[concat(variables('dcNicIpPrefix'),'.4')]",
       "ads02PrivIp": "[concat(variables('dcNicIpPrefix'),'.5')]"
     },
-    "devSqlVmSize": "Standard_D1_v2",
-    "vmInstance": 2,
-    "logAnalyticsAccountName": "[concat('oms',variables('randomInfix'),parameters('studentNumber'))]",
     "createNetworkInterfacesUri": "[uri(parameters('_artifactsLocation'),concat('nested/11.14.01.createNetworkInterfaces.json',parameters('_artifactsLocationSasToken')))]",
     "nicSuffix": "-nic",
     "nicCollection": {
@@ -221,8 +214,6 @@
       }
     },
     "createAds01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/03.15.00.createDomainController.json',parameters('_artifactsLocationSasToken')))]",
-    "dscModulesURL": "[concat(parameters('_artifactsLocation'),'/dsc/dsc.zip')]",
-    "rsvAccountName": "[concat('rsv',variables('randomInfix'),parameters('studentNumber'))]",
     "createDev01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/14.17.00.createDevServer.json',parameters('_artifactsLocationSasToken')))]",
     "createWebServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/15.21.00.createWebServers.json',parameters('_artifactsLocationSasToken')))]",
     "createSqlServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.23.00.createSqlServers.json',parameters('_artifactsLocationSasToken')))]",
@@ -693,7 +684,7 @@
       "apiVersion": "2017-05-10",
       "dependsOn": [
         "03.16.00.linkedDeploymentUpdateVnetWithDNS",
-        "08.11.00.linkedDeploymentCreateStorageAccount",
+        "08.11.00.linkedDeploymentCreateStorageAccount"
       ],
       "properties": {
         "templateLink": {
