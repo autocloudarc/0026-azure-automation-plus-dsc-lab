@@ -19,9 +19,6 @@
     },
     "lnx01nicId": {
       "type": "string"
-    },
-    "saName": {
-      "type": "string"
     }
   },
   "variables": {
@@ -87,8 +84,8 @@
         },
         "diagnosticsProfile": {
           "bootDiagnostics": {
-            "enabled": true,
-            "storageUri": "[reference(parameters('saName'), '2017-10-01').primaryEndpoints['blob']]"
+            "enabled": false,
+            "storageUri": ""
           }
         },
         "availabilitySet": {
