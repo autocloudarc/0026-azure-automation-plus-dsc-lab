@@ -27,12 +27,13 @@ Decscription of the prerequistes for the deployment
 1. An Azure subscription
 2. A web browser
 3. Internet connection
+4. Windows PowerShell Version 5.0+
+5. Member of local Windows Administrators group on machine on which you will execute the PowerShell script.
 
 ## Deploying The Template
 
-You can deploy this template directly through the Azure Portal or by using the scripts supplied in the root of this repository.
-
-To deploy the template using hte Azure Portal, click the Deploy to Azure button at the top of the article.
+1. Download the Deploy-AzureResourceGroup.ps1 and execute.
+    Example (from current directory) .\Deploy-AzureResourceGroup
 
 ## Solution overview and deployed resources
 
