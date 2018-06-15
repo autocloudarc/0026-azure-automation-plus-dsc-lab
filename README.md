@@ -28,7 +28,7 @@ Decscription of the prerequistes for the deployment
 2. A web browser
 3. Internet connection
 4. Windows PowerShell Version 5.0+
-5. Member of local Windows Administrators group on machine on which you will execute the PowerShell script.
+5. Member of local Windows Administrators group on machine on which you will execute the PowerShell script
 
 ## Deploying The Template
 
