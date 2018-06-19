@@ -99,6 +99,7 @@
   },
   "variables": {
     "randomInfix": "[parameters('studentRandomInfix')]",
+    "saName": "[variables('randomInfix')]",
     "createPublicIPUri": "[uri(parameters('_artifactsLocation'),concat('nested/04.36.00.createPublicIP.json',parameters('_artifactsLocationSasToken')))]",
     "devPublicIPAddressName": "[toLower(concat(variables('devPrefix'),'1-pip'))]",
     "devDomainNameLabelPrefix": "[concat(variables('devPublicIPAddressName'),parameters('studentRandomInfix'))]",
