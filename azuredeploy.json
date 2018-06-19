@@ -744,9 +744,6 @@
           },
           "lnx01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.lnx01nicId.value]"
-          },
-          "domainName": {
-            "value": "[variables('fqdnAdatumDev')]"
           }
         },
         "mode": "Incremental",
