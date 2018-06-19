@@ -90,18 +90,10 @@
             }
           ]
         },
-        "diagnosticsProfile": {
-          "diagnosticsProfile": {
-            "bootDiagnostics": {
-              "enabled": false,
-                "storageUri": ""
-                }
-          },
         "availabilitySet": {
           "id": "[parameters('adsAvSetId')]"
         }
       }
-    }
   },
     {
       "comments": "17.25.01.joinDomainAdsServers",
