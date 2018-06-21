@@ -41,13 +41,10 @@ This solution creates a consolidated training and demo lab environment for Azure
 
 The following resources are deployed as part of the solution
 
-## Deployment steps
-
-You can click the "deploy to Azure" button at the beginning of this document or follow the instructions for command line deployment using the scripts in the root of this repo.
-
 #### Connect
 
 To connect to this lab after it is deployed, RDP to the development/jump server AZRDEV##01 VM using the connect icon from the VM overview blade in the portal.
+The username to use is: .\adm.infra.user.
 
 ## After Deploying the Template (Usage)
 
