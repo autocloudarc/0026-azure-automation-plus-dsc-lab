@@ -68,7 +68,7 @@ The recommended outline of training objectives for this lab follows as a basic g
 
 #### Management
 
-To complete the recommended training objectives after this solutin is deployed, you can either RDP to the AZRDEV##01 jump VM or use the Azure portal.
+To complete the recommended training objectives after this solution is deployed, you can either RDP to the AZRDEV##01 jump VM or use the Azure portal.
 
 ## Notes
 
