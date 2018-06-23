@@ -583,6 +583,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
+        "01.11.00.linkedDeploymentCreateStorageAccount",
         "03.16.00.linkedDeploymentUpdateVnetWithDNS"
       ],
       "properties": {
@@ -609,6 +610,12 @@
           "dev01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.dev01nicId.value]"
           },
+          "saSku": {
+            "value": "[variables('saSku')]"
+          },
+          "diagStorageUri": {
+            "value": "[variables('diagStorageUri')]"
+            },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
