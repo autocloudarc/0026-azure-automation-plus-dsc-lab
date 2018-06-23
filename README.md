@@ -19,6 +19,7 @@ Decscription of the prerequistes for the deployment
 4. Windows PowerShell Version 5.1
 5. Member of local Windows Administrators group on the machine on which you will execute the PowerShell script.
 6. During script execution, you will be asked to configure the PSGallery repository as a trusted source so that the required modules such as AzureRM can be used.
+7. The password required must be at least 12 characters and meet complexity requirements, i.e. 3 out of 4 of upper case, lower case, numeric and special characters.
 
 ## After Deploying the Template (Usage)
 
