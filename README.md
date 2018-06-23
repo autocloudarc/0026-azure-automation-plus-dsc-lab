@@ -1,6 +1,7 @@
 # Azure Automation Plus DSC lab
 
 This template deploys a new lab environment that can be used for training, practice and demonstrations of the following technologies:
+
 1. Azure Automation
 2. Azure Automation Desired State Configuration
 3. Windows PowerShell
@@ -19,11 +20,12 @@ The lab infrastructure includes the following components:
 7. 1 x Automation account for Azure automation topics
 8. 1 x OMS Workspace for Runbook monitoring integration
 9. 2 x storage accounts, 1 for automatically staging deployment artifacts and the other for user specified artifacts for DSC.
-10.1 x recovery services vault for VM backup and recovery.
+10. 1 x recovery services vault for VM backup and recovery.
 
 ## Prerequisites
 
 Decscription of the prerequistes for the deployment
+
 1. An Azure subscription
 2. A web browser
 3. Internet connection
@@ -41,7 +43,7 @@ This solution creates a consolidated training and demo lab environment for Azure
 
 The following resources are deployed as part of the solution
 
-#### Connect
+## Connect
 
 To connect to this lab after it is deployed, RDP to the development/jump server AZRDEV##01 VM using the connect icon from the VM overview blade in the portal.
 The username to use is: .\adm.infra.user.
@@ -49,6 +51,7 @@ The username to use is: .\adm.infra.user.
 ## After Deploying the Template (Usage)
 
 The recommended outline of training objectives for this lab follows as a basic guide, but you may deviate, ommit, add or re-sequnce these steps as necessary to meet your or your organizations own requirements.
+
 1. Build the AZRDEV##01 server as a jump/dev DSC pull server using desired state configuration in local push configuration mode.
 2. Build the AZRWEB##01 web server as a web server using push mode remotely from AZRDEV##01.
 3. Build the AZRADS##01 domain controller as a domain controller using push mode remotely from AZRDEV##01.
@@ -63,7 +66,7 @@ The recommended outline of training objectives for this lab follows as a basic g
 12. Apply a configuration to the AZRLNX##01 Linux CentOS server using AA DSC.
 13. Create a runbook to convert all server private IP addresses from dynamic to static.
 
-#### Management
+### Management
 
 To complete the recommended training objectives after this solution is deployed, you can either RDP to the AZRDEV##01 jump VM or use the Azure portal.
 
