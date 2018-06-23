@@ -20,6 +20,12 @@
     "dev01nicId": {
       "type": "string"
     },
+    "saSku": {
+      "type": "string"
+    },
+    "diagStorageUri": {
+      "type": "string"
+    },
     "domainName": {
       "type": "string"
     },
@@ -34,7 +40,6 @@
     "imageOffer": "VisualStudio",
     "imageSku": "VS-2017-Comm-Latest-WS2016",
     "diskNameOs": "[toLower(concat(variables('dev01name'),'-syst'))]",
-    "saType": "Standard_LRS",
     "diskNameData": "[toLower(concat(variables('dev01name'),'-data'))]"
   },
   "resources": [
@@ -65,7 +70,7 @@
             "caching": "ReadWrite",
             "createOption": "FromImage",
             "managedDisk": {
-              "storageAccountType": "[variables('saType')]"
+              "storageAccountType": "[parameters('saSku')]"
             }
           },
           "dataDisks": [
@@ -76,7 +81,7 @@
               "createOption": "Empty",
               "diskSizeGB": 32,
               "managedDisk": {
-                "storageAccountType": "[variables('saType')]"
+                "storageAccountType": "[parameters('saSku')]"
               }
             }
           ]
@@ -87,6 +92,12 @@
               "id": "[parameters('dev01nicId')]"
             }
           ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[parameters('diagStorageUri')]"
+          }
         },
         "availabilitySet": {
           "id": "[parameters('devAvSetId')]"
