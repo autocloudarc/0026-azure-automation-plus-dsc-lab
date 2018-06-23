@@ -19,7 +19,13 @@
     },
     "lnx01nicId": {
       "type": "string"
-    }
+    },
+    "saSku": {
+      "type": "string"
+    },
+    "diagStorageUri": {
+      "type": "string"
+    },
   },
   "variables": {
     "lnx01name": "[concat(parameters('lnxPrefix'),1)]",
@@ -28,7 +34,6 @@
     "imageOffer": "CentOS",
     "imageSku": "7.4",
     "diskNameOs": "[toLower(concat(variables('lnx01name'),'-syst'))]",
-    "saType": "Standard_LRS",
     "diskNameData": "[toLower(concat(variables('lnx01name'),'-data'))]"
   },
   "resources": [
@@ -59,7 +64,7 @@
             "caching": "ReadWrite",
             "createOption": "FromImage",
             "managedDisk": {
-              "storageAccountType": "[variables('saType')]"
+              "storageAccountType": "[parameters('saSku')]"
             }
           },
           "dataDisks": [
@@ -70,7 +75,7 @@
               "createOption": "Empty",
               "diskSizeGB": 32,
               "managedDisk": {
-                "storageAccountType": "[variables('saType')]"
+                "storageAccountType": "[parameters('saSku')]"
               }
             }
           ]
@@ -81,6 +86,12 @@
               "id": "[parameters('lnx01nicId')]"
             }
           ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[parameters('diagStorageUri')]"
+          }
         },
         "availabilitySet": {
           "id": "[parameters('lnxAvSetId')]"
