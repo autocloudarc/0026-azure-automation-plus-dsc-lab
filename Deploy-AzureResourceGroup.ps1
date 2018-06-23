@@ -69,7 +69,16 @@ $templateUri = "https://raw.githubusercontent.com/autocloudarc/0026-azure-automa
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
-$studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
+
+# Ensure that the storage account name is glbally unique in DNS
+Do
+{
+    $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
+} #end while
+While (-not((Get-AzureRmStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
+
+# TASK-ITEM: Check if OMS workspace name must be unique globally in DNS. Uncomment below when implemented.
+# $omsWorkspaceName = "oms-" + $studentRandomInfix + "-$studentNumber"
 
 $parameters = @{}
 $parameters.Add("studentNumber", $studentNumber)
