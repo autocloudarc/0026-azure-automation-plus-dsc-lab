@@ -23,9 +23,52 @@
     This posting is provided "AS IS" with no warranties, and confers no rights.
 #>
 
+function Get-PSGalleryModule
+{
+	[CmdletBinding(PositionalBinding = $false)]
+	Param
+	(
+		# Required modules
+		[Parameter(Mandatory = $true,
+				   HelpMessage = "Please enter the PowerShellGallery.com modules required for this script",
+				   ValueFromPipeline = $true,
+				   Position = 0)]
+		[ValidateNotNull()]
+		[ValidateNotNullOrEmpty()]
+		[string[]]$ModulesToInstall
+	) #end param
+
+    # NOTE: The newest version of the PowerShellGet module can be found at: https://github.com/PowerShell/PowerShellGet/releases
+    # 1. Always ensure that you have the latest version
+
+	$Repository = "PSGallery"
+	Set-PSRepository -Name $Repository -InstallationPolicy Trusted
+	Install-PackageProvider -Name Nuget -ForceBootstrap -Force
+	foreach ($Module in $ModulesToInstall)
+	{
+        # If module exists, update it
+        If (Get-Module -Name $Module)
+        {
+            # To avoid multiple versions of a module is installed on the same system, first uninstall any previously installed and loaded versions if they exist
+            Update-Module -Name $Module -MaximumVersion -Force -ErrorAction SilentlyContinue -Verbose
+        } #end if
+		    # If the modules aren't already loaded, install and import it
+		else
+		{
+			# https://www.powershellgallery.com/packages/WriteToLogs
+			Install-Module -Name $Module -Repository $Repository -Force -Verbose
+			Import-Module -Name $Module -Verbose
+		} #end If
+	} #end foreach
+} #end function
+
+# Get required PowerShellGallery.com modules.
+Get-PSGalleryModule -ModulesToInstall "AzureRM"
+
 # Connect to Azure
 Connect-AzureRmAccount
 
+# Allowable student numbers
 [int[]]$studentNumEnum = 0..16
 
 Do
@@ -76,9 +119,6 @@ Do
     $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 } #end while
 While (-not((Get-AzureRmStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
-
-# TASK-ITEM: Check if OMS workspace name must be unique globally in DNS. Uncomment below when implemented.
-# $omsWorkspaceName = "oms-" + $studentRandomInfix + "-$studentNumber"
 
 $parameters = @{}
 $parameters.Add("studentNumber", $studentNumber)
