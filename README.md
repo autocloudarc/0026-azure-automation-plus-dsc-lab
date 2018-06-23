@@ -26,6 +26,10 @@ Although particular scenario or specific sets of excercises are not provided as 
 You may deviate, ommit, add or re-sequence these steps as necessary to meet your test/dev/training requirements.
 Please NOTE that this project is primarily for training and NOT recommended for production.
 
+For a hands-on excercise or training/class scenario, where all attendees will be deploying their own lab, a single subscription can be used, but you may have to request increases in core or other resource limits by
+submitting an Azure support ticket through this subscription. You may also consider assigning a seperate subscription to each attendee so that resource limits will not be exceeded.
+Special care was taken to ensure that multiple attendees can perform simultaneous deployments without resource name conflicts within the same subscription. This is due to the student numbers assigned to each attendee, and supports numbers from 0-16. For example, the ## symbols below represents the student number of the VMs, ranging from 0-16.
+
 1. Build the AZRDEV##01 server as a jump/dev DSC pull server using desired state configuration in local push configuration mode.
 2. Build the AZRWEB##01 web server as a web server using push mode remotely from AZRDEV##01.
 3. Build the AZRADS##01 domain controller as a domain controller using push mode remotely from AZRDEV##01.
