@@ -38,7 +38,7 @@
     "sqlServerInstances": 2,
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
-    "imageSku": "2016-Datacenter",
+    "imageSku": "2016-Datacenter"
   },
   "resources": [
     {
