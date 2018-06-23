@@ -102,7 +102,7 @@
     "saName": "[variables('randomInfix')]",
     "saKind": "Storage",
     "saSku": "Standard_LRS",
-    "saUrlSuffix": "blob.core.windows.net",
+    "saUrlSuffix": ".blob.core.windows.net",
     "diagStorageUri": "[concat('https://',variables('saName'),variables('saUrlSuffix'))]",
     "createStorageAccountUri": "[uri(parameters('_artifactsLocation'),concat('nested/01.11.00.createStorageAccount.json',parameters('_artifactsLocationSasToken')))]",
     "createPublicIPUri": "[uri(parameters('_artifactsLocation'),concat('nested/04.36.00.createPublicIP.json',parameters('_artifactsLocationSasToken')))]",
