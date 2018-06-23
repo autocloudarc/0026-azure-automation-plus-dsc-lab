@@ -85,10 +85,6 @@ The lab infrastructure includes the following components:
 To connect to this lab after it is deployed, RDP to the development/jump server AZRDEV##01 VM using the connect icon from the VM overview blade in the portal.
 The username to use is: .\adm.infra.user.
 
-### Management
-
-To complete the recommended training objectives after this solution is deployed, you can either RDP to the AZRDEV##01 jump VM and use the Azure portal to configure any of the Azure Automation components.
-
 ## Notes
 
 1. *This solution does not include a hybrid connection to an on-premises environment.*
