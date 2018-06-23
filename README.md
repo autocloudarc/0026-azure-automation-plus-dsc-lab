@@ -9,6 +9,17 @@ This template deploys a new lab environment that can be used for training, pract
 5. PowerShell Core 6.0
 6. Powershell DSC for Linux.
 
+## Prerequisites
+
+Decscription of the prerequistes for the deployment
+
+1. An Azure subscription
+2. A web browser
+3. Internet connection
+4. Windows PowerShell Version 5.1
+5. Member of local Windows Administrators group on the machine on which you will execute the PowerShell script.
+6. During script execution, you will be asked to configure the PSGallery repository as a trusted source so that the required modules such as AzureRM can be used.
+
 ## After Deploying the Template (Usage)
 
 Although particular scenario or specific sets of excercises are not provided as part of this project to practice these skills, listed here is the recommended outline of training objectives as a basic guide.
@@ -58,16 +69,6 @@ The lab infrastructure includes the following components:
 8. 1 x OMS Workspace for Runbook monitoring integration
 9. 2 x storage accounts, 1 for automatically staging deployment artifacts and the other for user specified artifacts for DSC.
 10. 1 x recovery services vault for VM backup and recovery.
-
-## Prerequisites
-
-Decscription of the prerequistes for the deployment
-
-1. An Azure subscription
-2. A web browser
-3. Internet connection
-4. Windows PowerShell Version 5.0+
-5. Member of local Windows Administrators group on machine on which you will execute the PowerShell script
 
 ## Deploying The Template
 
