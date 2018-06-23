@@ -63,13 +63,21 @@ function Get-PSGalleryModule
 	} #end foreach
 } #end function
 
+[string]$proceed = $null
+
 # Verify parameter values
 Do {
-    [string]$proceed = read-host "The PSGallery repository at www.powershellgallery.com will be configured as a trusted repository to download required modules for this script. Ok to proceed? [Y] [YES] [N] [NO]"
-    [string]$proceed = $proceed.ToUpper()
+    $proceed = read-host "The PSGallery repository at www.powershellgallery.com will be configured as a trusted repository to download required modules for this script. Ok to proceed? [Y] [YES] [N] [NO]"
+    $proceed = $proceed.ToUpper()
     }
 Until ($proceed -eq "Y" -OR $proceed -eq "YES" -OR $proceed -eq "N" -OR $proceed -eq "NO")
 
+if ($proceed -eq "N" -OR $proceed -eq "NO")
+{
+    Write-Output "Deployment terminated by user. Exiting..."
+    PAUSE
+    EXIT
+} #end if ne Y
 # Get required PowerShellGallery.com modules.
 Get-PSGalleryModule -ModulesToInstall "AzureRM"
 
