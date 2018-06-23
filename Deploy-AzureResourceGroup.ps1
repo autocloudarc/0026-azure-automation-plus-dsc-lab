@@ -1,4 +1,4 @@
-﻿#requires -version 5.0
+﻿#requires -version 5.1
 #requires -RunAsAdministrator
 <#
 .SYNOPSIS
@@ -157,7 +157,7 @@ else
 {
     $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
 $connectionMessage = @"
-To log into your new lab, navigate to https://portal.azure.com , authenticate to your subscription, then select the $jumpDevMachine and click the connect icon in the upper left of the blade...
+To log into your new lab, navigate to https://portal.azure.com , authenticate to your subscription, then select the $jumpDevMachine VM and click the connect icon in the upper left of the blade...
 You must use the login name: .\$adminUserName and specify the corresponding password you entered at the begining of this script.
 You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
 For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
