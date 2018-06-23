@@ -1,4 +1,5 @@
 ﻿#requires -version 5.0
+#requires -RunAsAdministrator
 <#
 .SYNOPSIS
    	Creates an automation lab to practice Azure automation, DSC, PowerShell and PowerShell core.
