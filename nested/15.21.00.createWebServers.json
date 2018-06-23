@@ -20,6 +20,12 @@
     "webNicIds": {
       "type": "array"
     },
+    "saSku": {
+      "type": "string"
+    },
+    "diagStorageUri": {
+      "type": "string"
+    },
     "domainName": {
       "type": "string"
     },
@@ -33,7 +39,6 @@
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "imageSku": "2016-Datacenter-Server-Core-smalldisk",
-    "saType": "Standard_LRS"
   },
   "resources": [
     {
@@ -67,7 +72,7 @@
             "caching": "ReadWrite",
             "createOption": "FromImage",
             "managedDisk": {
-              "storageAccountType": "[variables('saType')]"
+              "storageAccountType": "[parameters('saSku')]"
             }
           },
           "dataDisks": [
@@ -78,7 +83,7 @@
               "createOption": "Empty",
               "diskSizeGB": 32,
               "managedDisk": {
-                "storageAccountType": "[variables('saType')]"
+                "storageAccountType": "[parameters('saSku')]"
               }
             }
           ]
@@ -89,6 +94,12 @@
               "id": "[parameters('webNicIds')[copyIndex()]]"
             }
           ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[parameters('diagStorageUri')]"
+          }
         },
         "availabilitySet": {
           "id": "[parameters('webAvSetId')]"
