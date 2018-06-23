@@ -91,8 +91,13 @@ if ($ErrorMessages)
 else
 {
     $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
-    Write-Output "To log into your new lab, navigate to https://portal.azure.com , authenticate to your subscription. Then select the $jumpDevMachine and click the connect icon in the upper left of the blade..."
-    Write-Output "You must use the login name: .\$adminUserName and specify the corresponding password you entered at the begining of this script."
-    Write-Output "You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills."
-    Write-Output "Happy scripting..."
+$connectionMessage = @"
+To log into your new lab, navigate to https://portal.azure.com , authenticate to your subscription, then select the $jumpDevMachine and click the connect icon in the upper left of the blade...
+You must use the login name: .\$adminUserName and specify the corresponding password you entered at the begining of this script.
+You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
+For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
+If you like this script, follow me on GitHub at https://github.com/autocloudarc and feel free to send any feedback or submit issues so we can build a better experience for everyone.
+Happy scripting...
+"@
+Write-Output $connectionMessage
 }
