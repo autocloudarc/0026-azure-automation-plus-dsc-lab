@@ -100,6 +100,11 @@
   "variables": {
     "randomInfix": "[parameters('studentRandomInfix')]",
     "saName": "[variables('randomInfix')]",
+    "saKind": "Storage",
+    "saSku": "Standard_LRS",
+    "saUrlSuffix": "blob.core.windows.net",
+    "diagStorageUri": "[concat('https://',variables('saName'),variables('saUrlSuffix'))]",
+    "createStorageAccountUri": "[uri(parameters('_artifactsLocation'),concat('nested/01.11.00.createStorageAccount.json',parameters('_artifactsLocationSasToken')))]",
     "createPublicIPUri": "[uri(parameters('_artifactsLocation'),concat('nested/04.36.00.createPublicIP.json',parameters('_artifactsLocationSasToken')))]",
     "devPublicIPAddressName": "[toLower(concat(variables('devPrefix'),'1-pip'))]",
     "devDomainNameLabelPrefix": "[concat(variables('devPublicIPAddressName'),parameters('studentRandomInfix'))]",
@@ -216,6 +221,37 @@
     "updateVnetWithDNSuri": "[uri(parameters('_artifactsLocation'),concat('nested/03.16.00.updateVnetWithDNS.json',parameters('_artifactsLocationSasToken')))]"
   },
   "resources": [
+    {
+      "comments": "01.11.00.createStorageAccount",
+      "name": "01.11.00.linkedDeploymentCreateStorageAccount",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "dependsOn": [],
+      "properties": {
+        "templateLink": {
+          "uri": "[variables('createStorageAccountUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "saName": {
+            "value": "[variables('saName')]"
+          },
+          "saSku": {
+            "value": "[variables('saSku')]"
+          },
+          "saKind": {
+            "value": "[variables('saKind')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
+        },
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        }
+      }
+    },
     {
       "comments": "04.36.00.createPublicIP",
       "name": "04.36.00.linkedDeploymentCreatePublicIP",
@@ -457,6 +493,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
+        "01.11.00.linkedDeploymentCreateStorageAccount",
         "05.08.00.linkedDeploymentCreateAvSet",
         "07.03.00.linkedDeploymentCreateVnet",
         "11.14.01.linkedDeploymentCreateNetworkInterfaces"
@@ -485,6 +522,12 @@
           "ads03nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.ads03nicId.value]"
           },
+          "saSku": {
+            "value": "[variables('saSku')]"
+          },
+          "diagStorageUri": {
+            "value": "[variables('diagStorageUri')]"
+            },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
