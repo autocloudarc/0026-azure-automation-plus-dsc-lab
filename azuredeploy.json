@@ -763,6 +763,12 @@
           "adsNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.adsNicIds.value]"
           },
+          "saSku": {
+            "value": "[variables('saSku')]"
+          },
+          "diagStorageUri": {
+            "value": "[variables('diagStorageUri')]"
+            },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
