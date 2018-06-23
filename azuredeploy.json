@@ -185,31 +185,31 @@
     "nicSuffix": "-nic",
     "nicCollection": {
       "ads01nic": {
-        "name": "[toLower(concat(substring(variables('adsPrefix'),0,6),'01',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('adsPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
       },
       "ads02nic": {
-        "name": "[toLower(concat(substring(variables('adsPrefix'),0,6),'02',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('adsPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
       },
       "ads03nic": {
-        "name": "[toLower(concat(substring(variables('adsPrefix'),0,6),'03',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('adsPrefix'),0,6),parameters('studentNumber'),'03',variables('nicSuffix')))]"
       },
       "dev01nic": {
-        "name": "[toLower(concat(substring(variables('devPrefix'),0,6),'01',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('devPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
       },
       "web01nic": {
-        "name": "[toLower(concat(substring(variables('webPrefix'),0,6),'01',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('webPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
       },
       "web02nic": {
-        "name": "[toLower(concat(substring(variables('webPrefix'),0,6),'02',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('webPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
       },
       "sql01nic": {
-        "name": "[toLower(concat(substring(variables('sqlPrefix'),0,6),'01',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('sqlPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
       },
       "sql02nic": {
-        "name": "[toLower(concat(substring(variables('sqlPrefix'),0,6),'02',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('sqlPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
       },
       "lnx01nic": {
-        "name": "[toLower(concat(substring(variables('lnxPrefix'),0,6),'02',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('lnxPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
       }
     },
     "createAds01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/03.15.00.createDomainController.json',parameters('_artifactsLocationSasToken')))]",
