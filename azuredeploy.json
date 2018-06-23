@@ -739,6 +739,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
+        "01.11.00.linkedDeploymentCreateStorageAccount",
         "03.16.00.linkedDeploymentUpdateVnetWithDNS"
       ],
       "properties": {
