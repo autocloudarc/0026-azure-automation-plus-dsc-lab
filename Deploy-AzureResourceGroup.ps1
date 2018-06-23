@@ -26,6 +26,8 @@
 # Connect to Azure
 Connect-AzureRmAccount
 
+[int[]]$studentNumEnum = 0..16
+
 Do
 {
     # Subscription name
@@ -37,24 +39,27 @@ Until (Select-AzureRmSubscription -SubscriptionName $Subscription)
 
 Do
 {
- # Resource Group name
- [string]$rg = Read-Host "Please enter a NEW resource group name. NOTE: To avoid resource conflicts and facilitate better segregation/managment do NOT use an existing resource group [rg##] "
+    # Student number
+    [int]$studentNumber = Read-Host "Please enter your student number, which must be a number from [0-16]. NOTE: A resource group will be created with the name format [rg##], where ## represents the number you entered."
 } #end Do
-Until (($rg) -match '^rg\d{2}$')
+Until (([int]$studentNumber) -in [int[]]$studentNumEnum)
+
+# Resource Group name
+[string]$rg = "rg" + [int]$studentNumber
 
 Do
 {
- # The location refers to a geographic region of an Azure data center
- $regions = Get-AzureRmLocation | Select-Object -ExpandProperty Location
- Write-Output "The list of available regions are :"
- Write-Output ""
- Write-Output $regions
- Write-Output ""
- $enterRegionMessage = "Please enter the geographic location (Azure Data Center Region) for resources, i.e. [eastus2 | westus2]"
- [string]$Region = Read-Host $enterRegionMessage
- $region = $region.ToUpper()
- Write-Output "`$Region selected: $Region "
- Write-Output ""
+    # The location refers to a geographic region of an Azure data center
+    $regions = Get-AzureRmLocation | Select-Object -ExpandProperty Location
+    Write-Output "The list of available regions are :"
+    Write-Output ""
+    Write-Output $regions
+    Write-Output ""
+    $enterRegionMessage = "Please enter the geographic location (Azure Data Center Region) for resources, i.e. [eastus2 | westus2]"
+    [string]$Region = Read-Host $enterRegionMessage
+    $region = $region.ToUpper()
+    Write-Output "`$Region selected: $Region "
+    Write-Output ""
 } #end Do
 Until ($region -in $regions)
 
@@ -67,6 +72,7 @@ $adminPassword = $adminCred.GetNetworkCredential().password
 $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 
 $parameters = @{}
+$parameters.Add("studentNumber", $studentNumber)
 $parameters.Add(“adminUserName”, $adminUserName)
 $parameters.Add(“adminPassword”, $adminPassword)
 $parameters.Add(“studentRandomInfix”, $studentRandomInfix)
@@ -81,4 +87,12 @@ New-AzureRmResourceGroupDeployment -Name $rgDeployment `
 if ($ErrorMessages)
 {
     Write-Output '', 'Template deployment returned the following errors:', @(@($ErrorMessages) | ForEach-Object { $_.Exception.Message.TrimEnd("`r`n") })
+}
+else
+{
+    $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
+    Write-Output "To log into your new lab, navigate to https://portal.azure.com , authenticate to your subscription. Then select the $jumpDevMachine and click the connect icon in the upper left of the blade..."
+    Write-Output "You must use the login name: .\$adminUserName and specify the corresponding password you entered at the begining of this script."
+    Write-Output "You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills."
+    Write-Output "Happy scripting..."
 }
