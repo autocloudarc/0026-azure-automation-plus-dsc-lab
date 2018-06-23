@@ -20,6 +20,12 @@
     "ads03nicId": {
       "type": "string"
     },
+    "saSku": {
+      "type": "string"
+    },
+    "diagStorageUri": {
+      "type": "string"
+    },
     "domainName": {
       "type": "string"
     },
@@ -37,7 +43,6 @@
     "imageOffer": "WindowsServer",
     "imageSku": "2016-Datacenter-Server-Core-smalldisk",
     "diskNameOs": "[toLower(concat(variables('ads03name'),'-syst'))]",
-    "saType": "Standard_LRS",
     "diskNameData": "[toLower(concat(variables('ads03name'),'-data'))]"
   },
     "resources": [
@@ -68,7 +73,7 @@
               "caching": "ReadWrite",
               "createOption": "FromImage",
               "managedDisk": {
-                "storageAccountType": "[variables('saType')]"
+                "storageAccountType": "[parameters('saSku')]"
               }
             },
             "dataDisks": [
@@ -79,7 +84,7 @@
                 "createOption": "Empty",
                 "diskSizeGB": 32,
                 "managedDisk": {
-                  "storageAccountType": "[variables('saType')]"
+                  "storageAccountType": "[parameters('saSku')]"
                 }
               }
             ]
@@ -90,6 +95,12 @@
                 "id": "[parameters('ads03nicId')]"
               }
             ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[parameters('diagStorageUri')]"
+            }
           },
           "availabilitySet": {
             "id": "[parameters('adsAvSetId')]"
