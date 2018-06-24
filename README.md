@@ -140,7 +140,7 @@ The username to use is: .\adm.infra.user.
 
 ## 8.0 TARGET STATE DIAGRAM
 
-![Target State Diagram](/nested/images/0026-azure-automation-plus-dsc-lab.png)
+![Target State Diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-azure-automation-plus-dsc-lab.png)
 
 ## 9.0 NOTES
 
