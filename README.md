@@ -128,7 +128,7 @@ LINKS
 
 BOOKS
 
-1. Windows PowerShell in Action, 3rd Edition – Bruce Payette & Richard Siddaway (There’s a chapter on DSC)
+1. Windows PowerShell in Action, 3rd Edition – Bruce Payette & Richard Siddaway (See Chapter 18. Desired State Configuration)
 2. Windows PowerShell Desired State Configuration Revealed – Ravikanth Chaganti
 3. Learning PowerShell DSC – James Pogran
 4. PowerShell 5.1 and Desired State Configuration – Ron Davis
