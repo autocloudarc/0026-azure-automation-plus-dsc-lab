@@ -51,7 +51,7 @@ function Get-PSGalleryModule
         If (Get-Module -Name $Module)
         {
             # To avoid multiple versions of a module is installed on the same system, first uninstall any previously installed and loaded versions if they exist
-            Update-Module -Name $Module -MaximumVersion -Force -ErrorAction SilentlyContinue -Verbose
+            Update-Module -Name $Module -Force -ErrorAction SilentlyContinue -Verbose
         } #end if
 		    # If the modules aren't already loaded, install and import it
 		else
