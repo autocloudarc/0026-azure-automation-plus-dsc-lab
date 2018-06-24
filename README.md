@@ -2,55 +2,55 @@
 
 This template deploys a new lab environment that can be used for training, practice and demonstrations for the following topics:
 
-1.1 Azure Automation
-1.2 Azure Automation Desired State Configuration
-1.3 Windows PowerShell
-1.4 Windows PowerShell Desired State Configuration
-1.5 PowerShell Core 6.0
-1.6 Powershell DSC for Linux
+1. Azure Automation
+2. Azure Automation Desired State Configuration
+3. Windows PowerShell
+4. Windows PowerShell Desired State Configuration
+5. PowerShell Core 6.0
+6. Powershell DSC for Linux
 
 ## 2.0 Prerequisites
 
 Decscription of the prerequistes for the deployment
 
-2.1 An Azure subscription
-2.2 A web browser
-2.3 An Internet connection
-2.4 Windows PowerShell Version 5.1
-2.5 Member of local Windows Administrators group on the machine on which you will execute the PowerShell script.
-2.6 During script execution, you will be asked to configure the PSGallery repository as a trusted source so that the required modules such as AzureRM can be used.
-2.7 The password required must be at least 12 characters and meet complexity requirements, i.e. 3 out of 4 of upper case, lower case, numeric and special characters.
+1. An Azure subscription
+2. A web browser
+3. An Internet connection
+4. Windows PowerShell Version 5.1
+5. Member of local Windows Administrators group on the machine on which you will execute the PowerShell script.
+6. During script execution, you will be asked to configure the PSGallery repository as a trusted source so that the required modules such as AzureRM can be used.
+7. The password required must be at least 12 characters and meet complexity requirements, i.e. 3 out of 4 of upper case, lower case, numeric and special characters.
 
 ## 3.0 Lab Infrastructure
 
 The lab infrastructure includes the following components:
 
-3.1 1 x resource group named rg##, where ## in this document represents a one or two-digit number between 0 to 16, and reflects the student number you specify during deployment.
-3.2 3 x Windows 2016 Data Center Core domain controllers, where only 1 has been promoted to a domain controller: AZRADS##03.dev.adatum.com. AZRADS##01 & AZRADS##02 are only member servers until you promote them.
-3.3 1 x Widnows 2016 Data Center Development/Jump/DSCPull/DSCPush server w/the Visual Studio 2017 Community Edition VM image. This will be AZRDEV##01.
-3.4 2 x Windows 2016 Data Center Core servers, initially deployed as standalone servers but which can be configured after deployment as web servers using DSC. These are AZRWEB##01 and AZRWEB##02.
-3.5 2 x Widnows 2016 Data Center servers, initially deployed as standalone servers but which can be configured after deployment as SQL 2016 servers using DSC. These are AZRSQL##01 and AZRSQL##02.
-3.6 1 x CentOS 7 server, which can be used to demonstrate or practice PowerShell Core 6.0 or PowerShell DSC for Linux concepts. This is AZRLNX##01.
-3.7 1 x Automation account for Azure automation topics. This resource is named aaa-{studentRandomInfix}-##.
-3.8 1 x OMS Workspace for Runbook monitoring integration, named oms-{studentRandomInfix}-##.
-3.9 1 x storage account used for boot diagnostics and diagnostics logging for each VM. The name will be globally unique in DNS if you deploy from the Powershell script
-3.10 1 x recovery services vault for VM backup and recovery.
+1. 1 x resource group named rg##, where ## in this document represents a one or two-digit number between 0 to 16, and reflects the student number you specify during deployment.
+2. 3 x Windows 2016 Data Center Core domain controllers, where only 1 has been promoted to a domain controller: AZRADS##03.dev.adatum.com. AZRADS##01 & AZRADS##02 are only member servers until you promote them.
+3. 1 x Widnows 2016 Data Center Development/Jump/DSCPull/DSCPush server w/the Visual Studio 2017 Community Edition VM image. This will be AZRDEV##01.
+4. 2 x Windows 2016 Data Center Core servers, initially deployed as standalone servers but which can be configured after deployment as web servers using DSC. These are AZRWEB##01 and AZRWEB##02.
+5. 2 x Widnows 2016 Data Center servers, initially deployed as standalone servers but which can be configured after deployment as SQL 2016 servers using DSC. These are AZRSQL##01 and AZRSQL##02.
+6. 1 x CentOS 7 server, which can be used to demonstrate or practice PowerShell Core 6.0 or PowerShell DSC for Linux concepts. This is AZRLNX##01.
+7. 1 x Automation account for Azure automation topics. This resource is named aaa-{studentRandomInfix}-##.
+8. 1 x OMS Workspace for Runbook monitoring integration, named oms-{studentRandomInfix}-##.
+9. 1 x storage account used for boot diagnostics and diagnostics logging for each VM. The name will be globally unique in DNS if you deploy from the Powershell script
+10. 1 x recovery services vault for VM backup and recovery.
 
 ## 4.0 Deploying The Template
 
 Windows PowerShell
 
-4.1 Download the Deploy-AzureResourceGroup.ps1 to a directory where you want to execute the script from.
-4.2 Open your favorite Windows PowerShell host as an administrative user. You can use your favorite host; Visual Studio Code, Visual Studio, PowerShell ISE, PowerShell console, or other 3rd party host.
-4.3 Open and execute the script. The example below assumes you are already in the current script directory.
+1. Download the Deploy-AzureResourceGroup.ps1 to a directory where you want to execute the script from.
+2. Open your favorite Windows PowerShell host as an administrative user. You can use your favorite host; Visual Studio Code, Visual Studio, PowerShell ISE, PowerShell console, or other 3rd party host.
+3. Open and execute the script. The example below assumes you are already in the current script directory.
     .\Deploy-AzureResourceGroup.ps1
-4.5 When the script execute, answer the following prompts:
+4. When the script execute, answer the following prompts:
 
-    1. Consent to register the PSGallery as a trusted repository for the required modules
-    2. Authenticate to your subscription
-    3. Enter your target subscription name
-    4. Enter your student number
-    5. Enter your administrator password for the adm.infra.user account. Your password will not be exposed.
+    - Consent to register the PSGallery as a trusted repository for the required modules
+    - Authenticate to your subscription
+    - Enter your target subscription name
+    - Enter your student number
+    - Enter your administrator password for the adm.infra.user account. Your password will not be exposed.
 
 Azure CLI (bash)
 
@@ -100,53 +100,54 @@ For a hands-on excercise or training/class scenario, where all attendees will be
 submitting an Azure support ticket through this subscription. You may also consider assigning a seperate subscription to each attendee so that resource limits will not be exceeded.
 Special care was taken to ensure that multiple attendees can perform simultaneous deployments without resource name conflicts within the same subscription. This is due to the student numbers assigned to each attendee, and supports numbers from 0-16. For example, the ## symbols below represents the student number of the VMs, ranging from 0-16.
 
-5.1 Build the AZRDEV##01 server as a jump/dev DSC pull server using desired state configuration in local push configuration mode.
-5.2 Build the AZRWEB##01 web server as a web server using push mode remotely from AZRDEV##01.
-5.3 Build the AZRADS##01 domain controller as a domain controller using push mode remotely from AZRDEV##01.
-5.4 Build the AZRSQL##01 SQL 2016 server as an SQL server using push mode remotely from AZRDEV##01.
-5.5 Apply a configuration to AZRWEB##01 using the DSC Pull server AZRDEV##01.
-5.6 Apply a configuration to AZRADS##01 using the DSC Pull server AZRDEV##01.
-5.7 Apply a configuration to AZRSQL##01 using the DSC Pull server AZRDEV##01.
-5.8 Build the AZRWEB##02 web server as a web server using Azure Automation DSC (AA DSC).
-5.9 Build the AZRADS##02 domain controller as a domain controller using AA DSC.
-5.10 Build the AZRSQL##02 SQL 2016 server as an SQL server using AA DSC.
-5.11 Apply a configuration to the AZRLNX##01 Linux CentOS server using the push mode remotely from AZRDEV##01.
-5.12 Apply a configuration to the AZRLNX##01 Linux CentOS server using AA DSC.
-5.13 Create a runbook to convert all server private IP addresses from dynamic to static.
+1. Build the AZRDEV##01 server as a jump/dev DSC pull server using desired state configuration in local push configuration mode.
+2. Build the AZRWEB##01 web server as a web server using push mode remotely from AZRDEV##01.
+3. Build the AZRADS##01 domain controller as a domain controller using push mode remotely from AZRDEV##01.
+4. Build the AZRSQL##01 SQL 2016 server as an SQL server using push mode remotely from AZRDEV##01.
+5. Apply a configuration to AZRWEB##01 using the DSC Pull server AZRDEV##01.
+6. Apply a configuration to AZRADS##01 using the DSC Pull server AZRDEV##01.
+7. Apply a configuration to AZRSQL##01 using the DSC Pull server AZRDEV##01.
+8. Build the AZRWEB##02 web server as a web server using Azure Automation DSC (AA DSC).
+9. Build the AZRADS##02 domain controller as a domain controller using AA DSC.
+10. Build the AZRSQL##02 SQL 2016 server as an SQL server using AA DSC.
+11. Apply a configuration to the AZRLNX##01 Linux CentOS server using the push mode remotely from AZRDEV##01.
+12. Apply a configuration to the AZRLNX##01 Linux CentOS server using AA DSC.
+13. Create a runbook to convert all server private IP addresses from dynamic to static.
 
-## 6.0 REFERENCES
+## 6.0 References
 
 Here are some references for Azure Automation, PowerShell and Desired State Configuration that can be used during your learning and exploration of these topics.
 
 LINKS
 
-6.1 Azure Automation: <https://docs.microsoft.com/en-us/azure/>
-6.2 Desired State Configuration: <https://docs.microsoft.com/en-us/powershell/dsc/overview>
-6.3 Desired State Configuration for Linux: <https://docs.microsoft.com/en-us/powershell/dsc/lnxgettingstarted>
-6.4 Powershell Core: <https://docs.microsoft.com/en-us/powershell/scripting/whats-new/what-s-new-in-powershell-core-60?view=powershell-6>
-6.5 Example Scenario: <https://blogs.technet.microsoft.com/askpfeplat/2017/10/16/windows-powershell-and-dsc-on-linux-in-microsoft-azure/>
+1. Azure Automation: <https://docs.microsoft.com/en-us/azure/>
+2. Desired State Configuration: <https://docs.microsoft.com/en-us/powershell/dsc/overview>
+3. Desired State Configuration for Linux: <https://docs.microsoft.com/en-us/powershell/dsc/lnxgettingstarted>
+4. Powershell Core: <https://docs.microsoft.com/en-us/powershell/scripting/whats-new/what-s-new-in-powershell-core-60?view=powershell-6>
+5. Example Scenario: <https://blogs.technet.microsoft.com/askpfeplat/2017/10/16/windows-powershell-and-dsc-on-linux-in-microsoft-azure/>
 
 BOOKS
 
-6.6 Windows PowerShell in Action, 3rd Edition – Bruce Payette & Richard Siddaway (There’s a chapter on DSC)
-6.7 Windows PowerShell Desired State Configuration Revealed – Ravikanth Chaganti
-6.8 Learning PowerShell DSC – James Pogran
-6.9 PowerShell 5.1 and Desired State Configuration – Ron Davis
+1. Windows PowerShell in Action, 3rd Edition – Bruce Payette & Richard Siddaway (There’s a chapter on DSC)
+2. Windows PowerShell Desired State Configuration Revealed – Ravikanth Chaganti
+3. Learning PowerShell DSC – James Pogran
+4. PowerShell 5.1 and Desired State Configuration – Ron Davis
 
-## 7.0 CONNECT
+## 7.0 Connecting to your lab
 
-7.1 To connect to this lab after it is deployed, RDP to the development/jump server AZRDEV##01 VM using the connect icon from the VM overview blade in the portal.
+1. To connect to this lab after it is deployed, RDP to the development/jump server AZRDEV##01 VM using the connect icon from the VM overview blade in the portal.
+
 The username to use is: .\adm.infra.user.
 
-## 8.0 TARGET STATE DIAGRAM
+## 8.0 Target State Diagram
 
 ![Target State Diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-azure-automation-plus-dsc-lab.png)
 
-## 9.0 NOTES
+## 9.0 Notes
 
 8.1 *This solution does not include a hybrid connection to an on-premises environment.*
 8.2 *All Windows VMs are domain joined during the deployment.*
 
-## 10.0 TAGS
+## 10.0 Tags
 
 `Tags: Azure, Automation, Powershell, DSC`
