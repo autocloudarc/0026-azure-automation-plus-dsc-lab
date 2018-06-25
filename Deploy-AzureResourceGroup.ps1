@@ -81,6 +81,8 @@ if ($proceed -eq "N" -OR $proceed -eq "NO")
 # Get required PowerShellGallery.com modules.
 Get-PSGalleryModule -ModulesToInstall "AzureRM"
 
+Write-Output "Please see the open dialogue box in your browser to authenticate to your Azure subscription..."
+
 # Connect to Azure
 Connect-AzureRmAccount
 
@@ -156,13 +158,19 @@ if ($ErrorMessages)
 else
 {
     $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
+    $fqdnDev = (Get-AzureRmPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
 $connectionMessage = @"
-To log into your new lab, navigate to https://portal.azure.com , authenticate to your subscription, then select the $jumpDevMachine VM and click the connect icon in the upper left of the blade...
-You must use the login name: .\$adminUserName and specify the corresponding password you entered at the begining of this script.
+Your RDP connection prompt will open auotmatically after you read this messange and press Enter to continue...
+
+To log into your new automation lab, you must change your login name to: .\$adminUserName and specify the corresponding password you entered at the begining of this script.
 You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
 For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
 If you like this script, follow me on GitHub at https://github.com/autocloudarc and feel free to send any feedback or submit issues so we can build a better experience for everyone.
 Happy scripting...
 "@
-Write-Output $connectionMessage
+    Write-Output $connectionMessage
+    # Allow engineer to pause and read connection message before continuing
+    pause
+    # Open RDP prompt automatically
+    mstsc /v:$fqdn
 }
