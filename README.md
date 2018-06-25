@@ -17,8 +17,8 @@ Decscription of the prerequistes for the deployment
 2. A web browser
 3. An Internet connection
 4. Windows PowerShell Version 5.1
-5. Member of local Windows Administrators group on the machine on which you will execute the PowerShell script.
-6. During script execution, you will be asked to configure the PSGallery repository as a trusted source so that the required modules such as AzureRM can be used.
+5. Membership in the local Administrators group on the machine on which you will execute the PowerShell script.
+6. During script execution, you will be asked to configure the PSGallery repository as a trusted source so that the required modules such as AzureRM can be used by the script.
 7. The password required must be at least 12 characters and meet complexity requirements, i.e. 3 out of 4 of upper case, lower case, numeric and special characters.
 
 ## 3.0 Lab Infrastructure
@@ -114,7 +114,6 @@ Special care was taken to ensure that multiple attendees can perform simultaneou
 10. Build the AZRSQL##02 SQL 2016 server as an SQL server using AA DSC.
 11. Apply a configuration to the AZRLNX##01 Linux CentOS server using the push mode remotely from AZRDEV##01.
 12. Apply a configuration to the AZRLNX##01 Linux CentOS server using AA DSC.
-13. Create a runbook to convert all server private IP addresses from dynamic to static.
 
 ## 6.0 References
 
