@@ -160,12 +160,12 @@ else
     $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
     $fqdnDev = (Get-AzureRmPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
 $connectionMessage = @"
-Your RDP connection prompt will open auotmatically after you read this messange and press Enter to continue...
+Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
 
 To log into your new automation lab, you must change your login name to: .\$adminUserName and specify the corresponding password you entered at the begining of this script.
 You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
 For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
-If you like this script, follow me on GitHub at https://github.com/autocloudarc and feel free to send any feedback or submit issues so we can build a better experience for everyone.
+If you like this script, follow me on GitHub at https://github.com/autocloudarc, send feedback or submit issues so we can build a better experience for everyone.
 Happy scripting...
 "@
     Write-Output $connectionMessage
