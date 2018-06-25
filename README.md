@@ -92,7 +92,14 @@ Azure CLI (bash)
     --template-uri $uri \
     --parameters adminUserName=$adminUserName adminPassword=$adminPassword studentRadnomInfix=$studentRandomInfix studentNumber=$studentNumber
 
-## 5.0 After Deploying the Template (Usage)
+## 5.0 Connecting to your Lab
+
+1. If you use the PowerShell script method to deploy this lab, your RDP prompt will open automatically to the development/jump server AZRDEV##01 VM.
+2. If you use the Azure CLI (bash) method, then you will need to use your browser to authenticate to your subscription from <https://portal.azure.com> and click connect icon from the AZRDEV##01 VM overview blade in the portal.
+
+The username to use is: .\adm.infra.user.
+
+## 6.0 After Deploying the Template (Usage)
 
 Although particular scenario or specific sets of excercises are not provided as part of this project to practice these skills, listed here is the recommended outline of training objectives as a basic guide.
 You may deviate, ommit, add or re-sequence these steps as necessary to meet your test/dev/training requirements.
@@ -115,6 +122,15 @@ Special care was taken to ensure that multiple attendees can perform simultaneou
 11. Apply a configuration to the AZRLNX##01 Linux CentOS server using the push mode remotely from AZRDEV##01.
 12. Apply a configuration to the AZRLNX##01 Linux CentOS server using AA DSC.
 
+## 8.0 Target State Diagram
+
+![Target State Diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-azure-automation-plus-dsc-lab.png)
+
+## 9.0 Notes
+
+8.1 *This solution does not include a hybrid connection to an on-premises environment.*
+8.2 *All Windows VMs are domain joined during the deployment.*
+
 ## 6.0 References
 
 Here are some references for Azure Automation, PowerShell and Desired State Configuration that can be used during your learning and exploration of these topics.
@@ -133,22 +149,6 @@ BOOKS
 2. Windows PowerShell Desired State Configuration Revealed – Ravikanth Chaganti
 3. Learning PowerShell DSC – James Pogran
 4. PowerShell 5.1 and Desired State Configuration – Ron Davis
-
-## 7.0 Connecting to your lab
-
-1. If you use the PowerShell script method to deploy this lab, your RDP prompt will open automatically to the development/jump server AZRDEV##01 VM.
-2. If you use the Azure CLI (bash) method, then you will need to use your browser to authenticate to your subscription from https://portal.azure.com and click connect icon from the AZRDEV##01 VM overview blade in the portal.
-
-The username to use is: .\adm.infra.user.
-
-## 8.0 Target State Diagram
-
-![Target State Diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-azure-automation-plus-dsc-lab.png)
-
-## 9.0 Notes
-
-8.1 *This solution does not include a hybrid connection to an on-premises environment.*
-8.2 *All Windows VMs are domain joined during the deployment.*
 
 ## 10.0 Tags
 
