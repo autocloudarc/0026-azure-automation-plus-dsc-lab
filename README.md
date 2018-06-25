@@ -137,7 +137,8 @@ BOOKS
 
 ## 7.0 Connecting to your lab
 
-1. To connect to this lab after it is deployed, RDP to the development/jump server AZRDEV##01 VM using the connect icon from the VM overview blade in the portal.
+1. If you use the PowerShell script method to deploy this lab, your RDP prompt will open automatically to the development/jump server AZRDEV##01 VM.
+2. If you use the Azure CLI (bash) method, then you will need to use your browser to authenticate to your subscription from https://portal.azure.com and click connect icon from the AZRDEV##01 VM overview blade in the portal.
 
 The username to use is: .\adm.infra.user.
 
