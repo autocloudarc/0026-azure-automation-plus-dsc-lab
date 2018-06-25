@@ -153,4 +153,4 @@ The username to use is: .\adm.infra.user.
 
 ## 10.0 Tags
 
-`Tags: Azure, Automation, Windows Powershell, PowerShell Core, Desired State Configuration, DSC, AutoCloudArc, Preston K. Parsard`
+`Tags: Azure Automation Lab, Azure, Automation, Windows Powershell, Desired State Configuration, DSC, PowerShell Core, Linux`
