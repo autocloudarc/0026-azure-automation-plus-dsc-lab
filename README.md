@@ -41,7 +41,7 @@ The lab infrastructure includes the following components:
 Windows PowerShell
 
 1. Download the Deploy-AzureResourceGroup.ps1 to a directory where you want to execute the script from.
-2. Open your favorite Windows PowerShell host as an administrative user. You can use your favorite host; Visual Studio Code, Visual Studio, PowerShell ISE, PowerShell console, or other 3rd party host.
+2. Open your favorite Windows PowerShell host as an administrative user. You can use Visual Studio Code, Visual Studio, PowerShell ISE, PowerShell console, or other 3rd party host.
 3. Open and execute the script. The example below assumes you are already in the current script directory.
 
     .\Deploy-AzureResourceGroup.ps1
