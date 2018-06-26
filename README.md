@@ -101,11 +101,11 @@ The username to use is: .\adm.infra.user.
 
 ## 6.0 After Deploying the Template (Usage)
 
-Although particular scenario or specific sets of excercises are not provided as part of this project to practice these skills, listed here is the recommended outline of training objectives as a basic guide.
+Although particular scenarios or specific sets of excercises are not provided as part of this project to practice these skills, listed here is the recommended outline of training objectives as a basic guide.
 You may deviate, ommit, add or re-sequence these steps as necessary to meet your test/dev/training requirements.
 Please NOTE that this project is primarily for training and NOT recommended for production.
 
-For a hands-on excercise or training/class scenario, where all attendees will be deploying their own lab, a single subscription can be used, but you may have to request increases in core or other resource limits by
+For a hands-on excercises or training/class scenarios, where all attendees will be deploying their own lab, a single subscription can be used, but you may have to request increases in core or other resource limits by
 submitting an Azure support ticket through this subscription. You may also consider assigning a seperate subscription to each attendee so that resource limits will not be exceeded.
 Special care was taken to ensure that multiple attendees can perform simultaneous deployments without resource name conflicts within the same subscription. This is due to the student numbers assigned to each attendee, and supports numbers from 0-16. For example, the ## symbols below represents the student number of the VMs, ranging from 0-16.
 
@@ -128,8 +128,8 @@ Special care was taken to ensure that multiple attendees can perform simultaneou
 
 ## 9.0 Notes
 
-8.1 *This solution does not include a hybrid connection to an on-premises environment.*
-8.2 *All Windows VMs are domain joined during the deployment.*
+1. *This solution does not include a hybrid connection to an on-premises environment.*
+2. *All Windows VMs are domain joined during the deployment.*
 
 ## 6.0 References
 
