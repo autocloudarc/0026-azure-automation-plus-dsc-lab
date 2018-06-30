@@ -24,6 +24,7 @@
     This posting is provided "AS IS" with no warranties, and confers no rights.
 #>
 
+$BeginTimer = Get-Date -Verbose
 function Get-PSGalleryModule
 {
 	[CmdletBinding(PositionalBinding = $false)]
@@ -159,6 +160,12 @@ else
 {
     $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
     $fqdnDev = (Get-AzureRmPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
+
+    $StopTimer = Get-Date -Verbose
+    Write-Output "Calculating elapsed time..." -Log $Log
+    $ExecutionTime = New-TimeSpan -Start $BeginTimer -End $StopTimer
+    $Footer = "TOTAL SCRIPT EXECUTION TIME: $ExecutionTime"
+
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
 
