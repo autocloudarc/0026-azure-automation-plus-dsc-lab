@@ -142,6 +142,7 @@ LINKS
 3. Desired State Configuration for Linux: <https://docs.microsoft.com/en-us/powershell/dsc/lnxgettingstarted>
 4. Powershell Core: <https://docs.microsoft.com/en-us/powershell/scripting/whats-new/what-s-new-in-powershell-core-60?view=powershell-6>
 5. Example Scenario: <https://blogs.technet.microsoft.com/askpfeplat/2017/10/16/windows-powershell-and-dsc-on-linux-in-microsoft-azure/>
+6. Example Scenario: https://blogs.msdn.microsoft.com/powersql/2017/12/13/install-sql-server-2017-using-powershell-desired-state-configuration-and-sqlserverdsc/
 
 BOOKS
 
