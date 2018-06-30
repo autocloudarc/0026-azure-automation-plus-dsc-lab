@@ -165,7 +165,8 @@ else
     Write-Output "Calculating elapsed time..." -Log $Log
     $ExecutionTime = New-TimeSpan -Start $BeginTimer -End $StopTimer
     $Footer = "TOTAL SCRIPT EXECUTION TIME: $ExecutionTime"
-
+    Write-Output ""
+    Wite-Output $Footer
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
 
