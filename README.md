@@ -11,7 +11,7 @@ This template deploys a new lab environment that can be used for training, pract
 
 ## Target State Diagram
 
-![]
+![Target state diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/automationLab.png)
 
 ## 2.0 Prerequisites
 
