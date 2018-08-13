@@ -9,6 +9,10 @@ This template deploys a new lab environment that can be used for training, pract
 5. PowerShell Core 6.0
 6. Powershell DSC for Linux
 
+## Target State Diagram
+
+![]
+
 ## 2.0 Prerequisites
 
 Decscription of the prerequistes for the deployment
