@@ -98,8 +98,6 @@ ElseIf (-not(Get-InstalledModule -Name Az))
     Get-PSGalleryModule -ModulesToInstall "Az"
 } # ElseIf
 
-Write-Output "Please see the open dialogue box in your browser to authenticate to your Azure subscription..."
-
 # Connect to Azure
 Connect-AzureRmAccount
 
