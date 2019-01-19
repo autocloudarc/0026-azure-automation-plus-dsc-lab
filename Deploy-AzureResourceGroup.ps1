@@ -81,18 +81,18 @@ if ($proceed -eq "N" -OR $proceed -eq "NO")
 } #end if ne Y
 
 # If theh AzureRM module is not installed, but Az is, then set aliases for the AzureRM noun prefix.
-If (-not(Get-InstalledModule -Name AzureRM) -AND (Get-InstalledModule -Name Az))
+If (-not(Get-InstalledModule -Name "AzureRM") -AND (Get-InstalledModule -Name "Az"))
 {
     Enable-AzureRmAlias -Scope CurrentUser
 } # end if
 # Else, if both the AzureRM modules AND the Az modules are installed, remove the AzureRM modules and set the aliases for the AzurRM noun prefix.
-ElseIf ((Get-InstalledModule -Name AzureRM) -AND (Get-InstalledModule -Name Az))
+ElseIf ((Get-InstalledModule -Name "AzureRM") -AND (Get-InstalledModule -Name "Az"))
 {
-    Uninstall-Module -Name AzureRM -Force
-    Remove-Module -Name AzureRM
+    Uninstall-Module -Name "AzureRM" -Force
+    Remove-Module -Name "AzureRM"
     Enable-AzureRmAlias -Scope CurrentUser
 } # end ElseIf
-ElseIf (-not(Get-InstalledModule -Name Az))
+ElseIf (-not(Get-InstalledModule -Name "Az"))
 {
     # Get required Az modules from PowerShellGallery.com.
     Get-PSGalleryModule -ModulesToInstall "Az"
