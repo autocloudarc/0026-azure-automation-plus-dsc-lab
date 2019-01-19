@@ -49,7 +49,7 @@ function Get-PSGalleryModule
 	foreach ($Module in $ModulesToInstall)
 	{
         # If module exists, update it
-        If (Get-Module -Name $Module)
+        If (Get-InstalledModule -Name $Module)
         {
             # To avoid multiple versions of a module is installed on the same system, first uninstall any previously installed and loaded versions if they exist
             Update-Module -Name $Module -Force -ErrorAction SilentlyContinue -Verbose
@@ -58,7 +58,7 @@ function Get-PSGalleryModule
 		else
 		{
 			# https://www.powershellgallery.com/packages/WriteToLogs
-			Install-Module -Name $Module -Repository $Repository -Force -Verbose
+			Install-Module -Name $Module -Repository $Repository -Force -AllowClobber -Verbose
 			Import-Module -Name $Module -Verbose
 		} #end If
 	} #end foreach
@@ -80,7 +80,7 @@ if ($proceed -eq "N" -OR $proceed -eq "NO")
     EXIT
 } #end if ne Y
 # Get required PowerShellGallery.com modules.
-Get-PSGalleryModule -ModulesToInstall "AzureRM"
+Get-PSGalleryModule -ModulesToInstall "Az"
 
 Write-Output "Please see the open dialogue box in your browser to authenticate to your Azure subscription..."
 
