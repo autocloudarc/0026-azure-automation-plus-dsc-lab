@@ -80,6 +80,7 @@ if ($proceed -eq "N" -OR $proceed -eq "NO")
     EXIT
 } #end if ne Y
 
+# https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-1.1.0
 # If theh AzureRM module is not installed, but Az is, then set aliases for the AzureRM noun prefix.
 If (-not(Get-InstalledModule -Name "AzureRM") -AND (Get-InstalledModule -Name "Az"))
 {
