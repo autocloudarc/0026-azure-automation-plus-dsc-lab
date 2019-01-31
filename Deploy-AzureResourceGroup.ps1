@@ -49,7 +49,7 @@ function Get-PSGalleryModule
 	foreach ($Module in $ModulesToInstall)
 	{
         # If module exists, update it
-        If (Get-InstalledModule -Name $Module)
+        If (Get-InstalledModule -Name $Module -ErrorAction SilentlyContinue)
         {
             # To avoid multiple versions of a module is installed on the same system, first uninstall any previously installed and loaded versions if they exist
             Update-Module -Name $Module -Force -ErrorAction SilentlyContinue -Verbose
@@ -82,12 +82,12 @@ if ($proceed -eq "N" -OR $proceed -eq "NO")
 
 # https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-1.1.0
 # If theh AzureRM module is not installed, but Az is, then set aliases for the AzureRM noun prefix.
-If (-not(Get-InstalledModule -Name "AzureRM") -AND (Get-InstalledModule -Name "Az"))
+If (-not(Get-InstalledModule -Name "AzureRM" -ErrorAction SilentlyContinue) -AND (Get-InstalledModule -Name "Az"))
 {
     Enable-AzureRmAlias -Scope CurrentUser
 } # end if
 # Else, if both the AzureRM modules AND the Az modules are installed, remove the AzureRM modules and set the aliases for the AzurRM noun prefix.
-ElseIf ((Get-InstalledModule -Name "AzureRM") -AND (Get-InstalledModule -Name "Az"))
+ElseIf ((Get-InstalledModule -Name "AzureRM") -AND (Get-InstalledModule -Name "Az" -ErrorAction SilentlyContinue))
 {
     Uninstall-Module -Name "AzureRM" -Force
     Remove-Module -Name "AzureRM"
