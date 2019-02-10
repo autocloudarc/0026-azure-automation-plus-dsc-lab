@@ -224,6 +224,13 @@ Configuration sqlCnfgInstallPush03
             DependsOn = "[xDisk]ConfigureMstrDisk"
         } # end resource
 
+        File BckpPath 
+        {
+            Ensure = $ensure
+            DestinationPath = $node.SQLBackupDir 
+            Type = 'Directory'
+        } # end resource
+
         # Add SQL service account to local adminstrators group
         # TASK-ITEM: This is a non-priviledged domain user account that must have already been provisioned
         Group AddSqlUserToAdmins

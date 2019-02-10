@@ -31,7 +31,7 @@
             SQLTempDBDir = "t:\temp"
             SQLTempDBLogDir = "l:\logs"
             InstallSQLDataDir = "m:\mstr"
-            SQLBackupDir = "data"
+            SQLBackupDir = "c:\bckp"
             role = "sql"
             installFromPath = "C:\sql2016"
             instanceName = "MSSQLSERVER"
