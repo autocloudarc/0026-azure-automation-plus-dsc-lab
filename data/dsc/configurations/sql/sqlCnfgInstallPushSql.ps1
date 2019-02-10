@@ -45,8 +45,12 @@ This posting is provided "AS IS" with no warranties, and confers no rights.
 .LINK
 1. https://docs.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server-with-powershell-desired-state-configuration?view=sql-server-2017
 2. https://colinsalmcorner.com/post/install-and-configure-sql-server-using-powershell-dsc
-2. Getting Started with PowerShell DSC: Securing domainAdminCreds in MOF Files | packtpub.com: https://youtu.be/2nsCQ32Ufx0
+3. Getting Started with PowerShell DSC: Securing domainAdminCreds in MOF Files | packtpub.com: https://youtu.be/2nsCQ32Ufx0
+4. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
+5. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
+6. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
 
+ 
 
 .COMPONENT
 Windows PowerShell Desired State Configuration, ActiveDirectory
@@ -236,7 +240,14 @@ Configuration sqlCnfgInstallPush03
             Features            = $node.sqlFeatures
             SourcePath          = $node.InstallFromPath
             SQLSysAdminAccounts = @("$($node.sqlSysAdminAccounts)")
-            DependsOn           = "[Group]AddSqlUserToAdmins"
+            SqlSvcStartupType = $node.SqlSvcStartupType
+            SQLUserDBDir = $node.SQLUserDBDir
+            SQLUserDBLogDir = $node.SQLUserDBLogDir
+            SQLTempDBDir = $node.SQLTempDBDir
+            SQLTempDBLogDir = $node.SQLTempDBLogDir
+            InstallSQLDataDir = $node.InstallSQLDataDir
+            SQLBackupDir = $node.SQLUserDBDir
+            DependsOn = "[Group]AddSqlUserToAdmins"
         } # end resource
 
         # TASK-ITEM add SMSS installation

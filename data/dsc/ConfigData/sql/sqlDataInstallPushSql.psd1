@@ -25,6 +25,13 @@
             logsDiskDriveLetter = 'l'
             tempDiskDriveLetter = 't'
             mstrDiskDriveLetter = 'm'
+            SqlSvcStartupType = "Automatic"
+            SQLUserDBDir = "s:\data"
+            SQLUserDBLogDir = "l:\logs"
+            SQLTempDBDir = "t:\temp"
+            SQLTempDBLogDir = "l:\logs"
+            InstallSQLDataDir = "m:\mstr"
+            SQLBackupDir = "data"
             role = "sql"
             installFromPath = "C:\sql2016"
             instanceName = "MSSQLSERVER"
