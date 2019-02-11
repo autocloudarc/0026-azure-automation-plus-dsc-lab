@@ -50,8 +50,6 @@ This posting is provided "AS IS" with no warranties, and confers no rights.
 5. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
 6. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
 
- 
-
 .COMPONENT
 Windows PowerShell Desired State Configuration, ActiveDirectory
 
@@ -69,13 +67,15 @@ Configures a member server as a new domain controler in an existing domain.
 # 1. Pre-installation task for the OS
 # Set the source installation path for SQL 2016 developer edition
 
-$isoImagePath = "\\azrdev1001.dev.adatum.com\apps\sql"
-$isoFileName = "en_sql_server_2016_developer_with_service_pack_1_x64_dvd_9548071.iso"
+$sqlInstallPath = "\\cltdev1001.dev.adatum.com\apps\sql\SqlServer2016x64"
+$sqlFileName = "setup.exe"
+$ssmsInstallPath = "\\cltdev1001.dev.adatum.com\apps\sql"
+# $isoFileName = "en_sql_server_2016_developer_with_service_pack_1_x64_dvd_9548071.iso"
 # https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
-$smssFileName = "SSMS-Setup-ENU.exe"
-$localInstallPath = "c:\sql2016"
-$smssFilePath = Join-Path -Path $isoImagePath -ChildPath $smssFileName -Verbose
-$isoFilePath = Join-Path -Path $isoImagePath -ChildPath $isoFileName -Verbose
+$ssmsFileName = "SSMS-Setup-ENU.exe"
+# $localInstallPath = "c:\sql2016"
+$ssmsFilePath = Join-Path -Path $ssmsInstallPath -ChildPath $ssmsFileName -Verbose
+$sqlFilePath = Join-Path -Path $sqlInstallPath -ChildPath $sqlFileName -Verbose
 
 # 2. Add modules
 $moduleList = "dbatools","SqlServer","SqlServerDsc"
@@ -127,7 +127,9 @@ Configuration sqlCnfgInstallPush03
         [string[]]$dscResourceList,
         [string]$ensure = "present",
         [Parameter(Mandatory=$true)]
-        [string]$isoFilePath
+        [string]$sqlFilePath,
+        [Parameter(Mandatory=$true)]
+        [string]$ssmsFilePath
 	) # end param
 
     # Convert domainAdminCreds to netbios domainAdminCred format [NETBIOSdomainname\username]
@@ -265,9 +267,10 @@ Configuration sqlCnfgInstallPush03
         {
             Ensure = $ensure
             Name = "SMSS"
-            Path = "C:\sql2016\SSMS-Setup-ENU.exe"
+            Path = $ssmsFilePath
             ProductId = ""
             Arguments = '/Install /quiet /norestart /log c:\Windows\Temp\log.txt' 
+            DependsOn = "[SqlSetup]InstallDefaultInstance"
         } # end resource 
 
         xPendingReboot Reboot1
@@ -281,9 +284,9 @@ Configuration sqlCnfgInstallPush03
 
 #region Intialize values
 # 4. Set MOF path
-$sqlMofPath = "F:\OneDrive\02.00.00.GENERAL\devServer\data\dsc\mof"
+$sqlMofPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\mof"
 # 5. Set ConfigData path
-$ConfigDataPath = "F:\OneDrive\02.00.00.GENERAL\devServer\data\dsc\ConfigData\sql\sqlDataInstallPushSql.psd1"
+$ConfigDataPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\ConfigData\sql\sqlDataInstallPushSql.psd1"
 <#
 TASK-ITEM: Turn on print and file sharing (SMB-in) in group policies for target nodes using GROUP POLICY advanced firewall settings
 Scope: Computer node
@@ -296,31 +299,12 @@ Direction: Inbound
 #>
 # 6. Select target node to configure by looking for the 01 series DC patter for dev.adatum.com the .. represents a 2 digit number that can vary by deployments
 # TASK-ITEM: Change the filter to match a specific node for demonstration, otherwise filter for multiple nodes to demonstrate multiple simultaneous configurations 
-$targetNodes = (Get-ADComputer -Filter *).DNSHostName | Where-Object {$_ -match 'AZRSQL1003'}
+$targetNodes = (Get-ADComputer -Filter *).DNSHostName | Where-Object {$_ -match 'cltsql1003'}
 # 7. Get list of resources required for this configuration so that can be copied to the target node
 $dscResourceList = @("xActiveDirectory", "xComputerManagement", "xStorage", "xPendingReboot", "sqlServerDsc")
 # TASK-ITEM: Create array of module paths to copy to each node
 #endregion 
 
-# Copy installation files to targets if necessary
-ForEach ($targetNode in $targetNodes)
-{
-    $targetSession = New-PSSession -ComputerName $targetNode
-    $uncInstallPath = $localInstallPath.Replace('c:\',"\\$targetNode\c$\")
-    If (-not(Test-Path -Path $uncInstallPath))
-    {
-        Invoke-Command -Session $targetSession -ScriptBlock { New-Item -Path $using:localInstallPath -ItemType Directory -Force } -Verbose 
-    } # end if
-    If (-not(Test-Path -path "$uncInstallPath\setup.exe"))
-    {
-        Copy-Item -Path $isoFilePath -Destination $uncInstallPath -Recurse -Verbose -Force
-    } # end if 
-    If (-not(Test-Path -path "$uncInstallPath\SSMS-Setup-ENU.exe"))
-    {
-        Copy-Item -Path $smssFilePath -Destination $uncInstallPath -Recurse -Verbose -Force
-    } # end if 
-    Remove-PSSession -Session $targetSession
-} # end foreach
 #region main
 # 8. Create a session to prepare the target node, i.e Install pre-requisite features
 ForEach ($targetNode in $targetNodes)
@@ -356,12 +340,12 @@ ForEach ($targetNode in $targetNodes)
 
 # 9. Complile configuration
 # TASK-ITEM: Change the configuration name here to match the configuration name above [after the 'Configuration keyword']
-adsCnfgInstallPushSql03 -OutputPath $sqlMofPath -sqlCredential (Get-Credential -Message "Enter password for:" -UserName svc.sql.user@dev.adatum.com) -dscResourceList $dscResourceList -isoFilePath $isoFilePath -ConfigurationData $ConfigDataPath
+adsCnfgInstallPushSql03 -OutputPath $sqlMofPath -sqlCredential (Get-Credential -Message "Enter password for:" -UserName svc.sql.user@dev.adatum.com) -dscResourceList $dscResourceList -sqlFilePath $sqlFilePath -ssmsFilePath $ssmsFilePath -ConfigurationData $ConfigDataPath
 
 # 10. Configure target LCM
 Set-DscLocalConfigurationManager -Path $sqlMofPath -Verbose -Force
 
 # 11. Apply configuration to target
-Start-DscConfiguration -Path $sqlMofPath -ComputerName $targetNode -Wait -Verbose -Force
+Start-DscConfiguration -Path $sqlMofPath -ComputerName $targetNode -Wait -Verbose -WhatIf
 
 #endregion
