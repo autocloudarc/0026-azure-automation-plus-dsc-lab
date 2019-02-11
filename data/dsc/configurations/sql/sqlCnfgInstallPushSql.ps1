@@ -307,6 +307,8 @@ $dscResourceList = @("xActiveDirectory", "xComputerManagement", "xStorage", "xPe
 
 #region main
 # 8. Create a session to prepare the target node, i.e Install pre-requisite features
+# TASK-ITEM: Create a function for the loop below
+$separatorSingle = ("-"*100)
 ForEach ($targetNode in $targetNodes)
 {
     $targetNodeSession = New-PSSession -Name $targetNode
@@ -317,17 +319,26 @@ ForEach ($targetNode in $targetNodes)
     # Copy resources to target node
     ForEach ($targetModulePath in $targetModulePaths)
     {
-        $tagetModuleFolder = $targetModulePath | Split-Path -Leaf 
-        
-        Copy-Item -Path $targetModulePath -Destination $uncTargetPath -Recurse -Verbose -Force
+        $separatorSingle
+        $resourceName = $targetModulePath | Split-Path -Leaf
+        $uncTargetPathFull = Join-Path $uncTargetPath -ChildPath $resourceName
+        Write-Verbose "`$resourceName: $resourceName" -Verbose
+        Write-Verbose "`$targetmodulePath: $targetModulePath" -Verbose 
+        Write-Verbose "`$uncTargetPath: $uncTargetPath" -Verbose
+        If (-not(Test-Path -Path $uncTargetPathFull))
+        {
+            Write-Output "Copying DSC resources from local system to remote target..."
+            Copy-Item -Path $targetModulePath -Destination $uncTargetPath -Recurse -Verbose -WhatIf
+        } # end if
     } # end for
-
-    # Install Dsc-service on target node
+    <#
+    # Install Dsc-service on target node if required
         Invoke-Command -Session $targetNodeSession -ScriptBlock {
         Install-PackageProvider -Name NuGet -Force
 	    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
         Install-WindowsFeature -Name Dsc-service
     } # end ScriptBlock
+    #>
     <#
     TASK-ITEM:
         CAUTION; sqlCredentials will not be encrypted. To understand the requi rements and see demo for how to encrypt, see:
