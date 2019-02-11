@@ -49,7 +49,6 @@ This posting is provided "AS IS" with no warranties, and confers no rights.
 4. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
 5. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
 6. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
-
 .COMPONENT
 Windows PowerShell Desired State Configuration, ActiveDirectory
 
@@ -328,17 +327,25 @@ ForEach ($targetNode in $targetNodes)
         If (-not(Test-Path -Path $uncTargetPathFull))
         {
             Write-Output "Copying DSC resources from local system to remote target..."
+            # TASK-ITEM: Remove WhatIf for release
             Copy-Item -Path $targetModulePath -Destination $uncTargetPath -Recurse -Verbose -WhatIf
         } # end if
     } # end for
-    <#
+
     # Install Dsc-service on target node if required
+    If (-not(Get-WindowsFeature -ComputerName $targetNode -Name Dsc-Service).InstallState -eq 'Installed')
+    {
         Invoke-Command -Session $targetNodeSession -ScriptBlock {
-        Install-PackageProvider -Name NuGet -Force
-	    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
         Install-WindowsFeature -Name Dsc-service
-    } # end ScriptBlock
-    #>
+        } # end scriptblock
+    } # end if 
+    Invoke-Command -Session $targetNodeSession -ScriptBlock {
+        if (-not(Get-PackageProvider -Name Nuget -ErrorAction SilentlyContinue))
+        {
+            Install-PackageProvider -Name NuGet -Force
+            Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+        } # end if
+    } # end scriptblock
     <#
     TASK-ITEM:
         CAUTION; sqlCredentials will not be encrypted. To understand the requi rements and see demo for how to encrypt, see:
