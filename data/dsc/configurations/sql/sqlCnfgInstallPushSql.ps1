@@ -247,7 +247,7 @@ Configuration sqlCnfgInstallPush03
             InstanceName        = $node.instanceName
             Features            = $node.sqlFeatures
             SourcePath          = $node.InstallFromPath
-            SQLSysAdminAccounts = @("$($node.sqlSysAdminAccounts)")
+            SQLSysAdminAccounts = $node.sqlSysAdminAccounts
             SqlSvcStartupType = $node.SqlSvcStartupType
             SQLUserDBDir = $node.SQLUserDBDir
             SQLUserDBLogDir = $node.SQLUserDBLogDir
@@ -358,7 +358,7 @@ ForEach ($targetNode in $targetNodes)
 
 # 9. Complile configuration
 # TASK-ITEM: Change the configuration name here to match the configuration name above [after the 'Configuration keyword']
-adsCnfgInstallPushSql03 -OutputPath $sqlMofPath -sqlCredential (Get-Credential -Message "Enter password for:" -UserName svc.sql.user@dev.adatum.com) -dscResourceList $dscResourceList -sqlFilePath $sqlFilePath -ssmsFilePath $ssmsFilePath -ConfigurationData $ConfigDataPath
+sqlCnfgInstallPushSql03 -OutputPath $sqlMofPath -sqlCredential (Get-Credential -Message "Enter password for:" -UserName svc.sql.user@dev.adatum.com) -dscResourceList $dscResourceList -sqlFilePath $sqlFilePath -ssmsFilePath $ssmsFilePath -ConfigurationData $ConfigDataPath
 
 # 10. Configure target LCM
 Set-DscLocalConfigurationManager -Path $sqlMofPath -Verbose -Force
