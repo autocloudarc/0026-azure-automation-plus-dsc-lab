@@ -328,7 +328,7 @@ ForEach ($targetNode in $targetNodes)
         {
             Write-Output "Copying DSC resources from local system to remote target..."
             # TASK-ITEM: Remove WhatIf for release
-            Copy-Item -Path $targetModulePath -Destination $uncTargetPath -Recurse -Verbose -WhatIf
+            Copy-Item -Path $targetModulePath -Destination $uncTargetPath -Recurse -Verbose
         } # end if
     } # end for
 
@@ -364,6 +364,6 @@ sqlCnfgInstallPush03 -OutputPath $sqlMofPath -sqlCredential (Get-Credential -Mes
 Set-DscLocalConfigurationManager -Path $sqlMofPath -Verbose -Force
 
 # 11. Apply configuration to target
-Start-DscConfiguration -Path $sqlMofPath -ComputerName $targetNode -Wait -Verbose -WhatIf
+Start-DscConfiguration -Path $sqlMofPath -ComputerName $targetNode -Wait -Verbose
 
 #endregion
