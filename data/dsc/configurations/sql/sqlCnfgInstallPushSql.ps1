@@ -196,7 +196,7 @@ Configuration sqlCnfgInstallPush03
         File DataPath
         {
             Ensure = $ensure
-            DestinationPath = $node.SQLUserDBDir
+            DestinationPath = "$($node.SQLUserDBDir)"
             Type = 'Directory'
             DependsOn = "[xDisk]ConfigureDataDisk"
         } # end resource
@@ -204,7 +204,7 @@ Configuration sqlCnfgInstallPush03
         File LogsPath
         {
             Ensure = $ensure
-            DestinationPath = $node.SQLUserDBLogDir
+            DestinationPath = "$($node.SQLUserDBLogDir)"
             Type = 'Directory'
             DependsOn = "[xDisk]ConfigureLogsDisk"
         } # end resource
@@ -212,7 +212,7 @@ Configuration sqlCnfgInstallPush03
         File TempPath
         {
             Ensure = $ensure
-            DestinationPath = $node.SQLTempDBDir
+            DestinationPath = "$($node.SQLTempDBDir)"
             Type = 'Directory'
             DependsOn = "[xDisk]ConfigureTempDisk"
         } # end resource
@@ -220,7 +220,7 @@ Configuration sqlCnfgInstallPush03
         File MstrPath
         {
             Ensure = $ensure
-            DestinationPath = $node.sqlinstalldatadir
+            DestinationPath = "$($node.sqlinstalldatadir)"
             Type = 'Directory'
             DependsOn = "[xDisk]ConfigureMstrDisk"
         } # end resource
@@ -228,7 +228,7 @@ Configuration sqlCnfgInstallPush03
         File BckpPath 
         {
             Ensure = $ensure
-            DestinationPath = $node.SQLBackupDir 
+            DestinationPath = "$($node.SQLBackupDir)"
             Type = 'Directory'
         } # end resource
 
