@@ -1,7 +1,7 @@
 ﻿@{
     AllNodes = @(
         @{
-            NodeName = '*'
+            NodeName = 'cltsql1003.dev.adatum.com'
             fqdn = 'dev.adatum.com'
             DomainName = 'dev'
             retryCount = 3
@@ -38,8 +38,10 @@
             sqlFeatures = "SQLENGINE"
             sqlSysAdminAccounts = "Administrators"
          } # end node
+         <#
         @{
             NodeName = 'cltsql1003.dev.adatum.com'
-         } # end hashtable
+         } # end node
+         #>
     ) # end array
 } # end hashtable
