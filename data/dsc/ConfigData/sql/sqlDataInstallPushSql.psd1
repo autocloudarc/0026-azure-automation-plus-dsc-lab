@@ -48,7 +48,7 @@
          } # end hashtable
          #>
         @{
-            NodeName = 'azrsql1003.dev.adatum.com'
+            NodeName = 'cltsql1003.dev.adatum.com'
          } # end hashtable
     ) # end array
 } # end hashtable
