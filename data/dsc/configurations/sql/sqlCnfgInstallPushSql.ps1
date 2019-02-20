@@ -358,7 +358,7 @@ ForEach ($targetNode in $targetNodes)
 
 # 9. Complile configuration
 # TASK-ITEM: Change the configuration name here to match the configuration name above [after the 'Configuration keyword']
-sqlCnfgInstallPushSql03 -OutputPath $sqlMofPath -sqlCredential (Get-Credential -Message "Enter password for:" -UserName svc.sql.user@dev.adatum.com) -dscResourceList $dscResourceList -sqlFilePath $sqlFilePath -ssmsFilePath $ssmsFilePath -ConfigurationData $ConfigDataPath
+sqlCnfgInstallPush03 -OutputPath $sqlMofPath -sqlCredential (Get-Credential -Message "Enter password for:" -UserName svc.sql.user@dev.adatum.com) -dscResourceList $dscResourceList -sqlFilePath $sqlFilePath -ssmsFilePath $ssmsFilePath -ConfigurationData $ConfigDataPath
 
 # 10. Configure target LCM
 Set-DscLocalConfigurationManager -Path $sqlMofPath -Verbose -Force
