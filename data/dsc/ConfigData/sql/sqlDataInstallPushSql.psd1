@@ -37,16 +37,7 @@
             instanceName = "MSSQLSERVER"
             sqlFeatures = "SQLENGINE"
             sqlSysAdminAccounts = "Administrators"
-
          } # end node
-         <#
-        @{
-            NodeName = 'azrsql1001.dev.adatum.com'
-         } # end hashtable
-        @{
-            NodeName = 'azrsql1002.dev.adatum.com'
-         } # end hashtable
-         #>
         @{
             NodeName = 'cltsql1003.dev.adatum.com'
          } # end hashtable
