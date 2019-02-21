@@ -283,6 +283,7 @@ Configuration sqlCnfgInstallPush03
         # TASK-ITEM add SMSS installation
         # https://powershell.org/forums/topic/installing-an-exe-with-powershell-dsc-package-resource-gets-return-code-1619/
         # https://sqlwhisper.wordpress.com/2016/06/05/install-ssms-from-command-prompt/
+        # https://www.msigeek.com/715/how-to-troubleshoot-the-error-1603-fatal-error-during-installation
 
         Package "SMSS"
         {
