@@ -60,13 +60,16 @@ DevOps Engineer
 Active Directory Engineer
 
 .FUNCTIONALITY
-Configures a member server as a new domain controler in an existing domain.
+Configures a member server as a new sql server in an existing domain.
 #>
 
 # 1. Pre-installation task for the OS
 # Set the source installation path for SQL 2016 developer edition
+$targetSqlServer = "cltsql1003.dev.adatum.com"
 
-$sqlInstallPath = "\\cltdev1001.dev.adatum.com\apps\sql\SqlServer2016x64"
+$sqlInstallPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-apps\sql\SqlServer2016x64"
+$targetDirRemote = $sqlInstallPath | Split-Path -leaf
+$testTargetPath = "\\" + $targetSqlServer + "\c$\" + $targetDirRemote
 $sqlFileName = "setup.exe"
 $ssmsInstallPath = "\\cltdev1001.dev.adatum.com\apps\sql"
 # $isoFileName = "en_sql_server_2016_developer_with_service_pack_1_x64_dvd_9548071.iso"
@@ -75,9 +78,18 @@ $ssmsFileName = "SSMS-Setup-ENU.exe"
 # $localInstallPath = "c:\sql2016"
 $ssmsFilePath = Join-Path -Path $ssmsInstallPath -ChildPath $ssmsFileName -Verbose
 $sqlFilePath = Join-Path -Path $sqlInstallPath -ChildPath $sqlFileName -Verbose
+$sqlFilePathTarget = "C:\"
+
+# 1.1 Copy installation files to target
+$targetSession = New-PSSession -ComputerName $targetSqlServer
+if (-not(Test-Path -Path $testTargetPath))
+{
+    Copy-Item -ToSession $targetSession -Path $sqlInstallPath -Destination $sqlFilePathTarget -Recurse
+} # end if
+Remove-PSSession -Session $targetSession 
 
 # 2. Add modules
-$moduleList = "dbatools","SqlServer","SqlServerDsc"
+$moduleList = "dbatools","SqlServer","SqlServerDsc","xStorage","xPendingReboot","xComputerManagement"
 # 3. Trust PowerShell Gallery for downloading and installing modules
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 $targetUserOU = "OU=service,OU=accounts,DC=dev,DC=adatum,DC=com"
@@ -160,7 +172,7 @@ Configuration sqlCnfgInstallPush03
             Name = "Failover-Clustering"
             DependsOn = "[WindowsFeature]NET-Framework-45-core"
         } # end resource
-
+        
 		xDisk ConfigureDataDisk
 		{
 			DiskId = $node.dataDiskNumber
@@ -191,12 +203,14 @@ Configuration sqlCnfgInstallPush03
 			DriveLetter = $node.mstrDiskDriveLetter
             FSFormat = $node.FSFormat
             FSLabel = $node.mstrFSLabel
-		} # end resource
+        } # end resource
 
         File DataPath
-        {
+        {          
             Ensure = $ensure
-            DestinationPath = $node.SQLUserDBDir
+            # DestinationPath = $node.SQLUserDBDir
+            # DestinationPath = "s:\data"
+            DestinationPath = "$($node.SQLUserDBDir)"
             Type = 'Directory'
             DependsOn = "[xDisk]ConfigureDataDisk"
         } # end resource
@@ -204,7 +218,9 @@ Configuration sqlCnfgInstallPush03
         File LogsPath
         {
             Ensure = $ensure
-            DestinationPath = $node.SQLUserDBLogDir
+            # DestinationPath = $node.SQLUserDBLogDir
+            # DestinationPath = "l:\logs"
+            DestinationPath = "$($node.SQLUserDBLogDir)"
             Type = 'Directory'
             DependsOn = "[xDisk]ConfigureLogsDisk"
         } # end resource
@@ -212,7 +228,9 @@ Configuration sqlCnfgInstallPush03
         File TempPath
         {
             Ensure = $ensure
-            DestinationPath = $node.SQLTempDBDir
+            # DestinationPath = $node.SQLTempDBDir
+            # DestinationPath = "t:\temp"
+            DestinationPath = "$($node.SQLTempDBDir)"
             Type = 'Directory'
             DependsOn = "[xDisk]ConfigureTempDisk"
         } # end resource
@@ -220,7 +238,9 @@ Configuration sqlCnfgInstallPush03
         File MstrPath
         {
             Ensure = $ensure
-            DestinationPath = $node.sqlinstalldatadir
+            # DestinationPath = $node.sqlinstalldatadir
+            # DestinationPath = "m:\mstr"
+            DestinationPath = "$($node.InstallSQLDataDir)"
             Type = 'Directory'
             DependsOn = "[xDisk]ConfigureMstrDisk"
         } # end resource
@@ -228,7 +248,9 @@ Configuration sqlCnfgInstallPush03
         File BckpPath 
         {
             Ensure = $ensure
-            DestinationPath = $node.SQLBackupDir
+            # DestinationPath = $node.SQLBackupDir
+            # DestinationPath = "c:\bckp"
+            DestinationPath = "$($node.SQLBackupDir)"
             Type = 'Directory'
         } # end resource
 
