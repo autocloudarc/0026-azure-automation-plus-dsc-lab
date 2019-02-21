@@ -1,7 +1,7 @@
 ﻿@{
     AllNodes = @(
         @{
-            NodeName = 'cltsql1003.dev.adatum.com'
+            NodeName = '*'
             fqdn = 'dev.adatum.com'
             DomainName = 'dev'
             retryCount = 3
@@ -9,10 +9,10 @@
             PSDscAllowPlainTextPassword=$true
             PsDscAllowDomainUser = $true
             FSFormat = 'NTFS'
-            dataDiskNumber = '2'
-            logsDiskNumber = '3'
-            tempDiskNumber = '4'
-            mstrDiskNumber = '5'
+            dataDiskNumber = '1'
+            logsDiskNumber = '2'
+            tempDiskNumber = '3'
+            mstrDiskNumber = '4'
             dataFsLabel = "data"
             logsFsLabel = "logs"
             tempFsLabel = "temp"
@@ -33,15 +33,13 @@
             InstallSQLDataDir = "m:\mstr"
             SQLBackupDir = "c:\bckp"
             role = "sql"
-            installFromPath = "C:\sql2016"
+            installFromPath = "C:\SqlServer2016x64"
             instanceName = "MSSQLSERVER"
             sqlFeatures = "SQLENGINE"
             sqlSysAdminAccounts = "Administrators"
          } # end node
-         <#
         @{
             NodeName = 'cltsql1003.dev.adatum.com'
          } # end node
-         #>
     ) # end array
 } # end hashtable
