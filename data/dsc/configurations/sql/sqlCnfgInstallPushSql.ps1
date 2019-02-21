@@ -100,10 +100,15 @@ If (-not(Get-WindowsFeature -Name RSAT-AD-PowerShell).InstallState)
     Install-WindowsFeature -Name RSAT-AD-PowerShell
 } # end if
 
+$adDomainObject = Get-ADDomain
 # Get DNS root for server parameter
-$adsServer = (Get-ADDomain).DnsRoot
+$adsServer = $adDomainObject.DnsRoot
 # Find target SQL service account
 $targetSqlUser = (Get-ADUser -Filter { SamAccountName -eq 'svc.sql.user' } -SearchBase $targetUserOU -server $adsServer).SamAccountName
+# Construct NETBIOS format for username
+$nbDomainName = $adDomainObject.NetBIOSName 
+$targetSqlUserNetBIOS = ($nbDomainName, $targetSqlUser -join "\").ToLower()
+
 # Write-Debug "$targetSqlUser `t $targetSqlSamAccountName" -Debug
 # Abort if SQL service accout isn't found
 If (-not($targetSqlUser))
@@ -133,7 +138,9 @@ Configuration sqlCnfgInstallPush03
 	Param
 	(
         [Parameter(Mandatory=$true)]
-        [pscredential]$sqlCredentials,
+        [pscredential]$sqlCredential,
+        [Parameter(Mandatory=$true)]
+        [pscredential]$adminCredential,
         [Parameter(Mandatory=$true)]
         [string[]]$dscResourceList,
         [string]$ensure = "present",
@@ -143,8 +150,8 @@ Configuration sqlCnfgInstallPush03
         [string]$ssmsFilePath
 	) # end param
 
-    # Convert domainAdminCreds to netbios domainAdminCred format [NETBIOSdomainname\username]
-    $domainUserUpn = $sqlCredenitals.UserName
+    # Convert $sqlCredentials to NetBIOS format [NETBIOSdomainname\username]
+    $domainSqlUserNetBIOS = $sqlCredenital.UserName
 
     Install-PackageProvider -Name NuGet -Force
 	Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
@@ -233,7 +240,7 @@ Configuration sqlCnfgInstallPush03
             DestinationPath = "$($node.SQLTempDBDir)"
             Type = 'Directory'
             DependsOn = "[xDisk]ConfigureTempDisk"
-        } # end resource
+            } # end resource
 
         File MstrPath
         {
@@ -256,27 +263,32 @@ Configuration sqlCnfgInstallPush03
 
         # Add SQL service account to local adminstrators group
         # TASK-ITEM: This is a non-priviledged domain user account that must have already been provisioned
+        # https://docs.microsoft.com/en-us/powershell/dsc/resources/resources
+        # https://blogs.msdn.microsoft.com/brian_farnhill/2017/07/04/getting-ids-to-use-with-the-package-dsc-resource/
+
         Group AddSqlUserToAdmins
         {
-            GroupName = $node.sqlSysAdminAccounts
+            GroupName = "$($node.sqlSysAdminAccounts)"
             Ensure = $ensure
-            MembersToInclude = @($domainUserUpn)
+            MembersToInclude = @($domainSqlUserNetBIOS)
             Description = "SQL domain level service account"
+            Credential = $adminCredential
+            PsDscRunAsCredential = $adminCredential
         } # end resource
 
         SqlSetup "InstallDefaultInstance"
         {
-            InstanceName        = $node.instanceName
-            Features            = $node.sqlFeatures
-            SourcePath          = $node.InstallFromPath
-            SQLSysAdminAccounts = $node.sqlSysAdminAccounts
-            SqlSvcStartupType = $node.SqlSvcStartupType
-            SQLUserDBDir = $node.SQLUserDBDir
-            SQLUserDBLogDir = $node.SQLUserDBLogDir
-            SQLTempDBDir = $node.SQLTempDBDir
-            SQLTempDBLogDir = $node.SQLTempDBLogDir
-            InstallSQLDataDir = $node.InstallSQLDataDir
-            SQLBackupDir = $node.SQLUserDBDir
+            InstanceName        = "$($node.instanceName)"
+            Features            = "$($node.sqlFeatures)"
+            SourcePath          = "$($node.InstallFromPath)"
+            SQLSysAdminAccounts = "$($node.sqlSysAdminAccounts)"
+            SqlSvcStartupType = "$($node.SqlSvcStartupType)"
+            SQLUserDBDir = "$($node.SQLUserDBDir)"
+            SQLUserDBLogDir = "$($node.SQLUserDBLogDir)"
+            SQLTempDBDir = "$($node.SQLTempDBDir)"
+            SQLTempDBLogDir = "$($node.SQLTempDBLogDir)"
+            InstallSQLDataDir = "$($node.InstallSQLDataDir)"
+            SQLBackupDir = "$($node.SQLUserDBDir)"
             DependsOn = "[Group]AddSqlUserToAdmins"
         } # end resource
 
@@ -382,7 +394,9 @@ ForEach ($targetNode in $targetNodes)
 
 # 9. Complile configuration
 # TASK-ITEM: Change the configuration name here to match the configuration name above [after the 'Configuration keyword']
-sqlCnfgInstallPush03 -OutputPath $sqlMofPath -sqlCredential (Get-Credential -Message "Enter password for:" -UserName svc.sql.user@dev.adatum.com) -dscResourceList $dscResourceList -sqlFilePath $sqlFilePath -ssmsFilePath $ssmsFilePath -ConfigurationData $ConfigDataPath
+$sqlCred = (Get-Credential -Message "Enter password for:" -UserName $targetSqlUserNetBIOS)
+$daCred = Get-Credential -Message "Enter domain or target server administrative username and password using the format: $nbDomainName\<adminUserName>"
+sqlCnfgInstallPush03 -OutputPath $sqlMofPath -sqlCredential $sqlCred -adminCredential $daCred -dscResourceList $dscResourceList -sqlFilePath $sqlFilePath -ssmsFilePath $ssmsFilePath -ConfigurationData $ConfigDataPath
 
 # 10. Configure target LCM
 Set-DscLocalConfigurationManager -Path $sqlMofPath -Verbose -Force
@@ -390,4 +404,5 @@ Set-DscLocalConfigurationManager -Path $sqlMofPath -Verbose -Force
 # 11. Apply configuration to target
 Start-DscConfiguration -Path $sqlMofPath -ComputerName $targetNode -Wait -Verbose -Force
 
+Restart-Computer -ComputerName $targetSqlServer -Wait -Verbose
 #endregion
