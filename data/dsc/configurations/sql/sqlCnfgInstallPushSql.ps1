@@ -303,6 +303,8 @@ Configuration sqlCnfgInstallPush03
             Ensure = $ensure
             Features = "$($node.sqlFeatures)"
             InstanceName = "$($node.instanceName)"
+            SourcePath = "$($node.InstallFromPathRemote)"
+            SourceCredential = $adminCredential
             DependsOn = @("[SqlSetup]InstallDefaultInstance")
         } # end resource
 
@@ -321,13 +323,14 @@ Configuration sqlCnfgInstallPush03
         # https://powershell.org/forums/topic/installing-an-exe-with-powershell-dsc-package-resource-gets-return-code-1619/
         # https://sqlwhisper.wordpress.com/2016/06/05/install-ssms-from-command-prompt/
         # https://www.msigeek.com/715/how-to-troubleshoot-the-error-1603-fatal-error-during-installation
+        # https://blogs.msdn.microsoft.com/brian_farnhill/2017/07/04/getting-ids-to-use-with-the-package-dsc-resource/
 
         Package "SMSS"
         {
             Ensure = $ensure
             Name = "SMSS"
             Path = $ssmsFilePath
-            ProductId = ""
+            ProductId = "91a1b895-c621-4038-b34a-01e7affbcb6b"
             Arguments = '/Install /quiet /norestart' 
             LogPath = 'c:\Windows\Temp\log.txt'
             DependsOn = "[SqlSetup]InstallDefaultInstance"
@@ -429,5 +432,5 @@ Set-DscLocalConfigurationManager -Path $sqlMofPath -Verbose -Force
 # 11. Apply configuration to target
 Start-DscConfiguration -Path $sqlMofPath -ComputerName $targetNode -Wait -Verbose -Force
 
-Restart-Computer -ComputerName $targetSqlServer -Wait -Verbose -Force
+# Restart-Computer -ComputerName $targetSqlServer -Wait -Verbose -Force
 #endregion
