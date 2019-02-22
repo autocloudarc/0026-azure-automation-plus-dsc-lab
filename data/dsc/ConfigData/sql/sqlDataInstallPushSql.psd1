@@ -43,6 +43,7 @@
          } # end node
         @{
             NodeName = 'cltsql1003.dev.adatum.com'
+            hostname = 'cltsql1003'
          } # end node
     ) # end array
 } # end hashtable
