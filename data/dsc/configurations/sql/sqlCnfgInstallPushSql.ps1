@@ -104,6 +104,9 @@ $adDomainObject = Get-ADDomain
 $adsServer = $adDomainObject.DnsRoot
 # Find target SQL service account
 $targetSqlUser = (Get-ADUser -Filter { SamAccountName -eq 'svc.sql.user' } -SearchBase $targetUserOU -server $adsServer).SamAccountName
+# Construct NETBIOS format for username 
+$nbDomainName = $adDomainObject.NetBIOSName  
+$targetSqlUserNetBIOS = ($nbDomainName, $targetSqlUser -join "\").ToLower()
 
 # Write-Debug "$targetSqlUser `t $targetSqlSamAccountName" -Debug
 # Abort if SQL service accout isn't found
@@ -147,7 +150,7 @@ Configuration sqlCnfgInstallPush03
 	) # end param
 
     # Convert $sqlCredentials to NetBIOS format [NETBIOSdomainname\username]
-    # $domainSqlUserNetBIOS = $sqlCredenital.UserName
+    # $domainSqlUserNetBIOS = $sqlCredential.UserName
 
     Install-PackageProvider -Name NuGet -Force
 	Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
@@ -295,15 +298,23 @@ Configuration sqlCnfgInstallPush03
         } # end resource
 
         # https://enterinit.com/sql-server-2016-windows-server-2016-firewall-rule-step-by-step/
+        SqlWindowsFirewall SqlFwRules 
+        {
+            Ensure = $ensure
+            Features = "$($node.sqlFeatures)"
+            InstanceName = "$($node.instanceName)"
+            DependsOn = @("[SqlSetup]InstallDefaultInstance")
+        } # end resource
+
         SqlServerLogin ServiceAccount
         {
             Ensure = $ensure 
             InstanceName = "$($node.instanceName)"
-            ServerName = $targetSqlServer
+            ServerName = "$($node.NodeName)"
             Name = "$($node.SqlServiceAccount)"
             LoginType = "$($node.loginType)"
             PsDscRunAsCredential = $adminCredential
-            DependsOn = "[SqlSetup]InstallDefaultInstance"
+            DependsOn = @("[SqlWindowsFirewall]SqlFwRules")
         } # end resource
 
         # TASK-ITEM add SMSS installation
