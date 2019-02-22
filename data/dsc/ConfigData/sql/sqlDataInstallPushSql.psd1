@@ -34,6 +34,7 @@
             SQLBackupDir = "c:\bckp"
             role = "sql"
             installFromPath = "C:\SqlServer2016x64"
+            installFromPathRemote = "\\cltdev1001\apps\sql\SqlServer2016x64"
             instanceName = "MSSQLSERVER"
             sqlFeatures = "SQLENGINE"
             sqlSysAdminAccounts = "Administrators"
