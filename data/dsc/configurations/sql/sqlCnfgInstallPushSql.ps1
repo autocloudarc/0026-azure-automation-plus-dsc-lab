@@ -312,7 +312,7 @@ Configuration sqlCnfgInstallPush03
         {
             Ensure = $ensure 
             InstanceName = "$($node.instanceName)"
-            ServerName = "$($node.NodeName)"
+            ServerName = "$($node.hostname)"
             Name = "$($node.SqlServiceAccount)"
             LoginType = "$($node.loginType)"
             PsDscRunAsCredential = $adminCredential
