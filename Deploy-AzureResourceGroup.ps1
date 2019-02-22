@@ -108,11 +108,11 @@ Connect-AzureRmAccount
 Do
 {
     # Subscription name
-	(Get-AzureRmSubscription).Name
+	(Get-AzSubscription).Name
 	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
 	$Subscription = $Subscription.ToUpper()
 } #end Do
-Until (Select-AzContext -Subscription $Subscription)
+Until (Set-AzContext -Subscription $Subscription)
 
 Do
 {
@@ -142,7 +142,7 @@ Until ($region -in $regions)
 
 New-AzureRmResourceGroup -Name $rg -Location $region -Verbose
 
-$templateUri = "https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json"
+$templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
@@ -156,14 +156,14 @@ While (-not((Get-AzureRmStorageAccountNameAvailability -Name $studentRandomInfix
 
 $parameters = @{}
 $parameters.Add("studentNumber", $studentNumber)
-$parameters.Add(“adminUserName”, $adminUserName)
-$parameters.Add(“adminPassword”, $adminPassword)
-$parameters.Add(“studentRandomInfix”, $studentRandomInfix)
+$parameters.Add("adminUserName", $adminUserName)
+$parameters.Add("adminPassword", $adminPassword)
+$parameters.Add("studentRandomInfix", $studentRandomInfix)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
-New-AzResourceGroupDeployment -Name $rgDeployment `
--ResourceGroupName $rg `
+New-AzResourceGroupDeployment -ResourceGroupName $rg `
 -TemplateFile $templateUri `
+-Name $rgDeployment `
 -TemplateParameterObject $parameters `
 -Force -Verbose `
 -ErrorVariable ErrorMessages
