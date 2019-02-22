@@ -11,6 +11,9 @@ Desktop.ini
 # MOF files
 *.mof
 
+# ERROR files
+*.error
+
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
