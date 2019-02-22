@@ -37,6 +37,8 @@
             instanceName = "MSSQLSERVER"
             sqlFeatures = "SQLENGINE"
             sqlSysAdminAccounts = "Administrators"
+            sqlServiceAccount = "dev\svc.sql.user"
+            loginType = "WindowsUser"
          } # end node
         @{
             NodeName = 'cltsql1003.dev.adatum.com'

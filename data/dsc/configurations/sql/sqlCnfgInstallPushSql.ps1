@@ -47,8 +47,6 @@ This posting is provided "AS IS" with no warranties, and confers no rights.
 2. https://colinsalmcorner.com/post/install-and-configure-sql-server-using-powershell-dsc
 3. Getting Started with PowerShell DSC: Securing domainAdminCreds in MOF Files | packtpub.com: https://youtu.be/2nsCQ32Ufx0
 4. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
-5. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
-6. https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
 .COMPONENT
 Windows PowerShell Desired State Configuration, ActiveDirectory
 
@@ -81,6 +79,7 @@ $sqlFilePath = Join-Path -Path $sqlInstallPath -ChildPath $sqlFileName -Verbose
 $sqlFilePathTarget = "C:\"
 
 # 1.1 Copy installation files to target
+
 $targetSession = New-PSSession -ComputerName $targetSqlServer
 if (-not(Test-Path -Path $testTargetPath))
 {
@@ -105,9 +104,6 @@ $adDomainObject = Get-ADDomain
 $adsServer = $adDomainObject.DnsRoot
 # Find target SQL service account
 $targetSqlUser = (Get-ADUser -Filter { SamAccountName -eq 'svc.sql.user' } -SearchBase $targetUserOU -server $adsServer).SamAccountName
-# Construct NETBIOS format for username
-$nbDomainName = $adDomainObject.NetBIOSName 
-$targetSqlUserNetBIOS = ($nbDomainName, $targetSqlUser -join "\").ToLower()
 
 # Write-Debug "$targetSqlUser `t $targetSqlSamAccountName" -Debug
 # Abort if SQL service accout isn't found
@@ -151,7 +147,7 @@ Configuration sqlCnfgInstallPush03
 	) # end param
 
     # Convert $sqlCredentials to NetBIOS format [NETBIOSdomainname\username]
-    $domainSqlUserNetBIOS = $sqlCredenital.UserName
+    # $domainSqlUserNetBIOS = $sqlCredenital.UserName
 
     Install-PackageProvider -Name NuGet -Force
 	Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
@@ -265,23 +261,28 @@ Configuration sqlCnfgInstallPush03
         # TASK-ITEM: This is a non-priviledged domain user account that must have already been provisioned
         # https://docs.microsoft.com/en-us/powershell/dsc/resources/resources
         # https://blogs.msdn.microsoft.com/brian_farnhill/2017/07/04/getting-ids-to-use-with-the-package-dsc-resource/
+        # http://itproguru.com/expert/2014/09/how-to-fix-login-failed-for-user-microsoft-sql-server-error-18456-step-by-step-add-sql-administrator-to-sql-management-studio/
 
+        # TASK-ITEM: comment out to test adding sql service account via Add-LocalGroupMember cmdlet
         Group AddSqlUserToAdmins
         {
             GroupName = "$($node.sqlSysAdminAccounts)"
             Ensure = $ensure
-            MembersToInclude = @($domainSqlUserNetBIOS)
+            MembersToInclude = @("$($node.SqlServiceAccount)")
             Description = "SQL domain level service account"
             Credential = $adminCredential
             PsDscRunAsCredential = $adminCredential
         } # end resource
 
+        # https://github.com/PowerShell/SqlServerDsc#sqlsetup
+        # https://chrislumnah.com/2017/03/07/dsc-install-of-sql-server/
+
         SqlSetup "InstallDefaultInstance"
         {
-            InstanceName        = "$($node.instanceName)"
-            Features            = "$($node.sqlFeatures)"
-            SourcePath          = "$($node.InstallFromPath)"
-            SQLSysAdminAccounts = "$($node.sqlSysAdminAccounts)"
+            InstanceName = "$($node.instanceName)"
+            Features = "$($node.sqlFeatures)"
+            SourcePath = "$($node.InstallFromPath)"
+            SQLSysAdminAccounts = @("$($node.SqlServiceAccount)")
             SqlSvcStartupType = "$($node.SqlSvcStartupType)"
             SQLUserDBDir = "$($node.SQLUserDBDir)"
             SQLUserDBLogDir = "$($node.SQLUserDBLogDir)"
@@ -289,7 +290,20 @@ Configuration sqlCnfgInstallPush03
             SQLTempDBLogDir = "$($node.SQLTempDBLogDir)"
             InstallSQLDataDir = "$($node.InstallSQLDataDir)"
             SQLBackupDir = "$($node.SQLUserDBDir)"
-            DependsOn = "[Group]AddSqlUserToAdmins"
+            ForceReboot = $false
+            DependsOn = @("[File]MstrPath","[File]TempPath","[File]LogsPath","[File]DataPath","[Group]AddSqlUserToAdmins")
+        } # end resource
+
+        # https://enterinit.com/sql-server-2016-windows-server-2016-firewall-rule-step-by-step/
+        SqlServerLogin ServiceAccount
+        {
+            Ensure = $ensure 
+            InstanceName = "$($node.instanceName)"
+            ServerName = $targetSqlServer
+            Name = "$($node.SqlServiceAccount)"
+            LoginType = "$($node.loginType)"
+            PsDscRunAsCredential = $adminCredential
+            DependsOn = "[SqlSetup]InstallDefaultInstance"
         } # end resource
 
         # TASK-ITEM add SMSS installation
@@ -404,5 +418,5 @@ Set-DscLocalConfigurationManager -Path $sqlMofPath -Verbose -Force
 # 11. Apply configuration to target
 Start-DscConfiguration -Path $sqlMofPath -ComputerName $targetNode -Wait -Verbose -Force
 
-Restart-Computer -ComputerName $targetSqlServer -Wait -Verbose
+Restart-Computer -ComputerName $targetSqlServer -Wait -Verbose -Force
 #endregion
