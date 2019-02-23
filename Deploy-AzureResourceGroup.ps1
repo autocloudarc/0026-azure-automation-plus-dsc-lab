@@ -100,7 +100,7 @@ ElseIf (-not(Get-InstalledModule -Name "Az"))
 } # ElseIf
 
 # Connect to Azure
-Connect-AzureRmAccount
+Connect-AzAccount
 
 # Allowable student numbers
 [int[]]$studentNumEnum = 0..16
@@ -127,7 +127,7 @@ Until (([int]$studentNumber) -in [int[]]$studentNumEnum)
 Do
 {
     # The location refers to a geographic region of an Azure data center
-    $regions = Get-AzureRmLocation | Select-Object -ExpandProperty Location
+    $regions = Get-AzLocation | Select-Object -ExpandProperty Location
     Write-Output "The list of available regions are :"
     Write-Output ""
     Write-Output $regions
@@ -140,7 +140,7 @@ Do
 } #end Do
 Until ($region -in $regions)
 
-New-AzureRmResourceGroup -Name $rg -Location $region -Verbose
+New-AzResourceGroup -Name $rg -Location $region -Verbose
 
 $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
 $adminUserName = "adm.infra.user"
@@ -152,7 +152,7 @@ Do
 {
     $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 } #end while
-While (-not((Get-AzureRmStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
+While (-not((Get-AzStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
 
 $parameters = @{}
 $parameters.Add("studentNumber", $studentNumber)
@@ -174,7 +174,7 @@ if ($ErrorMessages)
 else
 {
     $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
-    $fqdnDev = (Get-AzureRmPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
+    $fqdnDev = (Get-AzPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
 
     $StopTimer = Get-Date -Verbose
     Write-Output "Calculating elapsed time..." -Log $Log
