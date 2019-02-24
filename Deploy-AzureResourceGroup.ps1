@@ -127,7 +127,7 @@ Login-AzureRMAccount
 Do
 {
     # Subscription name
-	(Get-AzSubscription).Name
+	(Get-AzureRMSubscription).Name
 	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
 	$Subscription = $Subscription.ToUpper()
 } #end Do
