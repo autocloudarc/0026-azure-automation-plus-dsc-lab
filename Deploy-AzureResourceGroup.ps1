@@ -131,7 +131,7 @@ Do
 	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
 	$Subscription = $Subscription.ToUpper()
 } #end Do
-Until (Set-AzureRmSubscription -Subscription $Subscription)
+Until (Select-AzureRmSubscription -Subscription $Subscription)
 
 Do
 {
