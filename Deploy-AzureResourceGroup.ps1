@@ -99,7 +99,7 @@ ElseIf ((Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyCo
         Get-PSGalleryModule -ModulesToInstall $azurePreferredModule
     } # end if
 } # end elseif
-ElseIf (Get-InstalledModule -Name $azureNonPreferredModule)
+ElseIf (Get-InstalledModule -Name $azureNonPreferredModule -ErrorAction SilentlyContinue)
 {
     # Get required Az modules from PowerShellGallery.com.
     Write-Output "As of 24FEB2019, the $azureNonPreferredModule module is not supported for this deployment due to the following error condition"
