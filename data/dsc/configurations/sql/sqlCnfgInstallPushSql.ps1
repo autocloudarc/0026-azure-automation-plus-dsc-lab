@@ -66,11 +66,10 @@ Configures a member server as a new sql server in an existing domain.
 
 # 1. Pre-installation task for the OS
 # Set the source installation path for SQL 2016 developer edition
-$targetSqlServer = "cltsql1003.dev.adatum.com"
+$targetSqlServers = "cltsql1003.dev.adatum.com","cltsql1001.dev.adatum.com"
 
 $sqlInstallPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-apps\sql\SqlServer2016x64"
 $targetDirRemote = $sqlInstallPath | Split-Path -leaf
-$testTargetPath = "\\" + $targetSqlServer + "\c$\" + $targetDirRemote
 $sqlFileName = "setup.exe"
 $ssmsInstallPath = "\\cltdev1001.dev.adatum.com\apps\sql"
 # $isoFileName = "en_sql_server_2016_developer_with_service_pack_1_x64_dvd_9548071.iso"
@@ -81,13 +80,18 @@ $ssmsFilePath = Join-Path -Path $ssmsInstallPath -ChildPath $ssmsFileName -Verbo
 $sqlFilePath = Join-Path -Path $sqlInstallPath -ChildPath $sqlFileName -Verbose
 $sqlFilePathTarget = "C:\"
 
-# 1.1 Copy installation files to target
-
-$targetSession = New-PSSession -ComputerName $targetSqlServer
-if (-not(Test-Path -Path $testTargetPath))
+ForEach ($targetSqlServer in $targetSqlServers)
 {
-    Copy-Item -ToSession $targetSession -Path $sqlInstallPath -Destination $sqlFilePathTarget -Recurse
-} # end if
+    $testTargetPath = "\\" + $targetSqlServer + "\c$\" + $targetDirRemote
+
+    # 1.1 Copy installation files to target
+
+    $targetSession = New-PSSession -ComputerName $targetSqlServer
+    if (-not(Test-Path -Path $testTargetPath))
+    {
+        Copy-Item -ToSession $targetSession -Path $sqlInstallPath -Destination $sqlFilePathTarget -Recurse
+    } # end if
+} # end foreach
 Remove-PSSession -Session $targetSession 
 
 # 2. Add modules
@@ -135,7 +139,7 @@ ForEach ($module in $moduleList)
 } # end for
 
 #region DSC Configuration
-Configuration sqlCnfgInstallPush03
+Configuration sqlCnfgInstallPushAllNodes
 {
 	Param
 	(
@@ -366,7 +370,8 @@ Direction: Inbound
 #>
 # 6. Select target node to configure by looking for the 01 series DC patter for dev.adatum.com the .. represents a 2 digit number that can vary by deployments
 # TASK-ITEM: Change the filter to match a specific node for demonstration, otherwise filter for multiple nodes to demonstrate multiple simultaneous configurations 
-$targetNodes = (Get-ADComputer -Filter *).DNSHostName | Where-Object {$_ -match 'cltsql1003'}
+# $targetNodes = (Get-ADComputer -Filter *).DNSHostName | Where-Object {$_ -match 'cltsql1003'}
+$targetNodes = $targetSqlServers
 # 7. Get list of resources required for this configuration so that can be copied to the target node
 $dscResourceList = @("xActiveDirectory", "xComputerManagement", "xStorage", "xPendingReboot", "sqlServerDsc")
 # TASK-ITEM: Create array of module paths to copy to each node
@@ -416,25 +421,26 @@ ForEach ($targetNode in $targetNodes)
     } # end scriptblock
     <#
     TASK-ITEM:
-        CAUTION; sqlCredentials will not be encrypted. To understand the requi rements and see demo for how to encrypt, see:
+        CAUTION; sqlCredentials will not be encrypted without using document encryption certificates installed on each node. 
+        To understand the requi rements and see demo for how to encrypt, see:
         Getting Started with PowerShell DSC: Securing sqlCredentials in MOF Files | packtpub.com
         https://youtu.be/2nsCQ32Ufx0
     #>
-    # Remove Session
-    Remove-PSSession -Session $targetNodeSession
 } # end foreach
+# Remove Session
+Remove-PSSession -Session $targetNodeSession
 
 # 9. Complile configuration
 # TASK-ITEM: Change the configuration name here to match the configuration name above [after the 'Configuration keyword']
 $sqlCred = (Get-Credential -Message "Enter password for:" -UserName $targetSqlUserNetBIOS)
 $daCred = Get-Credential -Message "Enter domain or target server administrative username and password using the format: $nbDomainName\<adminUserName>"
-sqlCnfgInstallPush03 -OutputPath $sqlMofPath -sqlCredential $sqlCred -adminCredential $daCred -dscResourceList $dscResourceList -sqlFilePath $sqlFilePath -ssmsFilePath $ssmsFilePath -ConfigurationData $ConfigDataPath
+sqlCnfgInstallPushAllNodes -OutputPath $sqlMofPath -sqlCredential $sqlCred -adminCredential $daCred -dscResourceList $dscResourceList -sqlFilePath $sqlFilePath -ssmsFilePath $ssmsFilePath -ConfigurationData $ConfigDataPath
 
 # 10. Configure target LCM
 Set-DscLocalConfigurationManager -Path $sqlMofPath -Verbose -Force
 
 # 11. Apply configuration to target
-Start-DscConfiguration -Path $sqlMofPath -ComputerName $targetNode -Wait -Verbose -Force
+Start-DscConfiguration -Path $sqlMofPath -ComputerName $targetNodes -Wait -Verbose -Force
 
 # Restart-Computer -ComputerName $targetSqlServer -Wait -Verbose -Force
 #endregion
