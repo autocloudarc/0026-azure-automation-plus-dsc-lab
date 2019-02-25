@@ -353,7 +353,7 @@ Configuration sqlCnfgInstallPush03
 # 4. Set MOF path
 $sqlMofPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\mof"
 # 5. Set ConfigData path
-$ConfigDataPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\ConfigData\sql\sqlDataInstallPushSql.psd1"
+$ConfigDataPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\ConfigData\sql\sqlDataInstallPushNode03.psd1"
 <#
 TASK-ITEM: Turn on print and file sharing (SMB-in) in group policies for target nodes using GROUP POLICY advanced firewall settings
 Scope: Computer node
