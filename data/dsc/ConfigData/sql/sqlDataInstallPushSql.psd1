@@ -44,6 +44,8 @@
         @{
             NodeName = 'cltsql1003.dev.adatum.com'
             hostname = 'cltsql1003'
+            CertificateFile = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-certs\eca\Request ID 11.cer"
+            Thumbprint = "DC1E9EB7DF9D3337561A9EC907F2E8710D05B66E"
          } # end node
     ) # end array
 } # end hashtable
