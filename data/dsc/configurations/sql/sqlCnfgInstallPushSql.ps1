@@ -8,6 +8,9 @@ Configure an SQL server using push DSC and an external configuration data file
 
 .DESCRIPTION
 This script includes a DSC configuration to build a set of SQL servers for an AlwaysOn AG cluster of 3 servers in an existing domain.
+To secure credentials, before running this script, import any document encyrption certificates from target nodes to the authoring server (where this script will be executed from).
+See 0026-azure-automation-plus-dsc-lab\data\scripts\Export-CACertificates.ps1 to export document certificate certificates with thumbprint and full path properties directly from your CA, then run the following command:
+Import-Certificate -FilePath <path\<certname.cer>> -CertStoreLocation cert:\LocalMachine\My
 
 .PARAMETER domainAdminCred
 Domain administrator username and password.
@@ -163,7 +166,8 @@ Configuration sqlCnfgInstallPush03
 			ConfigurationMode = 'ApplyAndAutoCorrect'
 			RebootNodeIfNeeded = $true
 			ActionAfterReboot = 'ContinueConfiguration'
-			AllowModuleOverwrite = $true
+            AllowModuleOverwrite = $true
+            CertificateID = $node.Thumbprint
 		} # end LCM
 
         WindowsFeature "NET-Framework-45-core"
