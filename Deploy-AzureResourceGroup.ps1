@@ -193,7 +193,7 @@ if ($ErrorMessages)
 else
 {
     $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
-    $fqdnDev = (Get-AzPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
+    $fqdnDev = (Get-AzureRMPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
 
     $StopTimer = Get-Date -Verbose
     Write-Output "Calculating elapsed time..." -Log $Log
