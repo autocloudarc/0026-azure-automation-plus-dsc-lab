@@ -53,13 +53,11 @@
             CertificateFile = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-certs\eca\Request ID 15.cer"
             Thumbprint = "4807B69B4C47311A7B437E127B6EE59820B4E2B3"
          } # end node
-         <#
          @{
             NodeName = 'cltsql1002.dev.adatum.com'
             hostname = 'cltsql1002'
             CertificateFile = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-certs\eca\Request ID 10.cer"
             Thumbprint = "7FE748522E299E193D8A3C641ACFBB9BC7108D05"
          } # end node
-         #>
     ) # end array
 } # end hashtable

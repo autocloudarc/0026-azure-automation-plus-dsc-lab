@@ -66,7 +66,7 @@ Configures a member server as a new sql server in an existing domain.
 
 # 1. Pre-installation task for the OS
 # Set the source installation path for SQL 2016 developer edition
-$targetSqlServers = "cltsql1003.dev.adatum.com","cltsql1001.dev.adatum.com"
+$targetSqlServers = "cltsql1003.dev.adatum.com","cltsql1001.dev.adatum.com", "cltsql1002.dev.adatum.com"
 
 $sqlInstallPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-apps\sql\SqlServer2016x64"
 $targetDirRemote = $sqlInstallPath | Split-Path -leaf
@@ -333,10 +333,10 @@ Configuration sqlCnfgInstallPushAllNodes
         # https://www.msigeek.com/715/how-to-troubleshoot-the-error-1603-fatal-error-during-installation
         # https://blogs.msdn.microsoft.com/brian_farnhill/2017/07/04/getting-ids-to-use-with-the-package-dsc-resource/
 
-        Package "SMSS"
+        Package "SSMS"
         {
             Ensure = $ensure
-            Name = "SMSS"
+            Name = "SSMS"
             Path = $ssmsFilePath
             ProductId = "91a1b895-c621-4038-b34a-01e7affbcb6b"
             Arguments = '/Install /quiet /norestart' 
@@ -347,7 +347,7 @@ Configuration sqlCnfgInstallPushAllNodes
         xPendingReboot Reboot1
         {
            Name = "RebootServer"
-           DependsOn = "[Package]SMSS"
+           DependsOn = "[Package]SSMS"
         } # end resource
 	} # end node
 } # end configuration
@@ -358,6 +358,7 @@ Configuration sqlCnfgInstallPushAllNodes
 $sqlMofPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\mof"
 # 5. Set ConfigData path
 $ConfigDataPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\ConfigData\sql\sqlDataInstallPushAllNodes.psd1"
+
 <#
 TASK-ITEM: Turn on print and file sharing (SMB-in) in group policies for target nodes using GROUP POLICY advanced firewall settings
 Scope: Computer node
