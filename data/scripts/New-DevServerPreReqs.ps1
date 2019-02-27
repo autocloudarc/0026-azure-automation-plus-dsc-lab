@@ -63,7 +63,7 @@ function Install-RequiredModules
 {
     [CmdletBinding()]
     # Get modules to install
-    $moduleList = @("xStorage","ActiveDirectoryCSDsc","CertificateDsc","xActiveDirectory","xComputerManagement","xPendingReboot","xPSDesiredStateConfiguration","xCertificate","xComputerManagement","xWebAdministration")
+    $moduleList = @("xStorage","ActiveDirectoryCSDsc","CertificateDsc","xActiveDirectory","xComputerManagement","xPendingReboot","xPSDesiredStateConfiguration","xCertificate","xWebAdministration")
     # Set installation policy for PSGallery to trusted. This will avoid prompts to proceed and install package managers
     Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -Verbose
     # Install pre-requiste modules to configure hard drive, and setup certificate services
