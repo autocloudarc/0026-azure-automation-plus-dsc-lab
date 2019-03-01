@@ -21,7 +21,12 @@ $password = $CredentialAsset.GetNetworkCredential().Password
  $ErrorActionPreference = "SilentlyContinue"
  # In addition to modules that have been imported into the Azure Automation Account, the specific resources used must also be imported from those modules for this configuration
  # Import-DscResource -ModuleName xPSDesiredStateConfiguration
- Import-DscResource -ModuleName PSDesiredStateConfiguration, xStorage, xActiveDirectory
+ # Separating each import on diffrent lines due to the error described at: https://github.com/PowerShell/PSDscResources/issues/43
+ # Error message is: Resource name 'WindowsPackageCab' is already being used by another Resource or Configuration
+ 
+ Import-DscResource -ModuleName PSDesiredStateConfiguration
+ Import-DscResource -ModuleName xStorage
+ Import-DscResource -ModuleName xActiveDirectory
 
  # Write-Verbose $ConfigData.NonNodeData.Message
 
