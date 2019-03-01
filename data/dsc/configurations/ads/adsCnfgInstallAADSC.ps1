@@ -2,7 +2,7 @@
 # https://blogs.msdn.microsoft.com/powershell/2014/01/09/separating-what-from-where-in-powershell-dsc/
 # https://social.msdn.microsoft.com/Forums/en-US/ccf2d18e-632b-46a8-b649-31be20dc0d22/dsc-with-xactivedirectory-verification-of-prerequisites-for-domain-controller-promotion-failed?forum=azureautomation
 
-configuration NewAddsCnfgLitware
+configuration adsCnfgInstallAADSC
 {
  # This is the credential for the new domain that must have already been created in the Azure Automation account as a credential asset:
  # The credential asset will use the Name: CredsLitware, UserName: <username>@domain.tld, password: **********
@@ -21,12 +21,11 @@ $password = $CredentialAsset.GetNetworkCredential().Password
  $ErrorActionPreference = "SilentlyContinue"
  # In addition to modules that have been imported into the Azure Automation Account, the specific resources used must also be imported from those modules for this configuration
  # Import-DscResource -ModuleName xPSDesiredStateConfiguration
- Import-DscResource -Name xDisk -Module xStorage
- Import-DscResource -Name xADDomain -Module xActiveDirectory
+ Import-DscResource -ModuleName PSDesiredStateConfiguration, xStorage, xActiveDirectory
 
  # Write-Verbose $ConfigData.NonNodeData.Message
 
- Node "dc11"
+ Node localhost
  # $AllNodes.Where{$_.Role -eq "DomainController"}.NodeName
  {
   # Prepare NTDS and LOG disk. Note that the disk number must be the next incremented number in the series of existing disks.
@@ -116,11 +115,12 @@ $password = $CredentialAsset.GetNetworkCredential().Password
   } #end resource
 
   # No slash at end of folder paths
-  xADDomain "FirstDS"
+  xADDomainController ReplicaDC
   {
-   DomainName = "litware.lab"
    DomainAdministratorCredential = $CredentialAsset
+   DomainName = "dev.adatum.com"
    SafeModeAdministratorPassword = $password
+   PDscRunAsCredential = $CredentialAsset
    DatabasePath = 'N:\NTDS'
    LogPath = 'N:\LOGS'
    SysvolPath = 'S:\SYSV'
