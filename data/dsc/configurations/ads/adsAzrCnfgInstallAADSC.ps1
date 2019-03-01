@@ -8,9 +8,9 @@ configuration adsAzrCnfgInstallAADSC
  # The credential asset will use the Name: CredsLitware, UserName: <username>@domain.tld, password: **********
  param
  (    
-    [string]$rgName,
-    [string]$AutoAcctName,
-    [string]$CredAssetName
+    [string]$rgName = "rg10",
+    [string]$AutoAcctName = "aaa-bcd1b452-10",
+    [string]$CredAssetName = "adcreds"
  ) # end param
 
  # Get the connection "AzureRunAsConnection "
@@ -40,7 +40,7 @@ $password = $CredentialAsset.GetNetworkCredential().Password
 
  # Write-Verbose $ConfigData.NonNodeData.Message
 
- $AllNodes.NodeName
+ Node localhost
  # $AllNodes.Where{$_.Role -eq "DomainController"}.NodeName
  {
   # Prepare NTDS and LOG disk. Note that the disk number must be the next incremented number in the series of existing disks.
