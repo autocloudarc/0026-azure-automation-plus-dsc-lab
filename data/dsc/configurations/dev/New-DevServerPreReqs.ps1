@@ -61,21 +61,60 @@ Configure prerequistes on a dev server for DSC pull/push and CA roles
 
 # Get modules to install
 $moduleList = @("xStorage","ActiveDirectoryCSDsc","CertificateDsc","xActiveDirectory","xComputerManagement","xPendingReboot","SqlServerDSC","SqlServer","dbatools")
-# Get features to add
-$featureList = @("DSC-Service","ADCS-Cert-Authority","RSAT-ADCS","RSAT-ADCS-Mgmt","RSAT-AD-PowerShell","RSAT-ADDS-Tools","RSAT-AD-AdminCenter","GPMC","DNS")
 
 # Set installation policy for PSGallery to trusted. This will avoid prompts to proceed and install package managers
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -Verbose
 # Install pre-requiste modules to configure hard drive, and setup certificate services
 Install-Module -Name $moduleList -Force -Verbose
 # Install the DSC feature to compile and apply DSC configurations
-Install-WindowsFeature -Name $featureList
+Install-WindowsFeature -Name "Dsc-Service"
 
 # Configure prerequisites
-Configuration DevServerPrereq
+Configuration devServerSetup
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration, xStorage
-    
+
+    $ensure = "Present"
+
+    $dcFeaturesToAdd = @(
+		$rsatDnsServer = @{
+			Ensure = $ensure
+			Name = "RSAT-DNS-Server"
+		} # end hashtable
+		$rsatAdCenter = @{
+			Ensure = $ensure
+			Name = "RSAT-AD-AdminCenter"
+		} # end hashtable
+		$rsatADDS = @{
+			Ensure = $ensure
+			Name = "RSAT-ADDS"
+		} # end hashatable
+		$rsatAdPowerShell = @{
+			Ensure = $ensure
+			Name = "RSAT-AD-PowerShell"
+		} # end hashtable
+		$rsatAdTools = @{
+			Ensure = $ensure
+			Name = "RSAT-AD-Tools"
+		} # end hashatale
+		$rsatGPMC = @{
+			Ensure = $ensure
+			Name = "GPMC"
+        } # end hashtable
+        $rsatCertAuth = @{
+            Ensure = $ensure
+            Name = "ADCS-Cert-Authority"
+        } # end hashtable
+        $rsatADCS = @{
+            Ensure = $ensure
+            Name = "RSAT-ADCS"
+        } # end hashtable
+        $rsatADCSMGT = @{
+            Ensure = $ensure
+            Name = "RSAT-ADCS-Mgmt"
+        } # end hashtable
+	) # end array
+
     Node localhost
     {
         # Check for disk
@@ -94,6 +133,16 @@ Configuration DevServerPrereq
             FSLabel = 'data'
             DependsOn = '[xWaitForDisk]Disk2'
         } # end resource
+
+        ForEach ($dcFeature in $dcFeaturesToAdd)
+		{
+			WindowsFeature "$($dcFeature.Name)"
+				{
+					Ensure = "$($dcFeature.Present)"
+					Name = "$($dcFeature.Name)"
+				} # end resource
+		} # end foreach
+
     } # end node
 } # end configuration
 
