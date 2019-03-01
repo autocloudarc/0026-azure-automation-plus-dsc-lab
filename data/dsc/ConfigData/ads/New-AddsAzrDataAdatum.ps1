@@ -58,7 +58,6 @@ TASK-INDEX:
 # 17 MAR 2016 00.01.0001 Preston K. Parsard prestopa@microsoft.com Initial release
 # 16 JUN 2016 00.01.0002 Preston K. Parsard prestopa@microsoft.com Fixed cannot find automation account error by correctly specifying the resource group of the automation 
 # .................................................................account instead of the node resource group in the cmdlet:
-# .................................................................$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -ConfigurationData $ConfigData -Parameters $parameters
 
 # Login to Azure Account
 Login-AzureRmAccount
@@ -67,20 +66,20 @@ Login-AzureRmAccount
 
 $ConfigData = @{
  AllNodes = @(
- @{
-   NodeName = '*'
-   PSDscAllowPlainTextPassword = $true
-   PSDscAllowDomainUser = $true  
-   RetryCount = 20               
-   RetryIntervalSec = 30
-  } #end node
+  @{
+    NodeName = '*'
+    PSDscAllowPlainTextPassword = $true
+    PSDscAllowDomainUser = $true  
+    RetryCount = 20               
+    RetryIntervalSec = 30
+    } #end node
  
- @{
-   NodeName = "localhost"
-   Role = "DomainController"
-   DomainName = "dev.adatum.com"
-  } #end node
- )
+  @{
+    NodeName = "localhost"
+    Role = "DomainController"
+    DomainName = "dev.adatum.com"
+    } # end node
+ ) # end array
 } #end $ConfigData
 
 # IMPORTANT: Specify the resource group in which the AUTOMATION account is located, which may not necessarily be the resource group where the NODE(S) reside
@@ -92,13 +91,12 @@ $ConfigName = "adsAzrCnfgInstallAADSC"
 # $CredentialAsset = Get-Credential -Message "Enter domain or target server administrative username and password using the format: $nbDomainName\<adminUserName>"
 $CredentialAsset = Get-Credential -Message "Enter domain or target server administrative username and password using the format: <adminUserName>@fqdn"
 # PowerShell requires parameters in a hashtable
-<#
 $parameters = @{
     CredentialAsset = $CredentialAsset
 } #end $parameters
-#>
 
-$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -ConfigurationData $ConfigData -Verbose
+
+$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -Parameters $parameters -ConfigurationData $ConfigData -Verbose
 while($CompilationJob.EndTime –eq $null -and $CompilationJob.Exception –eq $null)           
 {
  $CompilationJob = $CompilationJob | Get-AzureRmAutomationDscCompilationJob
