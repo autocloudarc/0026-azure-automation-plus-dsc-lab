@@ -12,14 +12,13 @@ configuration adsAzrCnfgInstallAADSC
     [string]$AutoAcctName,
     [string]$CredAssetName
  ) # end param
-
- $CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rgName -AutomationAccountName $AutoAcctName -Name $CredAssetName
-# $UniversalAdmName = $cred.UserName
-# $securePassword = $cred.Password
+ 
+# https://github.com/Azure/azure-powershell/issues/4369
+$ErrorActionPreference = "SilentlyContinue"
+$CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rgName -AutomationAccountName $AutoAcctName -Name $CredAssetName
 
 $password = $CredentialAsset.GetNetworkCredential().Password
 
- $ErrorActionPreference = "SilentlyContinue"
  # In addition to modules that have been imported into the Azure Automation Account, the specific resources used must also be imported from those modules for this configuration
  # Import-DscResource -ModuleName xPSDesiredStateConfiguration
  # Separating each import on diffrent lines due to the error described at: https://github.com/PowerShell/PSDscResources/issues/43
