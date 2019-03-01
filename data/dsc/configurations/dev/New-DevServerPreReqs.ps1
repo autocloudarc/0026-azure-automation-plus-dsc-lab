@@ -74,9 +74,8 @@ Install-WindowsFeature -Name $featureList
 # Configure prerequisites
 Configuration DevServerPrereq
 {
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName xStorage
-
+    Import-DscResource -ModuleName PSDesiredStateConfiguration, xStorage
+    
     Node localhost
     {
         # Check for disk
