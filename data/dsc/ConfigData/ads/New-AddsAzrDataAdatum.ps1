@@ -89,7 +89,7 @@ $CredAssetName = "adcreds"
 $ConfigName = "adsAzrCnfgInstallAADSC"
 # $CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -Name $CredAssetName
 # $CredentialAsset = Get-Credential -Message "Enter domain or target server administrative username and password using the format: $nbDomainName\<adminUserName>"
-$CredentialAsset = Get-Credential -Message "Enter domain or target server administrative username and password using the format: <adminUserName>@fqdn"
+# $CredentialAsset = Get-Credential -Message "Enter domain or target server administrative username and password using the format: <adminUserName>@fqdn"
 # PowerShell requires parameters in a hashtable
 $parameters = @{
     rgName = $rg
