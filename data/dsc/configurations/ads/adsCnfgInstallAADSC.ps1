@@ -56,22 +56,13 @@ $password = $CredentialAsset.GetNetworkCredential().Password
    DependsOn = "[xDisk]Volume"
   } #end resource
 
-  # Prepare SYSV disk, which will be disk number 3 in the series of disks on this system, since disk 2 was used above for the NTDS volume
-  xDisk "SYSV"
-  {
-   DiskId = '3'
-   DriveLetter = 'F'
-   FSLabel = 'SYSV'
-   DependsOn = "[xDisk]Volume"
-  } #end resource
-
   # Create SYSV directory
   File "SYSV"
   {
    DestinationPath = 'F:\SYSV'
    Type = 'Directory'
    Ensure = 'Present'
-   DependsOn = "[xDisk]SVolume"
+   DependsOn = "[xDisk]Volume"
   } #end resource
 
   # Install Dsc features
