@@ -97,6 +97,8 @@ $parameters = @{
     CredAssetName = $CredAssetName
 } #end $parameters
 
+# TASK-ITEM: Unresolved error, as of 01MAR2019 The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop:...
+# Method invocation failed because [Microsoft.Azure.Commands.Automation.Model.CredentialInfo] does not contain a method named 'GetNetworkCredential'.
 $CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -Parameters $parameters -ConfigurationData $ConfigData -ErrorAction SilentlyContinue -Verbose
 while(-not($CompilationJob.Exception))           
 {
