@@ -6,7 +6,7 @@ Configuration devServerSetup
 
     $ensure = "Present"
 
-    $dcFeaturesToAdd = @(
+    $featuresToAdd = @(
 		$rsatDnsServer = @{
 			Ensure = $ensure
 			Name = "RSAT-DNS-Server"
@@ -64,7 +64,7 @@ Configuration devServerSetup
             DependsOn = '[xWaitForDisk]Disk2'
         } # end resource
 
-        ForEach ($dcFeature in $dcFeaturesToAdd)
+        ForEach ($feature in $featuresToAdd)
 		{
 			WindowsFeature "$($dcFeature.Name)"
 				{
