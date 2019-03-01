@@ -83,7 +83,7 @@ $ConfigData = @{
  )
 } #end $ConfigData
 
-# IMPORTANT: Specify the resource group in which the AUTOMATION account is located, not the resource group where the NODE(S) reside
+# IMPORTANT: Specify the resource group in which the AUTOMATION account is located, which may not necessarily be the resource group where the NODE(S) reside
 $rg = "rg10"
 $AutomationAcct = "aaa-bcd1b452-10"
 $CredAssetName = "adcreds"
@@ -95,10 +95,11 @@ $parameters = @{
     CredentialAsset = $CredentialAsset
 } #end $parameters
 
-$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -Parameters $parameters -ConfigurationData $ConfigData -ErrorAction SilentlyContinue
+$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -Parameters $parameters -ConfigurationData $ConfigData -Verbose
 while($CompilationJob.EndTime –eq $null -and $CompilationJob.Exception –eq $null)           
 {
  $CompilationJob = $CompilationJob | Get-AzureRmAutomationDscCompilationJob
+ Write-Output $CompilationJob
  Start-Sleep -Seconds 3
-}
+} # end while
 $CompilationJob | Get-AzureRmAutomationDscCompilationJobOutput –Stream Any 
