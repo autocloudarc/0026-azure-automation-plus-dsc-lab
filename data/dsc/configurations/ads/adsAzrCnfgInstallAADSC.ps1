@@ -7,12 +7,13 @@ configuration adsAzrCnfgInstallAADSC
  # This is the credential for the new domain that must have already been created in the Azure Automation account as a credential asset:
  # The credential asset will use the Name: CredsLitware, UserName: <username>@domain.tld, password: **********
  param
- (
-    # [string] $rgName,
-    # [string] $AutoAcctName,
-    [pscredential]$CredentialAsset
+ (    
+    [string]$rgName,
+    [string]$AutoAcctName,
+    [string]$CredAssetName
  ) # end param
 
+ $CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -Name $CredAssetName
 # $UniversalAdmName = $cred.UserName
 # $securePassword = $cred.Password
 
