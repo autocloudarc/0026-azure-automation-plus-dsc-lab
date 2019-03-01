@@ -88,14 +88,17 @@ $rg = "rg10"
 $AutomationAcct = "aaa-bcd1b452-10"
 $CredAssetName = "adcreds"
 $ConfigName = "adsAzrCnfgInstallAADSC"
-$CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -Name $CredAssetName
-
+# $CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -Name $CredAssetName
+# $CredentialAsset = Get-Credential -Message "Enter domain or target server administrative username and password using the format: $nbDomainName\<adminUserName>"
+$CredentialAsset = Get-Credential -Message "Enter domain or target server administrative username and password using the format: <adminUserName>@fqdn"
 # PowerShell requires parameters in a hashtable
+<#
 $parameters = @{
     CredentialAsset = $CredentialAsset
 } #end $parameters
+#>
 
-$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -Parameters $parameters -ConfigurationData $ConfigData -Verbose
+$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -ConfigurationData $ConfigData -Verbose
 while($CompilationJob.EndTime –eq $null -and $CompilationJob.Exception –eq $null)           
 {
  $CompilationJob = $CompilationJob | Get-AzureRmAutomationDscCompilationJob
