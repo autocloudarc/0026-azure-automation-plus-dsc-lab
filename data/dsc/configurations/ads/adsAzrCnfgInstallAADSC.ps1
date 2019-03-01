@@ -22,7 +22,7 @@ Add-AzureRmAccount `
    -TenantId $servicePrincipalConnection.TenantId `
    -ApplicationId $servicePrincipalConnection.ApplicationId `
    -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint `
-   -ErrorAction 'Stop'
+   -ErrorAction 'SilentlyContinue'
 # https://github.com/Azure/azure-powershell/issues/4369
 # $ErrorActionPreference = "SilentlyContinue"
 $CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rgName -AutomationAccountName $AutoAcctName -Name $CredAssetName
