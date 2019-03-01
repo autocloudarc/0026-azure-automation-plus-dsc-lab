@@ -92,7 +92,9 @@ $ConfigName = "adsAzrCnfgInstallAADSC"
 $CredentialAsset = Get-Credential -Message "Enter domain or target server administrative username and password using the format: <adminUserName>@fqdn"
 # PowerShell requires parameters in a hashtable
 $parameters = @{
-    CredentialAsset = $CredentialAsset
+    rgName = $rg
+    AutoAcctName = $AutomationAcct
+    CredAssetName = $CredAssetName
 } #end $parameters
 
 
