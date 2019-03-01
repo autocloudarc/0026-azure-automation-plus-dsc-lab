@@ -95,7 +95,7 @@ $parameters = @{
     CredentialAsset = $CredentialAsset
 } #end $parameters
 
-$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -ConfigurationData $ConfigData -ErrorAction SilentlyContinue
+$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -Parameters $parameters -ConfigurationData $ConfigData -ErrorAction SilentlyContinue
 while($CompilationJob.EndTime –eq $null -and $CompilationJob.Exception –eq $null)           
 {
  $CompilationJob = $CompilationJob | Get-AzureRmAutomationDscCompilationJob
