@@ -11,7 +11,7 @@ configuration adsAzrCnfgInstallAADSC
     # [string] $rgName,
     # [string] $AutoAcctName,
     [pscredential]$CredentialAsset
- )
+ ) # end param
 
 # $UniversalAdmName = $cred.UserName
 # $securePassword = $cred.Password
