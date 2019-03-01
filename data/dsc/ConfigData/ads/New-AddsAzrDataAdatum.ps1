@@ -97,9 +97,8 @@ $parameters = @{
     CredAssetName = $CredAssetName
 } #end $parameters
 
-
 $CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -Parameters $parameters -ConfigurationData $ConfigData -ErrorAction SilentlyContinue -Verbose
-while($CompilationJob.EndTime –eq $null -and $CompilationJob.Exception –eq $null)           
+while(-not($CompilationJob.Exception))           
 {
  $CompilationJob = $CompilationJob | Get-AzureRmAutomationDscCompilationJob
  Write-Output $CompilationJob
