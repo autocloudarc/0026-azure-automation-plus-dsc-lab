@@ -8,11 +8,10 @@ configuration adsCnfgInstallAADSC
  # The credential asset will use the Name: CredsLitware, UserName: <username>@domain.tld, password: **********
  param
  (
-    [string] $rgName,
-    [string] $AutoAcctName
+    # [string] $rgName,
+    # [string] $AutoAcctName,
+    [pscredential]$CredentialAsset
  )
-
-$CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rgName -AutomationAccountName $AutoAcctName -Name 'adcreds'
 
 # $UniversalAdmName = $cred.UserName
 # $securePassword = $cred.Password
@@ -25,7 +24,7 @@ $password = $CredentialAsset.GetNetworkCredential().Password
 
  # Write-Verbose $ConfigData.NonNodeData.Message
 
- Node localhost
+ $AllNodes.NodeName
  # $AllNodes.Where{$_.Role -eq "DomainController"}.NodeName
  {
   # Prepare NTDS and LOG disk. Note that the disk number must be the next incremented number in the series of existing disks.
