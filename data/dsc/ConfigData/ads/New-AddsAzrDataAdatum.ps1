@@ -85,18 +85,17 @@ $ConfigData = @{
 
 # IMPORTANT: Specify the resource group in which the AUTOMATION account is located, not the resource group where the NODE(S) reside
 $rg = "rg10"
-# $AACredentialAssetName = "CredsLitware"
 $AutomationAcct = "aaa-bcd1b452-10"
+$CredAssetName = "adcreds"
 $ConfigName = "adsAzrCnfgInstallAADSC"
+$CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -Name $CredAssetName
 
 # PowerShell requires parameters in a hashtable
 $parameters = @{
- # Creds = $AACredentialAssetName
- rgName = $rg
- AutoAcctName = $AutomationAcct
+    CredentialAsset = $CredentialAsset
 } #end $parameters
 
-$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -ConfigurationData $ConfigData -Parameters $parameters -ErrorAction SilentlyContinue
+$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -ConfigurationData $ConfigData -ErrorAction SilentlyContinue
 while($CompilationJob.EndTime –eq $null -and $CompilationJob.Exception –eq $null)           
 {
  $CompilationJob = $CompilationJob | Get-AzureRmAutomationDscCompilationJob
