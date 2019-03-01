@@ -15,6 +15,7 @@ configuration adsAzrCnfgInstallAADSC
 
 # $UniversalAdmName = $cred.UserName
 # $securePassword = $cred.Password
+
 $password = $CredentialAsset.GetNetworkCredential().Password
 
  $ErrorActionPreference = "SilentlyContinue"
