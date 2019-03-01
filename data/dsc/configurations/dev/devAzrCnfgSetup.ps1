@@ -66,10 +66,10 @@ Configuration devServerSetup
 
         ForEach ($feature in $featuresToAdd)
 		{
-			WindowsFeature "$($dcFeature.Name)"
+			WindowsFeature "$($feature.Name)"
 				{
-					Ensure = "$($dcFeature.Present)"
-					Name = "$($dcFeature.Name)"
+					Ensure = "$($feature.Present)"
+					Name = "$($feature.Name)"
 				} # end resource
 		} # end foreach
 
