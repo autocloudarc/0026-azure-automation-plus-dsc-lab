@@ -13,7 +13,7 @@ configuration adsAzrCnfgInstallAADSC
     [string]$CredAssetName
  ) # end param
 
- $CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -Name $CredAssetName
+ $CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rgName -AutomationAccountName $AutoAcctName -Name $CredAssetName
 # $UniversalAdmName = $cred.UserName
 # $securePassword = $cred.Password
 
