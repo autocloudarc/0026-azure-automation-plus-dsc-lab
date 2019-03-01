@@ -98,7 +98,7 @@ $parameters = @{
 } #end $parameters
 
 
-$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -Parameters $parameters -ConfigurationData $ConfigData -Verbose
+$CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -Parameters $parameters -ConfigurationData $ConfigData -ErrorAcctionPreference SilentlyContinue -Verbose
 while($CompilationJob.EndTime –eq $null -and $CompilationJob.Exception –eq $null)           
 {
  $CompilationJob = $CompilationJob | Get-AzureRmAutomationDscCompilationJob
