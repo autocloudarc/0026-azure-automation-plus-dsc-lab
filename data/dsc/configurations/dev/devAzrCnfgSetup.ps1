@@ -1,7 +1,8 @@
 ﻿# Configure prerequisites
 Configuration devServerSetup
 {
-    Import-DscResource -ModuleName PSDesiredStateConfiguration, xStorage
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+    Import-DscResource -ModuleName xStorage
 
     $ensure = "Present"
 
