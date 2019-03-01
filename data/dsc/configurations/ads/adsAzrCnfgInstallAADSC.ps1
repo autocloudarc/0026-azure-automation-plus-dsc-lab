@@ -12,9 +12,19 @@ configuration adsAzrCnfgInstallAADSC
     [string]$AutoAcctName,
     [string]$CredAssetName
  ) # end param
+
+ # Get the connection "AzureRunAsConnection "
+ $servicePrincipalConnection=Get-AutomationConnection -Name 'AzureRunAsConnection'     
  
+"Logging in to Azure..."
+Add-AzureRmAccount `
+   -ServicePrincipal `
+   -TenantId $servicePrincipalConnection.TenantId `
+   -ApplicationId $servicePrincipalConnection.ApplicationId `
+   -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint `
+   -ErrorAction 'Stop'
 # https://github.com/Azure/azure-powershell/issues/4369
-$ErrorActionPreference = "SilentlyContinue"
+# $ErrorActionPreference = "SilentlyContinue"
 $CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rgName -AutomationAccountName $AutoAcctName -Name $CredAssetName
 
 $password = $CredentialAsset.GetNetworkCredential().Password
