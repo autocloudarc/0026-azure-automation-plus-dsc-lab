@@ -59,8 +59,8 @@ function Get-PSGalleryModule
 		else
 		{
 			# https://www.powershellgallery.com/packages/WriteToLogs
-			Install-Module -Name $Module -Repository $Repository -Force -AllowClobber -Verbose
-			Import-Module -Name $Module -Verbose
+			Install-Module -Name $Module -Repository $Repository -Force -ErrorAction SilentlyContinue -AllowClobber -Verbose
+			Import-Module -Name $Module -ErrorAction SilentlyContinue -Verbose
 		} #end If
 	} #end foreach
 } #end function
@@ -85,14 +85,14 @@ if ($proceed -eq "N" -OR $proceed -eq "NO")
 
 # https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-1.1.0
 # If theh AzureRM module is not installed, but Az is, then set aliases for the AzureRM noun prefix.
-If (-not(Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyContinue) -AND (-not(Get-InstalledModule -Name Az)))
+If (-not(Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyContinue) -AND (-not(Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)))
 {
     Get-PSGalleryModule -ModulesToInstall $azurePreferredModule
 } # end ElseIf
 ElseIf ((Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyContinue) -AND ((Get-InstalledModule -Name $azurePreferredModule).Version -ne (Find-Module -Name $azurePreferredModule).Version))
 {
     # Update AzureRM modules by removing, then re-installing
-    If (Get-InstalledModule -Name $azurePreferredModule)
+    If (Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyContinue)
     {
         Uninstall-Module -Name $azurePreferredModule -Force -Verbose
         Remove-Module -Name $azurePreferredModule -Force -Verbose
