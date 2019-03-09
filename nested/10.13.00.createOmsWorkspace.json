@@ -22,7 +22,7 @@
       "properties": {
         "source": "Azure",
         "sku": {
-          "name": "Per GB"
+          "name": "Free"
         }
       },
       "resources": []
