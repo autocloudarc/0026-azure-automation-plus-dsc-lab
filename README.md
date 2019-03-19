@@ -1,5 +1,7 @@
 # 1.0 Azure Automation Plus DSC lab
 
+BREAKING CHANGE: As of 24 FEB 2019, an issue relating to converting to the new Az modules was observed. The New-AzResourceGroupDeployment cmdlet misinterpreted the public GitHub hosted template uri as a PowerShell drive named https:. As a workaround, please ensure that you are still using the original AzureRM modules to properly deploy this solution. I will update once the new Az modules has been retested successfully for this project. See: ![issue 3](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/issues/3#issue-416824506) 
+
 This template deploys a new lab environment that can be used for training, practice and demonstrations for the following topics:
 
 1. Azure Automation
@@ -8,6 +10,10 @@ This template deploys a new lab environment that can be used for training, pract
 4. Windows PowerShell Desired State Configuration
 5. PowerShell Core 6.0
 6. Powershell DSC for Linux
+
+## Target State Diagram
+
+![Target state diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/automationLab.png)
 
 ## 2.0 Prerequisites
 

@@ -2,11 +2,19 @@
 Thumbs.db
 ehthumbs.db
 
+# Certificate files
+*.cer
 # Folder config file
 Desktop.ini
 
 # Log files
 *.log
+
+# MOF files
+*.mof
+
+# ERROR files
+*.error
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
@@ -48,3 +56,4 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+data/dsc/mof/cltsql1003.dev.adatum.com.mof.error

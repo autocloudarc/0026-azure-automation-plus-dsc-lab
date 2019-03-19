@@ -1,5 +1,6 @@
 ﻿#requires -version 5.1
 #requires -RunAsAdministrator
+
 <#
 .SYNOPSIS
    	Creates an automation lab to practice Azure automation, DSC, PowerShell and PowerShell core.
@@ -49,7 +50,7 @@ function Get-PSGalleryModule
 	foreach ($Module in $ModulesToInstall)
 	{
         # If module exists, update it
-        If (Get-Module -Name $Module)
+        If (Get-InstalledModule -Name $Module -ErrorAction SilentlyContinue)
         {
             # To avoid multiple versions of a module is installed on the same system, first uninstall any previously installed and loaded versions if they exist
             Update-Module -Name $Module -Force -ErrorAction SilentlyContinue -Verbose
@@ -58,13 +59,15 @@ function Get-PSGalleryModule
 		else
 		{
 			# https://www.powershellgallery.com/packages/WriteToLogs
-			Install-Module -Name $Module -Repository $Repository -Force -Verbose
-			Import-Module -Name $Module -Verbose
+			Install-Module -Name $Module -Repository $Repository -Force -ErrorAction SilentlyContinue -AllowClobber -Verbose
+			Import-Module -Name $Module -ErrorAction SilentlyContinue -Verbose
 		} #end If
 	} #end foreach
 } #end function
 
 [string]$proceed = $null
+[string]$azurePreferredModule = "AzureRM"
+[string]$azureNonPreferredModule = "Az"
 
 # Verify parameter values
 Do {
@@ -79,13 +82,44 @@ if ($proceed -eq "N" -OR $proceed -eq "NO")
     PAUSE
     EXIT
 } #end if ne Y
-# Get required PowerShellGallery.com modules.
-Get-PSGalleryModule -ModulesToInstall "AzureRM"
 
-Write-Output "Please see the open dialogue box in your browser to authenticate to your Azure subscription..."
+# https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-1.1.0
+# If theh AzureRM module is not installed, but Az is, then set aliases for the AzureRM noun prefix.
+If (-not(Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyContinue) -AND (-not(Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)))
+{
+    Get-PSGalleryModule -ModulesToInstall $azurePreferredModule
+} # end ElseIf
+ElseIf ((Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyContinue) -AND ((Get-InstalledModule -Name $azurePreferredModule).Version -ne (Find-Module -Name $azurePreferredModule).Version))
+{
+    # Update AzureRM modules by removing, then re-installing
+    If (Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyContinue)
+    {
+        Uninstall-Module -Name $azurePreferredModule -Force -Verbose
+        Remove-Module -Name $azurePreferredModule -Force -Verbose
+        Get-PSGalleryModule -ModulesToInstall $azurePreferredModule
+    } # end if
+} # end elseif
+ElseIf (Get-InstalledModule -Name $azureNonPreferredModule -ErrorAction SilentlyContinue)
+{
+    # Get required Az modules from PowerShellGallery.com.
+    Write-Output "As of 24FEB2019, the $azureNonPreferredModule module is not supported for this deployment due to the following error condition"
+    $errorConditionForAzModule = @"
+New-AzResourceGroupDeployment : Cannot retrieve the dynamic parameters for the cmdlet. Cannot find drive. A drive with the name 'https' does not exist.
+At <line number...>
++ New-AzResourceGroupDeployment -ResourceGroupName <ResourceGroupName> `
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [New-AzResourceGroupDeployment], ParameterBindingException
+    + FullyQualifiedErrorId : GetDynamicParametersException,Microsoft.Azure.Commands.ResourceManager.Cmdlets.Implementation.NewAzureResourceGroupDeploymentCmdlet
+"@
+    Write-Output $errorConditionForAzModule
+    Write-Output ""
+    Write-Output "To run this script, please uninstall the Az module and install the AzureRM module instead, then re-run this script."
+    Write-Output "Terminating script"
+    Exit-PSSession
+} # ElseIf
 
 # Connect to Azure
-Connect-AzureRmAccount
+Login-AzureRMAccount
 
 # Allowable student numbers
 [int[]]$studentNumEnum = 0..16
@@ -93,11 +127,19 @@ Connect-AzureRmAccount
 Do
 {
     # Subscription name
+<<<<<<< HEAD
 	(Get-AzureRmSubscription).Name
 	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
 	$Subscription = $Subscription.ToUpper()
 } #end Do
 Until (Select-AzureRmSubscription -Name $Subscription)
+=======
+	(Get-AzureRMSubscription).Name
+	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
+	$Subscription = $Subscription.ToUpper()
+} #end Do
+Until (Select-AzureRmSubscription -Subscription $Subscription)
+>>>>>>> 4eadbd88475c3f5b73da28b1afe858c1c5043e46
 
 Do
 {
@@ -112,7 +154,7 @@ Until (([int]$studentNumber) -in [int[]]$studentNumEnum)
 Do
 {
     # The location refers to a geographic region of an Azure data center
-    $regions = Get-AzureRmLocation | Select-Object -ExpandProperty Location
+    $regions = Get-AzureRMLocation | Select-Object -ExpandProperty Location
     Write-Output "The list of available regions are :"
     Write-Output ""
     Write-Output $regions
@@ -125,9 +167,9 @@ Do
 } #end Do
 Until ($region -in $regions)
 
-New-AzureRmResourceGroup -Name $rg -Location $region -Verbose
+New-AzureRMResourceGroup -Name $rg -Location $region -Verbose
 
-$templateUri = "https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json"
+$templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
@@ -141,14 +183,14 @@ While (-not((Get-AzureRmStorageAccountNameAvailability -Name $studentRandomInfix
 
 $parameters = @{}
 $parameters.Add("studentNumber", $studentNumber)
-$parameters.Add(“adminUserName”, $adminUserName)
-$parameters.Add(“adminPassword”, $adminPassword)
-$parameters.Add(“studentRandomInfix”, $studentRandomInfix)
+$parameters.Add("adminUserName", $adminUserName)
+$parameters.Add("adminPassword", $adminPassword)
+$parameters.Add("studentRandomInfix", $studentRandomInfix)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
-New-AzureRmResourceGroupDeployment -Name $rgDeployment `
--ResourceGroupName $rg `
+New-AzureRMResourceGroupDeployment -ResourceGroupName $rg `
 -TemplateFile $templateUri `
+-Name $rgDeployment `
 -TemplateParameterObject $parameters `
 -Force -Verbose `
 -ErrorVariable ErrorMessages
@@ -159,7 +201,7 @@ if ($ErrorMessages)
 else
 {
     $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
-    $fqdnDev = (Get-AzureRmPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
+    $fqdnDev = (Get-AzureRMPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
 
     $StopTimer = Get-Date -Verbose
     Write-Output "Calculating elapsed time..." -Log $Log
