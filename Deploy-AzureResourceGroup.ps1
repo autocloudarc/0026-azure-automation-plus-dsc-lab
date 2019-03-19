@@ -93,11 +93,11 @@ Connect-AzureRmAccount
 Do
 {
     # Subscription name
-	(Get-AzureRmSubscription).SubscriptionName
+	(Get-AzureRmSubscription).Name
 	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
 	$Subscription = $Subscription.ToUpper()
 } #end Do
-Until (Select-AzureRmSubscription -SubscriptionName $Subscription)
+Until (Select-AzureRmSubscription -Name $Subscription)
 
 Do
 {
