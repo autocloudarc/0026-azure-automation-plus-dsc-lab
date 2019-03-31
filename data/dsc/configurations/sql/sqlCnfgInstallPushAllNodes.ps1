@@ -287,6 +287,7 @@ Configuration sqlCnfgInstallPushAllNodes
 
         # https://github.com/PowerShell/SqlServerDsc#sqlsetup
         # https://chrislumnah.com/2017/03/07/dsc-install-of-sql-server/
+        # https://docs.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server-from-the-command-prompt?view=sql-server-2017#Feature 
 
         SqlSetup "InstallDefaultInstance"
         {
