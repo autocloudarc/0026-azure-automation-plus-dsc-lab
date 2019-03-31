@@ -66,9 +66,9 @@ Configures a member server as a new sql server in an existing domain.
 
 # 1. Pre-installation task for the OS
 # Set the source installation path for SQL 2016 developer edition
-$targetSqlServers = "cltsql1003.dev.adatum.com","cltsql1001.dev.adatum.com", "cltsql1002.dev.adatum.com"
-# $targetSqlServers = "cltsql1001.dev.adatum.com","cltsql1002.dev.adatum.com"
-$sqlInstallPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-apps\sql\SqlServer2016x64"
+# $targetSqlServers = "cltsql1003.dev.adatum.com","cltsql1001.dev.adatum.com", "cltsql1002.dev.adatum.com"
+$targetSqlServers = "cltsql1001.dev.adatum.com","cltsql1002.dev.adatum.com"
+$sqlInstallPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-apps\sql\SqlServer2017x64"
 $targetDirRemote = $sqlInstallPath | Split-Path -leaf
 $sqlFileName = "setup.exe"
 $ssmsInstallPath = "\\cltdev1001.dev.adatum.com\apps\sql"
