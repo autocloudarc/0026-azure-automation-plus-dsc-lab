@@ -127,11 +127,19 @@ Login-AzureRMAccount
 Do
 {
     # Subscription name
+<<<<<<< HEAD
+	(Get-AzureRmSubscription).Name
+	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
+	$Subscription = $Subscription.ToUpper()
+} #end Do
+Until (Select-AzureRmSubscription -Name $Subscription)
+=======
 	(Get-AzureRMSubscription).Name
 	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
 	$Subscription = $Subscription.ToUpper()
 } #end Do
 Until (Select-AzureRmSubscription -Subscription $Subscription)
+>>>>>>> 4eadbd88475c3f5b73da28b1afe858c1c5043e46
 
 Do
 {
