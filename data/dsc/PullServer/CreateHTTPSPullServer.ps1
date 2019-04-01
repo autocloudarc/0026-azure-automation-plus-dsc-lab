@@ -86,7 +86,7 @@ Configuration CreateHTTPSPullServer
             Ensure = "Present"
             Type = "File"
             DestinationPath = "C:\Program Files\WindowsPowerShell\DscService\RegistrationKeys.txt"
-            Contents = "2a5de1da-82c6-491f-80ec-7a64829a965a"
+            Contents = "$($node.RegistrationKey)"
         } # end resource
 
         # Validate web config file contains current DB settings
