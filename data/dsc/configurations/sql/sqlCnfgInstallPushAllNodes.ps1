@@ -65,10 +65,11 @@ Configures a member server as a new sql server in an existing domain.
 #>
 
 # 1. Pre-installation task for the OS
-# Set the source installation path for SQL 2016 developer edition
+# Set the source installation path for SQL 2017 developer edition
 # $targetSqlServers = "cltsql1003.dev.adatum.com","cltsql1001.dev.adatum.com", "cltsql1002.dev.adatum.com"
-$targetSqlServers = "cltsql1001.dev.adatum.com","cltsql1002.dev.adatum.com"
-$sqlInstallPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-apps\sql\SqlServer2017x64"
+# $targetSqlServers = "cltsql1001.dev.adatum.com","cltsql1002.dev.adatum.com"
+$targetSqlServers = "cltsql1001.dev.adatum.com"
+$sqlInstallPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-apps\sql\SqlServer2017x64trial"
 $targetDirRemote = $sqlInstallPath | Split-Path -leaf
 $sqlFileName = "setup.exe"
 $ssmsInstallPath = "\\cltdev1001.dev.adatum.com\apps\sql"
@@ -439,7 +440,7 @@ $daCred = Get-Credential -Message "Enter domain or target server administrative 
 sqlCnfgInstallPushAllNodes -OutputPath $sqlMofPath -sqlCredential $sqlCred -adminCredential $daCred -dscResourceList $dscResourceList -sqlFilePath $sqlFilePath -ssmsFilePath $ssmsFilePath -ConfigurationData $ConfigDataPath
 
 # 10. Configure target LCM
-Set-DscLocalConfigurationManager -Path $sqlMofPath -Verbose -Force
+Set-DscLocalConfigurationManager -Path $sqlMofPath -ComputerName $targetNodes -Verbose -Force
 
 # 11. Apply configuration to target
 Start-DscConfiguration -Path $sqlMofPath -ComputerName $targetNodes -Wait -Verbose -Force
