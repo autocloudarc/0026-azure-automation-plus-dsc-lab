@@ -14,7 +14,7 @@ Configuration httpsPullClientWeb
     {
         Settings
         {
-            ConfigurationID = $ID 
+            # ConfigurationID = $ID 
             RefreshMode =  'Pull'
             ActionAfterReboot = 'ContinueConfiguration'
             AllowModuleOverwrite = $true

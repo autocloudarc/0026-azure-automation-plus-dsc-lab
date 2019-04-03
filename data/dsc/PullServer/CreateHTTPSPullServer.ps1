@@ -72,9 +72,9 @@ Configuration CreateHTTPSPullServer
             EndpointName = "PSDSCPullServer"
             Port = 8080
             PhysicalPath = "c:\inetpub\wwwroot\PSDSCPullServer"
-            CertificateThumbPrint = 'B4BDD04D427DAA880FE1950A5CE9F83C93567E8D'
-            ModulePath = "$($node.SMBShareModules)"
-            ConfigurationPath = "$($node.SMBShareConfig)"
+            CertificateThumbPrint = $node.Thumbprint
+            ModulePath = $node.SMBShareModules
+            ConfigurationPath = $node.SMBShareConfig
             State = "Started"
             UseSecurityBestPractices = $true 
             DisableSecurityBestPractices = "SecureTLSProtocols"
