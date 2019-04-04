@@ -70,9 +70,6 @@ function Get-PSGalleryModule
 [string]$azurePreferredModule = "Az"
 [string]$azureNonPreferredModule = "AzureRM"
 
-# Import preferred Azure modules into current session
-Import-Module -Name $azurePreferredModule -Verbose
-
 # Verify parameter values
 Do {
     $proceed = read-host "The PSGallery repository at www.powershellgallery.com will be configured as a trusted repository to download required modules for this script. Ok to proceed? [Y] [YES] [N] [NO]"
@@ -93,6 +90,8 @@ if (Get-InstalledModule -Name $azureNonPreferredModule -ErrorAction SilentlyCont
     Uninstall-Module -Name $azureNonPreferredModule -ErrorAction SilentlyContinue -Verbose
     Remove-Module -Name $azureNonPreferredModule -ErrorAction SilentlyContinue -Verbose
 } # end if
+
+Write-Host "Your browser authentication prompt for your subscription may be opened in the background. Please resize this window to see it and log in."
 
 # Connect to Azure
 Connect-AzAccount
