@@ -100,27 +100,11 @@ Connect-AzAccount
 Do
 {
     # Subscription name
-<<<<<<< HEAD
 	(Get-AzSubscription).Name
 	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
 	$Subscription = $Subscription.ToUpper()
 } #end Do
 Until (Select-AzSubscription -Subscription $Subscription)
-=======
-<<<<<<< HEAD
-	(Get-AzureRmSubscription).Name
-	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
-	$Subscription = $Subscription.ToUpper()
-} #end Do
-Until (Select-AzureRmSubscription -Name $Subscription)
-=======
-	(Get-AzureRMSubscription).Name
-	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
-	$Subscription = $Subscription.ToUpper()
-} #end Do
-Until (Select-AzureRmSubscription -Subscription $Subscription)
->>>>>>> 4eadbd88475c3f5b73da28b1afe858c1c5043e46
->>>>>>> aa3bf4a2a167441455e03d720db9b6358a42408c
 
 Do
 {
