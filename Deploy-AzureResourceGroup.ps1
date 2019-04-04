@@ -70,6 +70,9 @@ function Get-PSGalleryModule
 [string]$azurePreferredModule = "Az"
 [string]$azureNonPreferredModule = "AzureRM"
 
+# Import preferred Azure modules into current session
+Import-Module -Name $azurePreferredModule -Verbose
+
 # Verify parameter values
 Do {
     $proceed = read-host "The PSGallery repository at www.powershellgallery.com will be configured as a trusted repository to download required modules for this script. Ok to proceed? [Y] [YES] [N] [NO]"
