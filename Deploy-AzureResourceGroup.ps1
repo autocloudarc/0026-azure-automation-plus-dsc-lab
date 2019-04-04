@@ -94,11 +94,11 @@ if (Get-InstalledModule -Name $azureNonPreferredModule -ErrorAction SilentlyCont
     Remove-Module -Name $azureNonPreferredModule -ErrorAction SilentlyContinue -Verbose
 } # end if
 
-# Connect to Azure
-Connect-AzAccount
-
 read-host "Your browser authentication request may be running the background. Please resize this window to see your browser authentication request to log into your Azure subscription"
 pause
+
+# Connect to Azure
+Connect-AzAccount
 
 # Allowable student numbers
 [int[]]$studentNumEnum = 0..16
