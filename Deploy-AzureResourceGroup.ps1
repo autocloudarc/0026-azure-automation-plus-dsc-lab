@@ -1,5 +1,6 @@
 ﻿#requires -version 5.1
 #requires -RunAsAdministrator
+#requires -Modules Az
 
 <#
 .SYNOPSIS
@@ -66,8 +67,8 @@ function Get-PSGalleryModule
 } #end function
 
 [string]$proceed = $null
-[string]$azurePreferredModule = "AzureRM"
-[string]$azureNonPreferredModule = "Az"
+[string]$azurePreferredModule = "Az"
+[string]$azureNonPreferredModule = "AzureRM"
 
 # Verify parameter values
 Do {
@@ -84,42 +85,16 @@ if ($proceed -eq "N" -OR $proceed -eq "NO")
 } #end if ne Y
 
 # https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-1.1.0
-# If theh AzureRM module is not installed, but Az is, then set aliases for the AzureRM noun prefix.
-If (-not(Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyContinue) -AND (-not(Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)))
+if (Get-InstalledModule -Name $azureNonPreferredModule -ErrorAction SilentlyContinue)
 {
-    Get-PSGalleryModule -ModulesToInstall $azurePreferredModule
-} # end ElseIf
-ElseIf ((Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyContinue) -AND ((Get-InstalledModule -Name $azurePreferredModule).Version -ne (Find-Module -Name $azurePreferredModule).Version))
-{
-    # Update AzureRM modules by removing, then re-installing
-    If (Get-InstalledModule -Name $azurePreferredModule -ErrorAction SilentlyContinue)
-    {
-        Uninstall-Module -Name $azurePreferredModule -Force -Verbose
-        Remove-Module -Name $azurePreferredModule -Force -Verbose
-        Get-PSGalleryModule -ModulesToInstall $azurePreferredModule
-    } # end if
-} # end elseif
-ElseIf (Get-InstalledModule -Name $azureNonPreferredModule -ErrorAction SilentlyContinue)
-{
-    # Get required Az modules from PowerShellGallery.com.
-    Write-Output "As of 24FEB2019, the $azureNonPreferredModule module is not supported for this deployment due to the following error condition"
-    $errorConditionForAzModule = @"
-New-AzResourceGroupDeployment : Cannot retrieve the dynamic parameters for the cmdlet. Cannot find drive. A drive with the name 'https' does not exist.
-At <line number...>
-+ New-AzResourceGroupDeployment -ResourceGroupName <ResourceGroupName> `
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : InvalidArgument: (:) [New-AzResourceGroupDeployment], ParameterBindingException
-    + FullyQualifiedErrorId : GetDynamicParametersException,Microsoft.Azure.Commands.ResourceManager.Cmdlets.Implementation.NewAzureResourceGroupDeploymentCmdlet
-"@
-    Write-Output $errorConditionForAzModule
-    Write-Output ""
-    Write-Output "To run this script, please uninstall the Az module and install the AzureRM module instead, then re-run this script."
-    Write-Output "Terminating script"
-    Exit-PSSession
-} # ElseIf
+    Uninstall-Module -Name $azureNonPreferredModule -ErrorAction SilentlyContinue -Verbose
+    Remove-Module -Name $azureNonPreferredModule -ErrorAction SilentlyContinue -Verbose
+} # end if
+
+Write-Host "Your browser authentication prompt for your subscription may be opened in the background. Please resize this window to see it and log in."
 
 # Connect to Azure
-Login-AzureRMAccount
+Connect-AzureRMAccount
 
 # Allowable student numbers
 [int[]]$studentNumEnum = 0..16
@@ -127,19 +102,11 @@ Login-AzureRMAccount
 Do
 {
     # Subscription name
-<<<<<<< HEAD
-	(Get-AzureRmSubscription).Name
-	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
-	$Subscription = $Subscription.ToUpper()
-} #end Do
-Until (Select-AzureRmSubscription -Name $Subscription)
-=======
 	(Get-AzureRMSubscription).Name
 	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
 	$Subscription = $Subscription.ToUpper()
 } #end Do
-Until (Select-AzureRmSubscription -Subscription $Subscription)
->>>>>>> 4eadbd88475c3f5b73da28b1afe858c1c5043e46
+Until (Select-AzureRMSubscription -Subscription $Subscription)
 
 Do
 {
@@ -153,7 +120,7 @@ Until (([int]$studentNumber) -in [int[]]$studentNumEnum)
 
 Do
 {
-    # The location refers to a geographic region of an Azure data center
+    # The location refers to a geographic region of an Az data center
     $regions = Get-AzureRMLocation | Select-Object -ExpandProperty Location
     Write-Output "The list of available regions are :"
     Write-Output ""
@@ -179,7 +146,7 @@ Do
 {
     $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 } #end while
-While (-not((Get-AzureRmStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
+While (-not((Get-AzureRMStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
 
 $parameters = @{}
 $parameters.Add("studentNumber", $studentNumber)
@@ -209,10 +176,13 @@ else
     $Footer = "TOTAL SCRIPT EXECUTION TIME: $ExecutionTime"
     Write-Output ""
     Write-Output $Footer
+    $fqdnUpnSuffix = "@dev.adatum.com"
+    $adminUserName = $adminUserName + $fqdnUpnSuffix
+
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
 
-To log into your new automation lab jump server $jumpDevMachine, you must change your login name to: .\$adminUserName and specify the corresponding password you entered at the begining of this script.
+To log into your new automation lab jump server $jumpDevMachine, you must change your login name to: $adminUserName and specify the corresponding password you entered at the begining of this script.
 You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
 For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
 If you like this script, follow me on GitHub at https://github.com/autocloudarc, send feedback or submit issues so we can build a better experience for everyone.
