@@ -94,7 +94,7 @@ if (Get-InstalledModule -Name $azureNonPreferredModule -ErrorAction SilentlyCont
 Write-Host "Your browser authentication prompt for your subscription may be opened in the background. Please resize this window to see it and log in."
 
 # Connect to Azure
-Connect-AzAccount
+Connect-AzureRMAccount
 
 # Allowable student numbers
 [int[]]$studentNumEnum = 0..16
@@ -102,11 +102,11 @@ Connect-AzAccount
 Do
 {
     # Subscription name
-	(Get-AzSubscription).Name
+	(Get-AzureRMSubscription).Name
 	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
 	$Subscription = $Subscription.ToUpper()
 } #end Do
-Until (Select-AzSubscription -Subscription $Subscription)
+Until (Select-AzureRMSubscription -Subscription $Subscription)
 
 Do
 {
@@ -120,8 +120,8 @@ Until (([int]$studentNumber) -in [int[]]$studentNumEnum)
 
 Do
 {
-    # The location refers to a geographic region of an Azure data center
-    $regions = Get-AzLocation | Select-Object -ExpandProperty Location
+    # The location refers to a geographic region of an Az data center
+    $regions = Get-AzureRMLocation | Select-Object -ExpandProperty Location
     Write-Output "The list of available regions are :"
     Write-Output ""
     Write-Output $regions
@@ -134,7 +134,7 @@ Do
 } #end Do
 Until ($region -in $regions)
 
-New-AzResourceGroup -Name $rg -Location $region -Verbose
+New-AzureRMResourceGroup -Name $rg -Location $region -Verbose
 
 $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
 $adminUserName = "adm.infra.user"
@@ -146,7 +146,7 @@ Do
 {
     $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 } #end while
-While (-not((Get-AzStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
+While (-not((Get-AzureRMStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
 
 $parameters = @{}
 $parameters.Add("studentNumber", $studentNumber)
@@ -155,7 +155,7 @@ $parameters.Add("adminPassword", $adminPassword)
 $parameters.Add("studentRandomInfix", $studentRandomInfix)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
-New-AzResourceGroupDeployment -ResourceGroupName $rg `
+New-AzureRMResourceGroupDeployment -ResourceGroupName $rg `
 -TemplateFile $templateUri `
 -Name $rgDeployment `
 -TemplateParameterObject $parameters `
@@ -168,7 +168,7 @@ if ($ErrorMessages)
 else
 {
     $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
-    $fqdnDev = (Get-AzPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
+    $fqdnDev = (Get-AzureRMPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
 
     $StopTimer = Get-Date -Verbose
     Write-Output "Calculating elapsed time..." -Log $Log
