@@ -23,7 +23,7 @@ Configuration CreateHTTPSPullServer
             ValueData = 1
             ValueType = 'Dword'
         } # end resource
-        
+            `
         Registry TLS1_2ServerDisabledByDefault
         {
             Ensure = 'Present'
@@ -72,9 +72,9 @@ Configuration CreateHTTPSPullServer
             EndpointName = "PSDSCPullServer"
             Port = 8080
             PhysicalPath = "c:\inetpub\wwwroot\PSDSCPullServer"
-            CertificateThumbPrint = 'B4BDD04D427DAA880FE1950A5CE9F83C93567E8D'
-            ModulePath = "$($node.SMBShareModules)"
-            ConfigurationPath = "$($node.SMBShareConfig)"
+            CertificateThumbPrint = $node.Thumbprint
+            ModulePath = $node.SMBShareModules
+            ConfigurationPath = $node.SMBShareConfig
             State = "Started"
             UseSecurityBestPractices = $true 
             DisableSecurityBestPractices = "SecureTLSProtocols"
@@ -86,7 +86,7 @@ Configuration CreateHTTPSPullServer
             Ensure = "Present"
             Type = "File"
             DestinationPath = "C:\Program Files\WindowsPowerShell\DscService\RegistrationKeys.txt"
-            Contents = "2a5de1da-82c6-491f-80ec-7a64829a965a"
+            Contents = "$($node.RegistrationKey)"
         } # end resource
 
         # Validate web config file contains current DB settings
@@ -139,3 +139,11 @@ $mofPathPullSvr = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automa
 
 CreateHTTPSPullServer -OutputPath $mofPathPullSvr -ConfigurationData $ConfigDataPathPullSvr
 Start-DscConfiguration -Path $mofPathPullSvr -ComputerName localhost -Wait -Verbose -Force
+# https://www.starwindsoftware.com/blog/how-to-build-a-secure-powershell-dsc-pull-server
+# https://docs.microsoft.com/en-us/powershell/dsc/pull-server/secureserver#verify-pull-server-functionality 
+Start-Process -FilePath iexplore.exe https://cltdev1001.dev.adatum.com:8080/PSDSCPullServer.svc/ 
+function Verify-DSCPullServer ($fqdn) {
+    ([xml](Invoke-WebRequest "https://$($fqdn):8080/psdscpullserver.svc" | % Content)).service.workspace.collection.href
+}
+
+Verify-DSCPullServer 'cltdev1001.dev.adatum.com'

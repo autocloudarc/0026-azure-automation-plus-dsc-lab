@@ -33,10 +33,10 @@
             InstallSQLDataDir = "m:\mstr"
             SQLBackupDir = "c:\bckp"
             role = "sql"
-            installFromPath = "C:\SqlServer2016x64"
-            installFromPathRemote = "\\cltdev1001\apps\sql\SqlServer2016x64"
+            installFromPath = "C:\SqlServer2017x64trial"
+            installFromPathRemote = "\\cltdev1001\apps\sql\SqlServer2017x64trial"
             instanceName = "MSSQLSERVER"
-            sqlFeatures = "SQLENGINE"
+            sqlFeatures = @("SQLENGINE","MDS")
             sqlSysAdminAccounts = "Administrators"
             sqlServiceAccount = "dev\svc.sql.user"
             loginType = "WindowsUser"

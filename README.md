@@ -90,13 +90,16 @@ Azure CLI (bash)
 
     # Assign a deployment name.
     rgDeployment=rg##deployment
-
+    
+    # Create a resource group
     az group create --name $rg --location $location
+    
+    # Be carefull when pasting multiple lines due to the differences in CRLF support for certain text editors/IDEs. 
     az group deployment create \
     --name $rgDeployment \
     --resource-group $rg \
     --template-uri $uri \
-    --parameters adminUserName=$adminUserName adminPassword=$adminPassword studentRadnomInfix=$studentRandomInfix studentNumber=$studentNumber
+    --parameters adminUserName=$adminUserName adminPassword=$adminPassword studentRandomInfix=$studentRandomInfix studentNumber=$studentNumber
 
 ## 5.0 Connecting to your Lab
 
