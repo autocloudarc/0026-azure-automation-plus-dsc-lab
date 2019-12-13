@@ -188,8 +188,8 @@ $parameters.Add("adminPassword", $adminPassword)
 $parameters.Add("studentRandomInfix", $studentRandomInfix)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
-New-AzureRMResourceGroupDeployment -ResourceGroupName $rg `
--TemplateFile $templateUri `
+New-AzResourceGroupDeployment -ResourceGroupName $rg `
+-TemplateUri $templateUri `
 -Name $rgDeployment `
 -TemplateParameterObject $parameters `
 -Force -Verbose `
