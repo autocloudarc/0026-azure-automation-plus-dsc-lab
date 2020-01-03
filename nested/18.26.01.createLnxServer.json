@@ -29,7 +29,7 @@
   },
   "variables": {
     "lnx01name": "[concat(parameters('lnxPrefix'),1)]",
-    "lnxVmSize": "Standard_A1_v2",
+    "lnxVmSize": "Standard_DS1_v2",
     "imagePublisher": "OpenLogic",
     "imageOffer": "CentOS",
     "imageSku": "7.4",
