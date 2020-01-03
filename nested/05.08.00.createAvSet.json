@@ -44,13 +44,17 @@
       "type": "string",
       "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[2])]"
     },
-    "devAvSetID": {
+    "pkiAvSetID": {
       "type": "string",
       "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[3])]"
     },
-    "lnxAvSetID": {
+    "devAvSetID": {
       "type": "string",
       "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[4])]"
+    },
+    "lnxAvSetID": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[5])]"
     }
   }
 }

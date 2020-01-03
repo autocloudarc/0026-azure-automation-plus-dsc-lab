@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "devPrefix": {
+    "pkiPrefix": {
       "type": "string"
     },
     "location": {
@@ -14,11 +14,11 @@
     "adminPassword": {
       "type": "securestring"
     },
-    "devAvSetId": {
+    "pkiAvSetId": {
       "type": "string"
     },
-    "dev01nicId": {
-      "type": "string"
+    "pkiNicIds": {
+      "type": "array"
     },
     "saSku": {
       "type": "string"
@@ -31,40 +31,32 @@
     },
     "domainJoinOptions": {
       "type": "string"
-    },
-    "devScriptUri": {
-      "type": "string"
-    },
-    "InstallAppsAndFeaturesScript": {
-      "type": "string"
     }
   },
   "variables": {
-    "dev01name": "[concat(parameters('devPrefix'),1)]",
-    "devVmSize": "Standard_DS1_v2",
-    "imagePublisher": "MicrosoftVisualStudio",
-    "imageOffer": "VisualStudio",
-    "imageSku": "VS-2017-Comm-Latest-WS2016",
-    /*
-    "imageOffer": "visualstudio2019latest",
-    "imageSku": "vs-2019-comm-latest-ws2019",
-    */
-    "diskNameOs": "[toLower(concat(variables('dev01name'),'-syst'))]",
-    "diskNameData": "[toLower(concat(variables('dev01name'),'-data'))]"
+    "sqlVmSize": "Standard_DS1_v2",
+    "pkiServerInstances": 1,
+    "imagePublisher": "MicrosoftWindowsServer",
+    "imageOffer": "WindowsServer",
+    "imageSku": "2016-Datacenter"
   },
   "resources": [
     {
-      "comments": "14.17.00.createDevServer",
+      "comments": "16.24.00.createPkiServers",
+      "name": "[concat(parameters('pkiPrefix'), copyIndex(1))]",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[variables('dev01name')]",
+      "copy": {
+        "name": "pkiServersCopy",
+        "count": "[variables('pkiServerInstances')]"
+      },
       "apiVersion": "2017-03-30",
       "location": "[parameters('location')]",
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[variables('devVmSize')]"
+          "vmSize": "[variables('sqlVmSize')]"
         },
         "osProfile": {
-          "computerName": "[variables('dev01name')]",
+          "computerName": "[concat(parameters('pkiPrefix'), copyIndex(1))]",
           "adminUsername": "[parameters('adminUserName')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -76,7 +68,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[variables('diskNameOs')]",
+            "name": "[concat(parameters('pkiPrefix'), copyIndex(1), '-syst')]",
             "caching": "ReadWrite",
             "createOption": "FromImage",
             "managedDisk": {
@@ -86,7 +78,7 @@
           "dataDisks": [
             {
               "lun": 0,
-              "name": "[variables('diskNameData')]",
+              "name": "[concat(parameters('pkiPrefix'), copyIndex(1), '-data')]",
               "caching": "None",
               "createOption": "Empty",
               "diskSizeGB": 32,
@@ -99,7 +91,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[parameters('dev01nicId')]"
+              "id": "[parameters('pkiNicIds')[copyIndex()]]"
             }
           ]
         },
@@ -110,21 +102,25 @@
           }
         },
         "availabilitySet": {
-          "id": "[parameters('devAvSetId')]"
+          "id": "[parameters('pkiAvSetId')]"
         }
       }
     },
     {
-      "comments": "14.17.01.joinDomainDevServer",
+      "comments": "16.24.01.joinDomainPkiServer",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('dev01name'),'/joindomain')]",
+      "name": "[concat(parameters('pkiPrefix'),copyIndex(1),'/joindomain')]",
+      "copy": {
+        "name": "pkiServersDomainJoinCopy",
+        "count": "[variables('pkiServerInstances')]"
+      },
       "apiVersion": "2017-12-01",
       "location": "[parameters('location')]",
       "tags": {
         "displayName": "JsonADDomainExtension"
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/',variables('dev01name'))]"
+        "[concat('Microsoft.Compute/virtualMachines/',parameters('pkiPrefix'),copyIndex(1))]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -141,29 +137,7 @@
           "Password": "[parameters('adminPassword')]"
         }
       }
-    },
-    {
-      "comments": "14.17.02.installAppsAndFeatures",
-      "name": "[concat(variables('dev01name'),'/14.17.02.installAppsAndFeatures')]",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2019-07-01",
-      "location": "[resourceGroup().location]",
-      "tags": {},
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/',variables('dev01name'),'/extensions/joindomain')]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "CustomScriptExtension",
-        "typeHandlerVersion": "1.9",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[parameters('devScriptUri')]"
-          ],
-          "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ',parameters('InstallAppsAndFeaturesScript'))]"
-        }
-      }
     }
   ]
+
 }

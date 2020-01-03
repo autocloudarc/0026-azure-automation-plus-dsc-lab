@@ -244,6 +244,30 @@
       }
     },
     {
+      "comments": "11.14.01.createNetworkInterfaces.pki01",
+      "name": "[parameters('nicCollection').pki01nic.name]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[parameters('location')]",
+      "apiVersion": "2017-10-01",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[parameters('subnetSrvsRef')]"
+              }
+            }
+          }
+        ],
+        "dnsSettings": {
+          "dnsServers": []
+        },
+        "enableIPForwarding": false
+      }
+    },
+    {
       "comments": "11.14.01.createNetworkInterfaces.lnx01[18.26.01]",
       "name": "[parameters('nicCollection').lnx01nic.name]",
       "type": "Microsoft.Network/networkInterfaces",
@@ -290,6 +314,10 @@
         "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicCollection').sql02nic.name)]"
       ],
       "type": "array"
+    },
+    "pki01NicId": {
+      "value": "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicCollection').pki01nic.name)]",
+      "type": "string"
     },
     "adsNicIds": {
       "value": [
