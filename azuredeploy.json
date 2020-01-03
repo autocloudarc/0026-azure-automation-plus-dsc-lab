@@ -218,7 +218,8 @@
     "createSqlServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.23.00.createSqlServers.json',parameters('_artifactsLocationSasToken')))]",
     "createAdsServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/17.25.00.createAdsServers.json',parameters('_artifactsLocationSasToken')))]",
     "createLnx01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/18.26.01.createLnxServer.json',parameters('_artifactsLocationSasToken')))]",
-    "updateVnetWithDNSuri": "[uri(parameters('_artifactsLocation'),concat('nested/03.16.00.updateVnetWithDNS.json',parameters('_artifactsLocationSasToken')))]"
+    "updateVnetWithDNSuri": "[uri(parameters('_artifactsLocation'),concat('nested/03.16.00.updateVnetWithDNS.json',parameters('_artifactsLocationSasToken')))]",
+    "installAppsAndFeaturesUri": "[uri(parameters('_artifactsLocation'),concat('cse/Install-AppsAndFeatures.ps1',parameters('_artifactsLocationSasToken')))]"
   },
   "resources": [
     {
@@ -621,6 +622,12 @@
           },
           "domainJoinOptions": {
             "value": "[variables('domainJoinOptions')]"
+          },
+          "devScriptUri": {
+            "value": "[variables('installAppsAndFeaturesUri')]"
+          },
+          "InstallAppsAndFeaturesScript": {
+            "value": "./cse/Install-AppsAndFeatures.ps1"
           }
         },
         "mode": "Incremental",
