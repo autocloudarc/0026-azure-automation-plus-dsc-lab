@@ -36,10 +36,15 @@
   "variables": {
     "sqlVmSize": "Standard_DS1_v2",
     "sqlServerInstances": 2,
+    "imagePublisher": "MicrosoftWindowsServer",
+    "imageOffer": "WindowsServer",
+    "imageSku": "2016-Datacenter"
+  },
+  /*
     "imagePublisher": "MicrosoftSQLServer",
     "imageOffer": "sql2019-ws2019",
     "imageSku": "sqldev"
-  },
+  */
   "resources": [
     {
       "comments": "16.23.00.createSqlServers",

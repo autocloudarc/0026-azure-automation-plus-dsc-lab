@@ -627,7 +627,7 @@
             "value": "[variables('installAppsAndFeaturesUri')]"
           },
           "InstallAppsAndFeaturesScript": {
-            "value": "./cse/Install-AppsAndFeatures.ps1"
+            "value": "./Install-AppsAndFeatures.ps1"
           }
         },
         "mode": "Incremental",

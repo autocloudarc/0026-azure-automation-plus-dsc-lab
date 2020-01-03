@@ -70,20 +70,6 @@ function Get-PSGalleryModule
 [string]$azurePreferredModule = "Az"
 [string]$azureNonPreferredModule = "AzureRM"
 
-# Verify parameter values
-Do {
-    $proceed = read-host "The PSGallery repository at www.powershellgallery.com will be configured as a trusted repository to download required modules for this script. Ok to proceed? [Y] [YES] [N] [NO]"
-    $proceed = $proceed.ToUpper()
-    }
-Until ($proceed -eq "Y" -OR $proceed -eq "YES" -OR $proceed -eq "N" -OR $proceed -eq "NO")
-
-if ($proceed -eq "N" -OR $proceed -eq "NO")
-{
-    Write-Output "Deployment terminated by user. Exiting..."
-    PAUSE
-    EXIT
-} #end if ne Y
-
 # https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-1.1.0
 if (Get-InstalledModule -Name $azureNonPreferredModule -ErrorAction SilentlyContinue)
 {
