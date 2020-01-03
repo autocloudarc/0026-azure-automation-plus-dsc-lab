@@ -37,8 +37,8 @@
     "dev01name": "[concat(parameters('devPrefix'),1)]",
     "devVmSize": "Standard_DS1_v2",
     "imagePublisher": "MicrosoftVisualStudio",
-    "imageOffer": "VisualStudio",
-    "imageSku": "VS-2017-Comm-Latest-WS2016",
+    "imageOffer": "visualstudio2019latest",
+    "imageSku": "vs-2019-comm-latest-ws2019",
     "diskNameOs": "[toLower(concat(variables('dev01name'),'-syst'))]",
     "diskNameData": "[toLower(concat(variables('dev01name'),'-data'))]"
   },
