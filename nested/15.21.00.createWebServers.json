@@ -38,7 +38,7 @@
     "webServerInstances": 2,
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
-    "imageSku": "2016-Datacenter-Server-Core-smalldisk"
+    "imageSku": "2019-datacenter-core-smalldisk-g2"
   },
   "resources": [
     {

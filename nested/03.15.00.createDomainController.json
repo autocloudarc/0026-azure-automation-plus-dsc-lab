@@ -41,7 +41,7 @@
     "adsVmSize": "Standard_A1_v2",
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
-    "imageSku": "2016-Datacenter-Server-Core-smalldisk",
+    "imageSku": "2019-datacenter-core-smalldisk-g2",
     "diskNameOs": "[toLower(concat(variables('ads03name'),'-syst'))]",
     "diskNameData": "[toLower(concat(variables('ads03name'),'-data'))]"
   },
