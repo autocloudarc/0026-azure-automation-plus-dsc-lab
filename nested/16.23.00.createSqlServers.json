@@ -35,7 +35,7 @@
   },
   "variables": {
     "sqlVmSize": "Standard_DS1_v2",
-    "sqlServerInstances": 3,
+    "sqlServerInstances": 2,
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "imageSku": "2016-Datacenter"
