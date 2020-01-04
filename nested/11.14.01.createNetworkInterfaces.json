@@ -290,6 +290,56 @@
         },
         "enableIPForwarding": false
       }
+    },
+    {
+      "comments": "11.14.01.createNetworkInterfaces.adg01",
+      "name": "[parameters('nicCollection').adg01nic.name]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[parameters('location')]",
+      "apiVersion": "2017-10-01",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAddress": "[variables('ads01PrivateIp')]",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[parameters('subnetAddsRef')]"
+              }
+            }
+          }
+        ],
+        "dnsSettings": {
+          "dnsServers": []
+        },
+        "enableIPForwarding": false
+      }
+    },
+    {
+      "comments": "11.14.01.createNetworkInterfaces.adg02",
+      "name": "[parameters('nicCollection').adg02nic.name]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[parameters('location')]",
+      "apiVersion": "2017-10-01",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAddress": "[variables('ads01PrivateIp')]",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[parameters('subnetAddsRef')]"
+              }
+            }
+          }
+        ],
+        "dnsSettings": {
+          "dnsServers": []
+        },
+        "enableIPForwarding": false
+      }
     }
   ],
   "outputs": {
@@ -323,6 +373,13 @@
       "value": [
         "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicCollection').ads01nic.name)]",
         "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicCollection').ads02nic.name)]"
+      ],
+      "type": "array"
+    },
+    "adgNicIds": {
+      "value": [
+        "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicCollection').adg01nic.name)]",
+        "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicCollection').adg02nic.name)]"
       ],
       "type": "array"
     },

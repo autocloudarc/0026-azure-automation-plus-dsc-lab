@@ -164,6 +164,7 @@
     "rsvName": "[concat('rsv-',variables('randomInfix'),'-',parameters('studentNumber'))]",
     "cspPrefix": "AZR",
     "roleCodeAds": "ADS",
+    "roleCodeAdg": "ADG",
     "roleCodeWeb": "WEB",
     "roleCodeSql": "SQL",
     "roleCodePki": "PKI",
@@ -171,6 +172,7 @@
     "roleCodeLnx": "LNX",
     "seriesPrefix": "0",
     "adsPrefix": "[concat(variables('cspPrefix'),variables('roleCodeAds'),parameters('studentNumber'),variables('seriesPrefix'))]",
+    "adgPrefix": "[concat(variables('cspPrefix'),variables('roleCodeAdg'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "webPrefix": "[concat(variables('cspPrefix'),variables('roleCodeWeb'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "sqlPrefix": "[concat(variables('cspPrefix'),variables('roleCodeSql'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "pkiPrefix": "[concat(variables('cspPrefix'),variables('roleCodePki'),parameters('studentNumber'),variables('seriesPrefix'))]",
@@ -196,6 +198,12 @@
       "ads03nic": {
         "name": "[toLower(concat(substring(variables('adsPrefix'),0,6),parameters('studentNumber'),'03',variables('nicSuffix')))]"
       },
+      "adg01nic": {
+        "name": "[toLower(concat(substring(variables('adgPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
+      },
+      "adg02nic": {
+        "name": "[toLower(concat(substring(variables('adgPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
+      },
       "dev01nic": {
         "name": "[toLower(concat(substring(variables('devPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
       },
@@ -212,7 +220,7 @@
         "name": "[toLower(concat(substring(variables('sqlPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
       },
       "pki01nic": {
-        "name": "[toLower(concat(substring(variables('pkiPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('pkiPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
       },
       "lnx01nic": {
         "name": "[toLower(concat(substring(variables('lnxPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
@@ -224,6 +232,7 @@
     "createSqlServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.23.00.createSqlServers.json',parameters('_artifactsLocationSasToken')))]",
     "createPkiServerUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.24.00.createPkiServer.json',parameters('_artifactsLocationSasToken')))]",
     "createAdsServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/17.25.00.createAdsServers.json',parameters('_artifactsLocationSasToken')))]",
+    "createAdgServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/17.25.01.createAdsGuiServers.json',parameters('_artifactsLocationSasToken')))]",
     "createLnx01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/18.26.01.createLnxServer.json',parameters('_artifactsLocationSasToken')))]",
     "updateVnetWithDNSuri": "[uri(parameters('_artifactsLocation'),concat('nested/03.16.00.updateVnetWithDNS.json',parameters('_artifactsLocationSasToken')))]",
     "installAppsAndFeaturesUri": "[uri(parameters('_artifactsLocation'),concat('cse/Install-AppsAndFeatures.ps1',parameters('_artifactsLocationSasToken')))]"
@@ -852,6 +861,58 @@
       }
     },
     {
+      "comments": "17.25.01.createAdsGuiServers",
+      "name": "17.25.01.linkedDeploymentCreateAdsGuiServers",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "dependsOn": [
+        "01.11.00.linkedDeploymentCreateStorageAccount",
+        "03.16.00.linkedDeploymentUpdateVnetWithDNS"
+      ],
+      "properties": {
+        "templateLink": {
+          "uri": "[variables('createAdgServersUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "adgPrefix": {
+            "value": "[variables('adgPrefix')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "adminUserName": {
+            "value": "[parameters('adminUserName')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "adsAvSetId": {
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
+          },
+          "adgNicIds": {
+            "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.adgNicIds.value]"
+          },
+          "saSku": {
+            "value": "[variables('saSku')]"
+          },
+          "diagStorageUri": {
+            "value": "[variables('diagStorageUri')]"
+            },
+          "domainName": {
+            "value": "[variables('fqdnAdatumDev')]"
+          },
+          "domainJoinOptions": {
+            "value": "[variables('domainJoinOptions')]"
+          }
+        },
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        }
+      }
+    },
+    {
       "comments": "18.26.01.createLnxServer",
       "name": "18.26.01.linkedDeploymentCreateLnxServer",
       "type": "Microsoft.Resources/deployments",
@@ -889,7 +950,7 @@
           },
           "diagStorageUri": {
             "value": "[variables('diagStorageUri')]"
-            },
+            }
         },
         "mode": "Incremental",
         "debugSetting": {
