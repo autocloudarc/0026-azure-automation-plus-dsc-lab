@@ -35,20 +35,16 @@
   },
   "variables": {
     "sqlVmSize": "Standard_DS1_v2",
-    "pkiServerInstances": 1,
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
-    "imageSku": "2016-Datacenter"
+    "imageSku": "2016-Datacenter",
+    "pkiServerName": "[concat(parameters('pkiPrefix'),1)]"
   },
   "resources": [
     {
       "comments": "16.24.00.createPkiServers",
-      "name": "[concat(parameters('pkiPrefix'), copyIndex(1))]",
+      "name": "[variables('pkiServerName')]",
       "type": "Microsoft.Compute/virtualMachines",
-      "copy": {
-        "name": "pkiServersCopy",
-        "count": "[variables('pkiServerInstances')]"
-      },
       "apiVersion": "2017-03-30",
       "location": "[parameters('location')]",
       "properties": {
@@ -56,7 +52,7 @@
           "vmSize": "[variables('sqlVmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('pkiPrefix'), copyIndex(1))]",
+          "computerName": "[variables('pkiServerName')]",
           "adminUsername": "[parameters('adminUserName')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -68,7 +64,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(parameters('pkiPrefix'), copyIndex(1), '-syst')]",
+            "name": "[concat(variables('pkiServerName'),'-syst')]",
             "caching": "ReadWrite",
             "createOption": "FromImage",
             "managedDisk": {
@@ -78,7 +74,7 @@
           "dataDisks": [
             {
               "lun": 0,
-              "name": "[concat(parameters('pkiPrefix'), copyIndex(1), '-data')]",
+              "name": "[concat(variables('pkiServerName'),'-data')]",
               "caching": "None",
               "createOption": "Empty",
               "diskSizeGB": 32,
@@ -91,7 +87,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[parameters('pki01NicId')[copyIndex()]]"
+              "id": "[parameters('pki01NicId')]"
             }
           ]
         },
@@ -109,18 +105,14 @@
     {
       "comments": "16.24.01.joinDomainPkiServer",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('pkiPrefix'),copyIndex(1),'/joindomain')]",
-      "copy": {
-        "name": "pkiServersDomainJoinCopy",
-        "count": "[variables('pkiServerInstances')]"
-      },
+      "name": "[concat(variables('pkiServerName'),'/joindomain')]",
       "apiVersion": "2017-12-01",
       "location": "[parameters('location')]",
       "tags": {
         "displayName": "JsonADDomainExtension"
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/',parameters('pkiPrefix'),copyIndex(1))]"
+        "[concat('Microsoft.Compute/virtualMachines/',variables('pkiServerName'))]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
