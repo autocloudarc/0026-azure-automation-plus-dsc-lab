@@ -222,7 +222,7 @@
     "createDev01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/14.17.00.createDevServer.json',parameters('_artifactsLocationSasToken')))]",
     "createWebServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/15.21.00.createWebServers.json',parameters('_artifactsLocationSasToken')))]",
     "createSqlServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.23.00.createSqlServers.json',parameters('_artifactsLocationSasToken')))]",
-    "createPkiServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.24.00.createPkiServers.json',parameters('_artifactsLocationSasToken')))]",
+    "createPkiServerUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.24.00.createPkiServer.json',parameters('_artifactsLocationSasToken')))]",
     "createAdsServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/17.25.00.createAdsServers.json',parameters('_artifactsLocationSasToken')))]",
     "createLnx01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/18.26.01.createLnxServer.json',parameters('_artifactsLocationSasToken')))]",
     "updateVnetWithDNSuri": "[uri(parameters('_artifactsLocation'),concat('nested/03.16.00.updateVnetWithDNS.json',parameters('_artifactsLocationSasToken')))]",
@@ -758,7 +758,7 @@
       ],
       "properties": {
         "templateLink": {
-          "uri": "[variables('createPkiServersUri')]",
+          "uri": "[variables('createPkiServerUri')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
