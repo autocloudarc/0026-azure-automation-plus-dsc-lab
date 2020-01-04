@@ -94,9 +94,9 @@ Until (Select-AzureRMSubscription -Subscription $Subscription)
 Do
 {
     # Student number
-    $studentNumber = Read-Host "Please enter your student number, which must be a number from [0-16], or hit RETURN to select [0]. NOTE: Your resource group name will be rg##, where ## represents the number you entered."
+    [int]$studentNumber = Read-Host "Please enter your student number, which must be a number from [0-16], or hit RETURN to select [0]. NOTE: Your resource group name will be rg##, where ## represents the number you entered."
 } #end Do
-Until (($studentNumber -match '\d{2}') -and ([int]$studentNumber -ge 0) -and ([int]$studentNumber -le 16))
+Until (($studentNumber -is [int]) -and ($studentNumber -match '\d{2}') -and ([int]$studentNumber -ge 0) -and ([int]$studentNumber -le 16))
 
 # Resource Group name
 [string]$rg = "rg" + [int]$studentNumber
