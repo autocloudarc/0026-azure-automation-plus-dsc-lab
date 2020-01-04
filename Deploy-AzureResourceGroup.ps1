@@ -82,9 +82,6 @@ Write-Host "Your browser authentication prompt for your subscription may be open
 # Connect to Azure
 Connect-AzureRMAccount
 
-# Allowable student numbers
-[int[]]$studentNumEnum = 0..16
-
 Do
 {
     # Subscription name
@@ -97,9 +94,9 @@ Until (Select-AzureRMSubscription -Subscription $Subscription)
 Do
 {
     # Student number
-    [int]$studentNumber = Read-Host "Please enter your student number, which must be a number from [0-16], or hit RETURN to select [0]. NOTE: Your resource group name will be rg##, where ## represents the number you entered."
+    $studentNumber = Read-Host "Please enter your student number, which must be a number from [0-16], or hit RETURN to select [0]. NOTE: Your resource group name will be rg##, where ## represents the number you entered."
 } #end Do
-Until (([int]$studentNumber) -in [int[]]$studentNumEnum)
+Until (($studentNumber -match '\d{2}') -and ([int]$studentNumber -ge 0) -and ([int]$studentNumber -le 16))
 
 # Resource Group name
 [string]$rg = "rg" + [int]$studentNumber
