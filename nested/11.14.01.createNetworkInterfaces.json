@@ -35,14 +35,16 @@
     "adsPrivateIps": {
       "type": "object",
       "metadata": {
-        "description": "Private IP prefix for DCs (ads03,1,2)"
+        "description": "Private IP prefix for DCs (ads03,1,2 and adg01,02)"
       }
     }
   },
   "variables": {
     "ads03PrivateIp": "[parameters('adsPrivateIps').ads03privIp]",
     "ads01PrivateIp": "[parameters('adsPrivateIps').ads01privIp]",
-    "ads02PrivateIp": "[parameters('adsPrivateIps').ads02privIp]"
+    "ads02PrivateIp": "[parameters('adsPrivateIps').ads02privIp]",
+    "adg01PrivateIp": "[parameters('adsPrivateIps').adg01privIp]",
+    "adg02PrivateIp": "[parameters('adsPrivateIps').adg02privIp]"
   },
   "resources": [
     {
@@ -302,7 +304,7 @@
           {
             "name": "ipconfig1",
             "properties": {
-              "privateIPAddress": "[variables('ads01PrivateIp')]",
+              "privateIPAddress": "[variables('adg01PrivateIp')]",
               "privateIPAllocationMethod": "Static",
               "subnet": {
                 "id": "[parameters('subnetAddsRef')]"
@@ -327,7 +329,7 @@
           {
             "name": "ipconfig1",
             "properties": {
-              "privateIPAddress": "[variables('ads01PrivateIp')]",
+              "privateIPAddress": "[variables('adg02PrivateIp')]",
               "privateIPAllocationMethod": "Static",
               "subnet": {
                 "id": "[parameters('subnetAddsRef')]"

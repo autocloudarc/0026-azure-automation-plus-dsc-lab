@@ -184,7 +184,9 @@
     "adsPrivateIps": {
       "ads03PrivIp": "[concat(variables('dcNicIpPrefix'),'.6')]",
       "ads01PrivIp": "[concat(variables('dcNicIpPrefix'),'.4')]",
-      "ads02PrivIp": "[concat(variables('dcNicIpPrefix'),'.5')]"
+      "ads02PrivIp": "[concat(variables('dcNicIpPrefix'),'.5')]",
+      "adg01PrivIp": "[concat(variables('dcNicIpPrefix'),'.7')]",
+      "adg02PrivIp": "[concat(variables('dcNicIpPrefix'),'.8')]"
     },
     "createNetworkInterfacesUri": "[uri(parameters('_artifactsLocation'),concat('nested/11.14.01.createNetworkInterfaces.json',parameters('_artifactsLocationSasToken')))]",
     "nicSuffix": "-nic",
