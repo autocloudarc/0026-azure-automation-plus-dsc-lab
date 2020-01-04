@@ -777,8 +777,8 @@
           "pkiAvSetId": {
             "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.pkiAvSetId.value]"
           },
-          "pkiNicIds": {
-            "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.pkiNicIds.value]"
+          "pki01NicId": {
+            "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.pki01NicId.value]"
           },
           "saSku": {
             "value": "[variables('saSku')]"

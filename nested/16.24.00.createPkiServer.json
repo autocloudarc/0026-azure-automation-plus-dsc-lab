@@ -17,8 +17,8 @@
     "pkiAvSetId": {
       "type": "string"
     },
-    "pkiNicIds": {
-      "type": "array"
+    "pki01NicId": {
+      "type": "string"
     },
     "saSku": {
       "type": "string"
@@ -91,7 +91,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[parameters('pkiNicIds')[copyIndex()]]"
+              "id": "[parameters('pki01NicId')[copyIndex()]]"
             }
           ]
         },
@@ -139,5 +139,4 @@
       }
     }
   ]
-
 }
