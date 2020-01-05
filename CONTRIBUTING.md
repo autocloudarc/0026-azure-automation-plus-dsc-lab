@@ -8,7 +8,7 @@ To contribute, we ask that you please follow these steps:
 1. Read the [README](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/README.md) file to get an idea of this projects intent and scope.
 
 ## CODE OF CONDUCT
-2. Read the code of conduct, which outlines the rules of expected behavior for users and contributors alike.
+2. Read the [Code of Conduct](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/CODE_OF_CONDUCT.md), which outlines the rules of expected behavior for users and contributors alike.
 
 ## CLONING
 3. Clone the project locally to implement any proposed changes.
