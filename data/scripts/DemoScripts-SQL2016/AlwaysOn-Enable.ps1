@@ -1,1 +1,0 @@
-enable-sqlalwayson -Path SQLServer:\Sql\SQLADMIN11CN1\Default -Force
