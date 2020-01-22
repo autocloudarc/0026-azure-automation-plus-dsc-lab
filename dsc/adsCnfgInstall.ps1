@@ -3,18 +3,18 @@ Configuration adsCnfgInstall
 	Param
 	(
 		[string]$domainName,
-		[int]$dataDiskNumber,
+		[string]$dataDiskNumber,
 		[string]$dataDiskDriveLetter,
 		[System.Management.Automation.PSCredential]$domainAdminCredentials
 	) # end param
 
 	Install-PackageProvider -Name NuGet -Force
 	Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-	Import-DscResource -ModuleName PSDesiredStateConfiguration, xActiveDirectory, xComputerManagement, xDisk
+	Import-DscResource -ModuleName PSDesiredStateConfiguration, xActiveDirectory, xComputerManagement, xStorage
 
 	[string]$netbiosDomainName = $domainName.Split(".")[0]
 	[System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${netbiosDomainName}\$($domainAdminCredentials.UserName)", $domainAdminCredentials.Password)
-	
+
 	$dcFeaturesToAdd = @(
 		$rsatDnsServer = @{
 			Ensure = "Present";
@@ -43,7 +43,7 @@ Configuration adsCnfgInstall
 	) # end array
 
 	Node localhost
-	{     
+	{
   		LocalConfigurationManager
 		{
 			ConfigurationMode = 'ApplyAndAutoCorrect'
@@ -75,7 +75,7 @@ Configuration adsCnfgInstall
 
 		xWaitForDisk WaitForDataDiskProvisioning
 		{
-			DiskNumber = $dataDiskNumber
+			DiskId = $dataDiskNumber
 			RetryCount = $Node.RetryCount
 			RetryIntervalSec = $Node.RetryIntervalSec
 			DependsOn = "[WindowsFeature]RSAT-Role-Tools"
@@ -83,14 +83,14 @@ Configuration adsCnfgInstall
 
 		xDisk ConfigureDataDisk
 		{
-			DiskNumber = $dataDiskNumber
+			DiskId = $dataDiskNumber
 			DriveLetter = $dataDiskDriveLetter
 			DependsOn = "[xWaitforDisk]WaitForDataDiskProvisioning"
 		} # end resource
 
-		xADDomain CreateForest 
-		{ 
-			DomainName = $domainName            
+		xADDomain CreateForest
+		{
+			DomainName = $domainName
 			DomainAdministratorCredential = [System.Management.Automation.PSCredential]$DomainCreds
 			SafemodeAdministratorPassword = [System.Management.Automation.PSCredential]$DomainCreds
 			DomainNetbiosName = $netbiosDomainName
@@ -101,3 +101,13 @@ Configuration adsCnfgInstall
 		} # end resource
 	} # end node
 } # end configuration
+
+$domainAdminCredentials = Get-Credential -Message "Enter domain admin username and password" 
+
+adsCnfgInstall -domainName dev.adatum.com -dataDiskNumber 2 -dataDriveLetter F -domainAdminCredentials
+
+# Prepare the session
+$session = New-CimSession -Credential $DomainAdministratorCredentials -ComputerName $SecondDomainControllerName -Verbose
+
+# Apply the configuration using the session
+Start-DscConfiguration -Path $configPath -CimSession $session -Verbose -Wait -Force

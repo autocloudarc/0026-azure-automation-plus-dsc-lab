@@ -1,1 +1,0 @@
-(Get-ChildItem -Path cert:\LocalMachine\My | Where-Object {$_.EnhancedKeyUsageList.FriendlyName -contains 'Document Encryption'} | Select-Object -Property Thumbprint).Thumbprint
