@@ -1,0 +1,155 @@
+{
+    "window.zoomLevel": -1,
+
+     // Specifies the url of the GitHub project in which to generate bug reports.
+  "powershell.bugReporting.project": "https://github.com/PowerShell/vscode-powershell",
+
+  // Enables syntax based code folding. When disabled, the default indentation based code folding is used.
+  "powershell.codeFolding.enable": true,
+
+  // Shows the last line of a folded section similar to the default VSCode folding style. When disabled, the entire folded region is hidden.
+  "powershell.codeFolding.showLastLine": true,
+
+  // Align assignment statements in a hashtable or a DSC Configuration.
+  "powershell.codeFormatting.alignPropertyValuePairs": true,
+
+  // Does not reformat one-line code blocks, such as "if (...) {...} else {...}".
+  "powershell.codeFormatting.ignoreOneLineBlock": true,
+
+  // Adds a newline (line break) after a closing brace.
+  "powershell.codeFormatting.newLineAfterCloseBrace": true,
+
+  // Adds a newline (line break) after an open brace.
+  "powershell.codeFormatting.newLineAfterOpenBrace": true,
+
+  // Places open brace on the same line as its associated statement.
+  "powershell.codeFormatting.openBraceOnSameLine": true,
+
+  // Sets the codeformatting options to follow the given indent style in a way that is compatible with PowerShell syntax. For more information about the brace styles please refer to https://github.com/PoshCode/PowerShellPracticeAndStyle/issues/81.
+  "powershell.codeFormatting.preset": "Custom",
+
+  // Adds a space after a separator (',' and ';').
+  "powershell.codeFormatting.whitespaceAfterSeparator": true,
+
+  // Adds spaces before and after an operator ('=', '+', '-', etc.).
+  "powershell.codeFormatting.whitespaceAroundOperator": true,
+
+  // Adds a space between a keyword and its associated scriptblock expression.
+  "powershell.codeFormatting.whitespaceBeforeOpenBrace": true,
+
+  // Adds a space between a keyword (if, elseif, while, switch, etc) and its associated conditional expression.
+  "powershell.codeFormatting.whitespaceBeforeOpenParen": true,
+
+  // Determines whether a temporary PowerShell Integrated Console is created for each debugging session, useful for debugging PowerShell classes and binary modules.
+  "powershell.debugging.createTemporaryIntegratedConsole": false,
+
+  // Specifies an alternate path to the folder containing modules that are bundled with the PowerShell extension (i.e. PowerShell Editor Services, PSScriptAnalyzer, Plaster)
+  "powershell.developer.bundledModulesPath": "",
+
+  // Sets the logging verbosity level for the PowerShell Editor Services host executable.  Valid values are 'Diagnostic', 'Verbose', 'Normal', 'Warning', and 'Error'
+  "powershell.developer.editorServicesLogLevel": "Normal",
+
+  // Launches the language service with the /waitForDebugger flag to force it to wait for a .NET debugger to attach before proceeding.
+  "powershell.developer.editorServicesWaitForDebugger": false,
+
+  // An array of strings that enable experimental features in the PowerShell extension.
+  "powershell.developer.featureFlags": [],
+
+  // Indicates that the powerShellExePath points to a developer build of Windows PowerShell and configures it for development.
+  "powershell.developer.powerShellExeIsWindowsDevBuild": false,
+
+  // Deprecated. Please use the 'powershell.powerShellExePath' setting instead
+  "powershell.developer.powerShellExePath": "",
+
+  // Loads user and system-wide PowerShell profiles (profile.ps1 and Microsoft.VSCode_profile.ps1) into the PowerShell session. This affects IntelliSense and interactive script execution, but it does not affect the debugger.
+  "powershell.enableProfileLoading": true,
+
+  // Controls the comment-based help completion behavior triggered by typing '##'. Set the generated help style with 'BlockComment' or 'LineComment'. Disable the feature with 'Disabled'.
+  "powershell.helpCompletion": "BlockComment",
+
+  // Switches focus to the console when a script selection is run or a script file is debugged. This is an accessibility feature. To disable it, set to false.
+  "powershell.integratedConsole.focusConsoleOnExecute": true,
+
+  // Shows the integrated console when the PowerShell extension is initialized.
+  "powershell.integratedConsole.showOnStartup": true,
+
+  // Specifies an array of versionName / exePath pairs where exePath points to a non-standard install location for PowerShell and versionName can be used to reference this path with the powershell.powerShellDefaultVersion setting.
+  "powershell.powerShellAdditionalExePaths": [],
+
+  // Specifies the name of the PowerShell version used in the startup session when the extension loads e.g "Windows PowerShell (x86)" or "PowerShell Core 6.0.2 (x64)".
+  "powershell.powerShellDefaultVersion": "",
+
+  // Specifies the full path to a PowerShell executable. Changes the installation of PowerShell used for language and debugging services.
+  "powershell.powerShellExePath": "",
+
+  // Enables real-time script analysis from PowerShell Script Analyzer. Uses the newest installed version of the PSScriptAnalyzer module or the version bundled with this extension, if it is newer.
+  "powershell.scriptAnalysis.enable": true,
+
+  // Specifies the path to a PowerShell Script Analyzer settings file. To override the default settings for all projects, enter an absolute path, or enter a path relative to your workspace.
+  "powershell.scriptAnalysis.settingsPath": "",
+
+  // Starts PowerShell extension features automatically when a PowerShell file opens. If false, to start the extension, use the 'PowerShell: Restart Current Session' command. IntelliSense, code navigation, integrated console, code formatting, and other features are not enabled until the extension starts.
+  "powershell.startAutomatically": true,
+
+  // Uses the 32-bit language service on 64-bit Windows. This setting has no effect on 32-bit Windows or on the PowerShell extension debugger, which has its own architecture configuration.
+  "powershell.useX86Host": false,
+
+   // Enables Application Insights telemetry collection for the Azure Repos extension.
+   "team.appInsights.enabled": true,
+
+   // [Not for TFVC] Specify the team project's build definition Id to monitor when your source code repository is not hosted with Microsoft. Requires both team.remoteUrl and team.teamProject.
+   "team.buildDefinitionId": 0,
+ 
+   // Set the logging level for the extension (error, warn, info, verbose, debug).
+   "team.logging.level": "",
+ 
+   // Specify the account and either the queryText or queryPath of the query you'd like to monitor.  If specified, queryText is preferred over queryPath.
+   "team.pinnedQueries": [
+     {
+       "account": "",
+       "queryText": "",
+       "queryPath": ""
+     }
+   ],
+ 
+   // Specify the number of minutes to wait when polling for new builds and pull requests.
+   "team.pollingInterval": 5,
+ 
+   // [Not for TFVC] Specify the url to a project collection to use when your source code repository is not hosted with Microsoft. Requires team.teamProject.
+   "team.remoteUrl": "",
+ 
+   // Tracks whether the extension should display the Welcome message after the initial installation.
+   "team.showWelcomeMessage": true,
+ 
+   // [Not for TFVC] Specify the team project to use when your source code repository is not hosted with Microsoft. Requires team.remoteUrl.
+   "team.teamProject": "",
+ 
+   // [Required for TFVC] Specify the full path to the TF executable or script to use for TFVC functionality.
+   "tfvc.location": "",
+ 
+   // [Optional for TFVC] Specify the full URL (ex. http://servername:9999/proxy) to the TFS proxy to use for TFVC functionality.
+   "tfvc.proxy": "",
+ 
+   // [Optional for TFVC] Restricts the TFVC workspace to the currently open VS Code workspace.
+   "tfvc.restrictWorkspace": false,
+   
+  // Background color of the decoration. Use rgba() and define transparent background colors to play well with other decorations. Ex.: rgba(21, 126, 251, 0.1)
+  "bookmarks.backgroundLineColor": "",
+
+  // Path to another image to be presented as Bookmark
+  "bookmarks.gutterIconPath": "",
+
+  // Allow navigation look for bookmarks in all files in the project, instead of only the current
+  "bookmarks.navigateThroughAllFiles": false,
+
+  // Allow bookmarks to be saved (and restored) locally in the opened Project/Folder instead of VS Code
+  "bookmarks.saveBookmarksInProject": false,
+
+  // Should display the Treeview?
+  "bookmarks.treeview.visible": true,
+
+  // Allow navigation to wrap around at the first and last bookmarks in scope (current file or all files)
+  "bookmarks.wrapNavigation": true
+
+ 
+}
