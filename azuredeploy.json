@@ -172,7 +172,7 @@
     "roleCodeLnx": "LNX",
     "seriesPrefix": "0",
     "adsPrefix": "[concat(variables('cspPrefix'),variables('roleCodeAds'),parameters('studentNumber'),variables('seriesPrefix'))]",
-    "adgPrefix": "[concat(variables('cspPrefix'),variables('roleCodeAdg'),parameters('studentNumber'),variables('seriesPrefix'))]",
+    // "adgPrefix": "[concat(variables('cspPrefix'),variables('roleCodeAdg'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "webPrefix": "[concat(variables('cspPrefix'),variables('roleCodeWeb'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "sqlPrefix": "[concat(variables('cspPrefix'),variables('roleCodeSql'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "pkiPrefix": "[concat(variables('cspPrefix'),variables('roleCodePki'),parameters('studentNumber'),variables('seriesPrefix'))]",
