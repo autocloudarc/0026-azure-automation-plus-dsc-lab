@@ -1,5 +1,5 @@
 ﻿{
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "devPrefix": {
@@ -43,11 +43,11 @@
     "dev01name": "[concat(parameters('devPrefix'),1)]",
     "devVmSize": "Standard_DS1_v2",
     "imagePublisher": "MicrosoftVisualStudio",
-    "imageOffer": "VisualStudio",
-    "imageSku": "VS-2017-Comm-Latest-WS2016",
-    /*
     "imageOffer": "visualstudio2019latest",
     "imageSku": "vs-2019-comm-latest-ws2019",
+    /*
+    "imageOffer": "visualstudio2019latest" | "VisualStudio",
+    "imageSku": "vs-2019-comm-latest-ws2019" | "VS-2017-Comm-Latest-WS2016",
     */
     "diskNameOs": "[toLower(concat(variables('dev01name'),'-syst'))]",
     "diskNameData": "[toLower(concat(variables('dev01name'),'-data'))]"
