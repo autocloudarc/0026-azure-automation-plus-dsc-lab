@@ -164,7 +164,7 @@
     "rsvName": "[concat('rsv-',variables('randomInfix'),'-',parameters('studentNumber'))]",
     "cspPrefix": "AZR",
     "roleCodeAds": "ADS",
-    "roleCodeAdg": "ADG",
+    // "roleCodeAdg": "ADG",
     "roleCodeWeb": "WEB",
     "roleCodeSql": "SQL",
     "roleCodePki": "PKI",
@@ -200,12 +200,13 @@
       "ads03nic": {
         "name": "[toLower(concat(substring(variables('adsPrefix'),0,6),parameters('studentNumber'),'03',variables('nicSuffix')))]"
       },
-      "adg01nic": {
+      /* "adg01nic": {
         "name": "[toLower(concat(substring(variables('adgPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
       },
       "adg02nic": {
         "name": "[toLower(concat(substring(variables('adgPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
       },
+      */
       "dev01nic": {
         "name": "[toLower(concat(substring(variables('devPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
       },
@@ -234,7 +235,7 @@
     "createSqlServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.23.00.createSqlServers.json',parameters('_artifactsLocationSasToken')))]",
     "createPkiServerUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.24.00.createPkiServer.json',parameters('_artifactsLocationSasToken')))]",
     "createAdsServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/17.25.00.createAdsServers.json',parameters('_artifactsLocationSasToken')))]",
-    "createAdgServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/17.25.01.createAdsGuiServers.json',parameters('_artifactsLocationSasToken')))]",
+    // "createAdgServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/17.25.01.createAdsGuiServers.json',parameters('_artifactsLocationSasToken')))]",
     "createLnx01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/18.26.01.createLnxServer.json',parameters('_artifactsLocationSasToken')))]",
     "updateVnetWithDNSuri": "[uri(parameters('_artifactsLocation'),concat('nested/03.16.00.updateVnetWithDNS.json',parameters('_artifactsLocationSasToken')))]",
     "installAppsAndFeaturesUri": "[uri(parameters('_artifactsLocation'),concat('cse/Install-AppsAndFeatures.ps1',parameters('_artifactsLocationSasToken')))]"
@@ -862,6 +863,7 @@
         }
       }
     },
+    /*
     {
       "comments": "17.25.01.createAdsGuiServers",
       "name": "17.25.01.linkedDeploymentCreateAdsGuiServers",
@@ -914,6 +916,7 @@
         }
       }
     },
+    */
     {
       "comments": "18.26.01.createLnxServer",
       "name": "18.26.01.linkedDeploymentCreateLnxServer",
