@@ -330,8 +330,8 @@ $labResourceGroupFilter = "rg??"
 Write-Warning "The list of PoC resource groups are:"
 Get-AzResourceGroup -Name $labResourceGroupFilter -Verbose
 Write-Output ""
-Write-Output "To remove the resource groups, use the command below:"
-Write-Output "Get-AzResourceGroup -Name 'rg??' | ForEach-Object { Remove-AzResourceGroup -ResourceGroupName $_.ResourceGroupName -Verbose -Force }"
+Write-Warning "To remove the resource groups, use the command below:"
+Write-Warning 'Get-AzResourceGroup -Name <YourResourceGroupName> | ForEach-Object { Remove-AzResourceGroup -ResourceGroupName $_.ResourceGroupName -Verbose -Force }'
 
 Write-Warning "Transcript logs are hosted in the directory: $LogDirectory to allow access for multiple users on this machine for diagnostic or auditing purposes."
 Write-Warning "To examine, archive or remove old log files to recover storage space, run this command to open the log files location: Start-Process -FilePath $LogDirectory"
