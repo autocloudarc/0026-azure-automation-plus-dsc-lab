@@ -65,7 +65,11 @@ Configuration adsCnfgInstallPushAds01
 	Param
 	(
 		[Parameter(Mandatory=$true)]
+<<<<<<< HEAD
+        [PSdomainAdminCred]$domainAdminCred,
+=======
         [PSCredential]$domainAdminCred,
+>>>>>>> master
         [Parameter(Mandatory=$true)]
         [string]$thumbPrint
         #>
@@ -187,7 +191,11 @@ Configuration adsCnfgInstallPushAds01
 # Set MOF path
 $devMofPath = "f:\dsc\mof"
 # Set ConfigData path
+<<<<<<< HEAD
+$ConfigDataPath = "F:\dsc\configdata\adsDataInstallPushAds01.psd1"
+=======
 $ConfigDataPath = "<>"
+>>>>>>> master
 <#
 TASK-ITEM: Turn on print and file sharing (SMB-in) in group policies for target nodes using GROUP POLICY advanced firewall settings
 Scope: Computer node

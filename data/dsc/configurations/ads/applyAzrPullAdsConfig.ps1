@@ -28,7 +28,11 @@ Configuration applyAzrPullAdsConfig
     Import-DscResource -ModuleName xComputerManagement
     Import-DscResource -ModuleName xStorage
     Import-DscResource -ModuleName xPendingReboot
+<<<<<<< HEAD
+	[pscredential]$domainAdminCred = Get-AutomationPSCredential 'domainAdminCred'
+=======
 	[pscredential]$domainAdminCred = Get-AutomationPSCredential '<credential asset name>'
+>>>>>>> master
 
 	$dcFeaturesToAdd = @(
 		$rsatDns = @{

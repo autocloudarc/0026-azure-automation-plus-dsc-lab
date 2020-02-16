@@ -35,7 +35,11 @@ The path to the DSC configuration script file.
 
 .NOTES
 The MIT License (MIT)
+<<<<<<< HEAD
+Copyright (c) 2018 Preston K. Parsard
+=======
 Copyright (c) 2020 Preston K. Parsard
+>>>>>>> master
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -77,12 +81,21 @@ Configures a member server in an existing domain.
 [CmdletBinding()]
 param (
 	# TASK-ITEM: Specify the values for these parameters from your own environment.
+<<<<<<< HEAD
+	[string]$ResourceGroupName = "rg10",
+	[string]$AutomationAccountName = "aaa-0a745bbb2-10",
+	[string]$ConfigurationName = "applyAzrPullSvrConfig",
+	[string]$NodeConfigurationName = "$ConfigurationName.localhost",
+	[string]$TargetNode = "azrsql1001.dev.adatum.com",
+	[string]$ConfigurationSourcePath = "E:\data\git\JHDesiredState\data\dsc\configurations\svr\applyAzrPullSvrConfig.ps1"
+=======
 	[string]$ResourceGroupName,
 	[string]$AutomationAccountName,
 	[string]$ConfigurationName,
 	[string]$NodeConfigurationName,
 	[string]$TargetNode,
 	[string]$ConfigurationSourcePath
+>>>>>>> master
 ) # end param
 
 #region FUNCTIONS
@@ -103,7 +116,11 @@ Start-Transcript -Path $logFilePath -IncludeInvocationHeader -Verbose
 
 #region Intialize values
 # Set MOF path: Relevant for PUSH configuration only.
+<<<<<<< HEAD
+# $devMofPath = "E:\data\git\JHDesiredState\data\dsc\configurations\svr\mof"
+=======
 # $devMofPath = "<>"
+>>>>>>> master
 # Select target node to configure by looking for the 01 series DC patter for dev.adatum.com the .. represents a 2 digit number that can vary by deployments
 # $targetNode = $configData.AllNodes.NodeName
 <#

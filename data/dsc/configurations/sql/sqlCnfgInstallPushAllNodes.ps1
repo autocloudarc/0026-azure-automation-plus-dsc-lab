@@ -68,11 +68,19 @@ Configures a member server as a new sql server in an existing domain.
 # Set the source installation path for SQL 2017 developer edition
 # $targetSqlServers = "cltsql1003.dev.adatum.com","cltsql1001.dev.adatum.com", "cltsql1002.dev.adatum.com"
 # $targetSqlServers = "cltsql1001.dev.adatum.com","cltsql1002.dev.adatum.com"
+<<<<<<< HEAD
+$targetSqlServers = "cltsql1001.dev.adatum.com"
+$sqlInstallPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-apps\sql\SqlServer2017x64trial"
+$targetDirRemote = $sqlInstallPath | Split-Path -leaf
+$sqlFileName = "setup.exe"
+$ssmsInstallPath = "\\cltdev1001.dev.adatum.com\apps\sql"
+=======
 $targetSqlServers = "<>"
 $sqlInstallPath = "<>"
 $targetDirRemote = $sqlInstallPath | Split-Path -leaf
 $sqlFileName = "setup.exe"
 $ssmsInstallPath = "\\<>\"
+>>>>>>> master
 # $isoFileName = "en_sql_server_2016_developer_with_service_pack_1_x64_dvd_9548071.iso"
 # https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
 $ssmsFileName = "SSMS-Setup-ENU.exe"
@@ -357,9 +365,15 @@ Configuration sqlCnfgInstallPushAllNodes
 
 #region Intialize values
 # 4. Set MOF path
+<<<<<<< HEAD
+$sqlMofPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\mof"
+# 5. Set ConfigData path
+$ConfigDataPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\ConfigData\sql\sqlDataInstallPushAllNodes.psd1"
+=======
 $sqlMofPath = "<>"
 # 5. Set ConfigData path
 $ConfigDataPath = "<>"
+>>>>>>> master
 
 <#
 TASK-ITEM: Turn on print and file sharing (SMB-in) in group policies for target nodes using GROUP POLICY advanced firewall settings

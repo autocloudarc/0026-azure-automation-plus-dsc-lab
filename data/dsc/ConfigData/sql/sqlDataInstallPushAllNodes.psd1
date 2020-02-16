@@ -34,7 +34,11 @@
             SQLBackupDir = "c:\bckp"
             role = "sql"
             installFromPath = "C:\SqlServer2017x64trial"
+<<<<<<< HEAD
+            installFromPathRemote = "\\cltdev1001\apps\sql\SqlServer2017x64trial"
+=======
             installFromPathRemote = "\\<server>\SqlServer2017x64trial"
+>>>>>>> master
             instanceName = "MSSQLSERVER"
             sqlFeatures = @("SQLENGINE","MDS")
             sqlSysAdminAccounts = "Administrators"
@@ -42,6 +46,24 @@
             loginType = "WindowsUser"
          } # end node
         @{
+<<<<<<< HEAD
+            NodeName = 'cltsql1003.dev.adatum.com'
+            hostname = 'cltsql1003'
+            CertificateFile = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-certs\eca\Request ID 11.cer"
+            Thumbprint = "DC1E9EB7DF9D3337561A9EC907F2E8710D05B66E"
+         } # end node
+         @{
+            NodeName = 'cltsql1001.dev.adatum.com'
+            hostname = 'cltsql1001'
+            CertificateFile = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-certs\eca\Request ID 15.cer"
+            Thumbprint = "4807B69B4C47311A7B437E127B6EE59820B4E2B3"
+         } # end node
+         @{
+            NodeName = 'cltsql1002.dev.adatum.com'
+            hostname = 'cltsql1002'
+            CertificateFile = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-certs\eca\Request ID 10.cer"
+            Thumbprint = "7FE748522E299E193D8A3C641ACFBB9BC7108D05"
+=======
             NodeName = '<>.dev.adatum.com'
             hostname = '<>'
             CertificateFile = "..\*.cer"
@@ -58,6 +80,7 @@
             hostname = '<>'
             CertificateFile = "...\.cer"
             Thumbprint = "<>"
+>>>>>>> master
          } # end node
     ) # end array
 } # end hashtable

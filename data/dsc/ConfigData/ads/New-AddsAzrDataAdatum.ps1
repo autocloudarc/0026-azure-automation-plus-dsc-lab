@@ -77,22 +77,42 @@ $ConfigData = @{
   @{
     NodeName = "localhost"
     Role = "DomainController"
+<<<<<<< HEAD
+    DomainName = "dev.adatum.com"
+=======
     DomainName = "<>"
+>>>>>>> master
     } # end node
  ) # end array
 } #end $ConfigData
 
 # IMPORTANT: Specify the resource group in which the AUTOMATION account is located, which may not necessarily be the resource group where the NODE(S) reside
+<<<<<<< HEAD
+$rg = "rg10"
+$AutomationAcct = "aaa-bcd1b452-10"
+$CredAssetName = "adcreds"
+$ConfigName = "adsAzrCnfgInstallAADSC"
+# $CredentialAsset = Get-AzureRmAutomationCredential -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -Name $CredAssetName
+# $CredentialAsset = Get-Credential -Message "Enter domain or target server administrative username and password using the format: $nbDomainName\<adminUserName>"
+# $CredentialAsset = Get-Credential -Message "Enter domain or target server administrative username and password using the format: <adminUserName>@fqdn"
+=======
 $rg = "<>"
 $AutomationAcct = "<>"
 $CredAssetName = "<>"
 $ConfigName = "<>"
+>>>>>>> master
 # PowerShell requires parameters in a hashtable
 $parameters = @{
     rgName = $rg
     AutoAcctName = $AutomationAcct
     CredAssetName = $CredAssetName
 } #end $parameters
+<<<<<<< HEAD
+
+# TASK-ITEM: Unresolved error, as of 01MAR2019 The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop:...
+# Method invocation failed because [Microsoft.Azure.Commands.Automation.Model.CredentialInfo] does not contain a method named 'GetNetworkCredential'.
+=======
+>>>>>>> master
 $CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -Parameters $parameters -ConfigurationData $ConfigData -ErrorAction SilentlyContinue -Verbose
 while(-not($CompilationJob.Exception))           
 {

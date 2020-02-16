@@ -1,5 +1,5 @@
 ﻿{
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "sqlPrefix": {
@@ -38,12 +38,13 @@
     "sqlServerInstances": 2,
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
-    "imageSku": "2016-Datacenter"
+    "imageSku": "2019-Datacenter"
   },
   /*
     "imagePublisher": "MicrosoftSQLServer",
     "imageOffer": "sql2019-ws2019",
     "imageSku": "sqldev"
+    "imageSku": "2016-Datacenter"
   */
   "resources": [
     {

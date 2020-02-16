@@ -24,6 +24,12 @@ Configuration SetClientTLSProtocolValues
     } # end node
 } # end configuration
 
+<<<<<<< HEAD
+$webMofPath = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\PullClientsLCM\mof"
+SetClientTLSProtocolValues -OutputPath $webMofPath -Verbose
+# Start-DscConfiguration -Path $webMofPath -ComputerName "cltweb1001.dev.adatum.com", "cltweb1002.dev.adatum.com" -Wait -Verbose -Force
+=======
 $webMofPath = "...\mof"
 SetClientTLSProtocolValues -OutputPath $webMofPath -Verbose
 # Start-DscConfiguration -Path $webMofPath -ComputerName "<>", "<>" -Wait -Verbose -Force
+>>>>>>> master

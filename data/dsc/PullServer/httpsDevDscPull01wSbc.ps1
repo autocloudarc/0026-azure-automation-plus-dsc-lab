@@ -54,7 +54,11 @@ configuration httpsDevDscPull01
     Import-DSCResource -ModuleName xPSDesiredStateConfiguration
     # To explicitly import the resource WindowsFesture and File.
     Import-DscResource -ModuleName PSDesiredStateConfiguration
+<<<<<<< HEAD
+	$dscPath = "F:\data\dsc"
+=======
 	$dscPath = "<>"
+>>>>>>> master
 	$Global:DSCMachineStatus = 1
 
     Node $NodeName
@@ -92,7 +96,11 @@ configuration httpsDevDscPull01
 } # end configuration
 
 # Set compilation path for *.mof file configuration
+<<<<<<< HEAD
+$configPath = "F:\data\dsc\PullServer"
+=======
 $configPath = "<>"
+>>>>>>> master
 # Compile the configuration
 httpsDevDscPull01 -CertificateThumbPrint $thumbprint -RegistrationKey $RegistrationKey -OutputPath $configPath
 # Run the compile configuration to make the target node a DSC Pull Server
@@ -128,7 +136,11 @@ configuration ConfigurePullServerLCM
 } #  end configuration
 
 # Set output path
+<<<<<<< HEAD
+$lcmConfigPath = "F:\data\dsc\PullServerLCM"
+=======
 $lcmConfigPath = "<>"
+>>>>>>> master
 # Compile LCM configuration
 ConfigurePullServerLCM -OutputPath $lcmConfigPath -Verbose
 # Apply LCM configuration

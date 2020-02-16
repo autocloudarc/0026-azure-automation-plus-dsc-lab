@@ -77,12 +77,21 @@ Configures a member server in an existing domain.
 [CmdletBinding()]
 param (
 	# TASK-ITEM: Specify the values for these parameters from your own environment.
+<<<<<<< HEAD
+	[string]$ResourceGroupName = "rg10",
+	[string]$AutomationAccountName = "aaa-0a745bbb2-10",
+	[string]$ConfigurationName = "applyAzrPullPkiConfig",
+	[string]$NodeConfigurationName = "$ConfigurationName.localhost",
+	[string]$TargetNode = "azrpki1001.dev.adatum.com",
+	[string]$ConfigurationSourcePath = "E:\data\git\JHDesiredState\data\dsc\configurations\pki\applyAzrPullPkiConfig.ps1"
+=======
 	[string]$ResourceGroupName,
 	[string]$AutomationAccountName,
 	[string]$ConfigurationName,
 	[string]$NodeConfigurationName,
 	[string]$TargetNode,
 	[string]$ConfigurationSourcePath
+>>>>>>> master
 ) # end param
 
 #region FUNCTIONS

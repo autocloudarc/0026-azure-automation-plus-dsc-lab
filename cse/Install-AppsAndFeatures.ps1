@@ -57,4 +57,5 @@ TASK-ITEMS:
 
 Install-WindowsFeature -Name RSAT-AD-PowerShell
 Install-WindowsFeature -Name RSAT-ADDS -IncludeAllSubFeature -IncludeManagementTools
+Install-WindowsFeature -Name GPMC
 Invoke-Expression ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))

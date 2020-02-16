@@ -20,7 +20,11 @@ configuration ConfigurePullServerLCM
 } #  end configuration
 
 # Set output path
+<<<<<<< HEAD
+$lcmConfigPath = "F:\data\dsc\PullServerLCM"
+=======
 $lcmConfigPath = "...\PullServerLCM"
+>>>>>>> master
 # Compile LCM configuration
 ConfigurePullServerLCM -OutputPath $lcmConfigPath -Verbose
 # Apply LCM configuration
@@ -115,7 +119,11 @@ $thumbprint = (Get-ChildItem -Path $certStore | Where-Object { $_.FriendlyName -
 # Create a new guid for the registration key
 $RegistrationKey = ([guid]::NewGuid()).guid
 # Specify output path
+<<<<<<< HEAD
+$configPath = "F:\data\dsc\PullServer"
+=======
 $configPath = "<>"
+>>>>>>> master
 
 # Get certificate thumbprint of pull server certificate which has the subject name of 'dscpull'
 # https://stackoverflow.com/questions/39286570/registering-a-record-in-dns-remotely-using-powershell
@@ -140,7 +148,11 @@ $pullServerRecord = Get-DnsServerResourceRecord -Name $certFriendlyName -Compute
 
 if (-not($pullServerRecord))
 {
+<<<<<<< HEAD
+	Add-DnsServerResourceRecordA –ComputerName $dns -Name $certFriendlyName -IPv4Address $ip.IPAddress -ZoneName $Zone
+=======
 	Add-DnsServerResourceRecordA ï¿½ComputerName $dns -Name $certFriendlyName -IPv4Address $ip.IPAddress -ZoneName $Zone
+>>>>>>> master
 	# if Get-DnsServerResourceRecord -Name dscpull -ComputerName $dns -ZoneName $zone -RRType A { "OK" }
 } #end 
 
