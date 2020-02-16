@@ -1,6 +1,5 @@
 ﻿#requires -version 5.1
 #requires -RunAsAdministrator
-#requires -Modules Az
 
 <#
 .SYNOPSIS
@@ -10,14 +9,7 @@ Creates a lab infrastructure to practice Azure Automation, administration, gover
 This script will create a lab infrastructure to practice Azure automation, administration, governance, automation, DSC, PowerShell and PowerShell core topics. The capabilities are limited only by your imagination!
 
 PRE-REQUISITES:
-
-1. If you already have the Az modules installed, you may still encounter the following error:
-    The script 'Deploy-AzureResourceGroup.ps1' cannot be run because the following modules that are specified by the "#requires" statements of the script are missing: Az.
-    At line:0 char:0
-To resolve, please run the following command to import the Az modules into your current session.
-Import-Module -Name Az -Verbose
-
-2. Before executing this script, ensure that you change the directory to the directory where the script is located. For example, if the script is in: c:\scripts\Deploy-AzureResourceGroup.ps1 then
+1. Before executing this script, ensure that you change the directory to the directory where the script is located. For example, if the script is in: c:\scripts\Deploy-AzureResourceGroup.ps1 then
     change to this directory using the following command:
     Set-Location -Path c:\scripts
 
