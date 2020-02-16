@@ -8,9 +8,15 @@ configuration adsAzrCnfgInstallAADSC
  # The credential asset will use the Name: CredsLitware, UserName: <username>@domain.tld, password: **********
  param
  (    
+<<<<<<< HEAD
     [string]$rgName = "rg10",
     [string]$AutoAcctName = "aaa-bcd1b452-10",
     [string]$CredAssetName = "adcreds"
+=======
+    [string]$rgName,
+    [string]$AutoAcctName,
+    [string]$CredAssetName,
+>>>>>>> master
  ) # end param
 # TASK-ITEM: The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop: Run Login-AzureRmAccount to login.
 <#

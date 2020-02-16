@@ -77,12 +77,21 @@ Configures a member server as a new domain controler in an existing domain.
 [CmdletBinding()]
 param (
 	# TASK-ITEM: Specify the values for these parameters from your own environment.
+<<<<<<< HEAD
 	[string]$ResourceGroupName = "rg10",
 	[string]$AutomationAccountName = "aaa-0a745bbb2-10",
 	[string]$ConfigurationName = "applyAzrPullAdsConfig",
 	[string]$NodeConfigurationName = "$ConfigurationName.localhost",
 	[string]$TargetNode = "azrads1001.dev.adatum.com",
 	[string]$ConfigurationSourcePath = "E:\data\git\JHDesiredState\data\dsc\configurations\ads\applyAzrPullAdsConfig.ps1"
+=======
+	[string]$ResourceGroupName,
+	[string]$AutomationAccountName,
+	[string]$ConfigurationName,
+	[string]$NodeConfigurationName,
+	[string]$TargetNode,
+	[string]$ConfigurationSourcePath
+>>>>>>> master
 ) # end param
 
 #region FUNCTIONS
@@ -103,9 +112,13 @@ Start-Transcript -Path $logFilePath -IncludeInvocationHeader -Verbose
 
 #region Intialize values
 # Set MOF path: Relevant for PUSH configuration only.
+<<<<<<< HEAD
 # $devMofPath = "E:\data\git\JHDesiredState\data\dsc\configurations\ads\mof"
 # Select target node to configure by looking for the 01 series DC patter for dev.adatum.com the .. represents a 2 digit number that can vary by deployments
 # $targetNode = $configData.AllNodes.NodeName
+=======
+# $devMofPath = ""
+>>>>>>> master
 <#
 TASK-ITEM: IMPORTANT. If you are onboarding on-premises machines to Azure Automation DSC, please do the following.
 1. Review:

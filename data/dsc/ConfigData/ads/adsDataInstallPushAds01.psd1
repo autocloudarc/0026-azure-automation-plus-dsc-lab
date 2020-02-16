@@ -2,6 +2,7 @@
     AllNodes = @(
         # Configure the ...01 DC only
         @{
+<<<<<<< HEAD
             NodeName = 'azrads1001.dev.adatum.com'
             <#
                 Although the thumbprint value, when viewed directly from the certificate store in the certificates mmc console shows lowercase,
@@ -17,6 +18,11 @@
             #>
             dscNodeCertThumbprint = "47A6934F0A7A894AEF988C5708C4554E1C4A5A28"
 	        CertificateFile = "c:\dscNodeCert\AZRADS1001-dscNodeCert.cer"
+=======
+            NodeName = '<>'
+            dscNodeCertThumbprint = "<>"
+	        CertificateFile = "...\*.cer"
+>>>>>>> master
             role = "ads"
             fqdn = 'dev.adatum.com'
             DomainName = 'dev'

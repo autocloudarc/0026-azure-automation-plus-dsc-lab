@@ -86,6 +86,7 @@ $ConfigData = @{
 
 # PowerShell requires parameters in a hashtable
 $parameters = @{
+<<<<<<< HEAD
 		creds = "creds"
 } #end $parameters
 
@@ -94,6 +95,16 @@ $rg = "rg00"
 
 $AutomationAcct = "auto01"
 $ConfigName = "NewAdds"
+=======
+		creds = "<>"
+} #end $parameters
+
+# IMPORTANT: Specify the resource group in which the AUTOMATION account is located, not the resource group where the NODE(S) reside
+$rg = "<>"
+
+$AutomationAcct = "<>"
+$ConfigName = "<>"
+>>>>>>> master
 
 $CompilationJob = Start-AzureRmAutomationDscCompilationJob -ResourceGroupName $rg -AutomationAccountName $AutomationAcct -ConfigurationName $ConfigName -ConfigurationData $ConfigData -Parameters $parameters
 while($CompilationJob.EndTime –eq $null -and $CompilationJob.Exception –eq $null)           

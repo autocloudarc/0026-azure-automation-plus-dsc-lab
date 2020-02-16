@@ -134,8 +134,13 @@ Configuration CreateHTTPSPullServer
     } # end node
 } # end configuration
 
+<<<<<<< HEAD
 $ConfigDataPathPullSvr = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\PullServer\CreateHTTPSPullServerConfigData.psd1"
 $mofPathPullSvr = "F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\dsc\mof"
+=======
+$ConfigDataPathPullSvr = "...\*.psd1"
+$mofPathPullSvr = "...\mof"
+>>>>>>> master
 
 CreateHTTPSPullServer -OutputPath $mofPathPullSvr -ConfigurationData $ConfigDataPathPullSvr
 Start-DscConfiguration -Path $mofPathPullSvr -ComputerName localhost -Wait -Verbose -Force
@@ -146,4 +151,8 @@ function Verify-DSCPullServer ($fqdn) {
     ([xml](Invoke-WebRequest "https://$($fqdn):8080/psdscpullserver.svc" | % Content)).service.workspace.collection.href
 }
 
+<<<<<<< HEAD
 Verify-DSCPullServer 'cltdev1001.dev.adatum.com'
+=======
+Verify-DSCPullServer '<>'
+>>>>>>> master

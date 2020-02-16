@@ -20,9 +20,15 @@ else
 $env:path += "C:\Program Files\OpenSSL\bin"
 # 3. https://blogs.msdn.microsoft.com/alejacma/2012/04/13/how-to-export-issued-certificates-from-a-ca-programatically-powershell/
 #Params 
+<<<<<<< HEAD
  $strServer = "azrdev1001.dev.adatum.com"; 
  $strCAName = "eca01"; 
  $strPathForCerts = "F:\ca\cert\export"; 
+=======
+ $strServer = "<>"; 
+ $strCAName = "<>"; 
+ $strPathForCerts = "<>"; 
+>>>>>>> master
  
  # Constants 
  $CV_OUT_BASE64HEADER = 0; 
@@ -95,5 +101,10 @@ $env:path += "C:\Program Files\OpenSSL\bin"
  } # end for
  Write-Host "We are done!`nCerts have been copied to: $strPathForCerts"
  pause
+<<<<<<< HEAD
  Start-Process -FilePath explorer -ArgumentList F:\ca\cert\export
  # $subjectName = (openssl x509 -in "F:\ca\cert\export\Request ID 13.cer" -noout -text | Select-String -Pattern "dns:azrweb1001").ToString().Split(":")[1]
+=======
+ Start-Process -FilePath explorer -ArgumentList <>
+ # $subjectName = (openssl x509 -in "..\*.cer" -noout -text | Select-String -Pattern "dns:azrweb1001").ToString().Split(":")[1]
+>>>>>>> master

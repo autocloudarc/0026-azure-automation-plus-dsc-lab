@@ -2,7 +2,11 @@
     AllNodes = @(
         @{
             environment = "dev"
+<<<<<<< HEAD
             nodeName = "azrdev1001.dev.adatum.com"
+=======
+            nodeName = "<>"
+>>>>>>> master
             Role = "devServer"
             diskId = "2"
             driveLetter = "f"

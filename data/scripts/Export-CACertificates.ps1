@@ -1,9 +1,15 @@
 # https://blogs.msdn.microsoft.com/alejacma/2012/04/13/how-to-export-issued-certificates-from-a-ca-programatically-powershell/
 
 #Params 
+<<<<<<< HEAD
 $strServer = "cltdev1001.dev.adatum.com"
 $strCAName = "eca"
 $strPathForCerts = "F:\data\OneDrive\02.00.00.GENERAL\repos\0000-certs\eca"
+=======
+$strServer = "<>"
+$strCAName = "eca"
+$strPathForCerts = "..\certs"
+>>>>>>> master
 
 # Constants 
 $CV_OUT_BASE64HEADER = 0; 

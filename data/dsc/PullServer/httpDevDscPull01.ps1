@@ -20,7 +20,11 @@ configuration ConfigurePullServerLCM
 } #  end configuration
 
 # Set output path
+<<<<<<< HEAD
 $lcmConfigPath = "F:\data\dsc\PullServerLCM"
+=======
+$lcmConfigPath = "...\PullServerLCM"
+>>>>>>> master
 # Compile LCM configuration
 ConfigurePullServerLCM -OutputPath $lcmConfigPath -Verbose
 # Apply LCM configuration
@@ -31,8 +35,11 @@ Get-DscLocalConfigurationManager
 Configuration CreateDscPullServerHTTP
 {
 	# http://en.community.dell.com/techcenter/b/techcenter/archive/2016/12/30/setting-up-a-dsc-desired-state-configuration-http-pull-server-to-deploy-hyper-v-and-failover-cluster
+<<<<<<< HEAD
 	# C:\Program Files\WindowsPowerShell\Modules\xPSDesiredStateConfiguration\8.4.0.0\DSCResources\MSFT_xDSCWebService\MSFT_xDSCWebService.psm1
 	# C:\inetpub\PSDSCPullServer\web.config
+=======
+>>>>>>> master
 	param
     (
         [string[]]$NodeName = $env:COMPUTERNAME,
@@ -44,7 +51,11 @@ Configuration CreateDscPullServerHTTP
 	
 	Import-DscResource -ModuleName PSDesiredStateConfiguration, xPSDesiredStateConfiguration
 
+<<<<<<< HEAD
 	$dscPath = "F:\data\dsc"
+=======
+	$dscPath = "<>"
+>>>>>>> master
 	$Global:DSCMachineStatus = 1
 
     Node $NodeName
@@ -126,16 +137,26 @@ $guid = ([guid]::NewGuid()).guid
  
 # Create the computer Meta.Mof in folder
 
+<<<<<<< HEAD
 $pullClientLCMPath = "F:\data\dsc\PullServer"
+=======
+$pullClientLCMPath = "<>"
+>>>>>>> master
 
 # Compile the meta configuration
 # MetaConfigPUllClients -ComputerName $CientNode -guid $guid -OutputPath $pullClientLCMPath
 # Set the LCM for client machines
 # Set-DscLocalConfigurationManager -ComputerName $ClientNode -Path $pullClientLCMPath -Verbose
 
+<<<<<<< HEAD
 $fqdn = $env:COMPUTERNAME + ".dev.adatum.com"
 
 $PullServerConfigPath = "F:\data\dsc\PullServer"
+=======
+$fqdn = $env:COMPUTERNAME + "fqdn"
+
+$PullServerConfigPath = "...\PullServer"
+>>>>>>> master
 
 # Compile the configuration
 CreateDscPullServerHTTP -RegistrationKey $guid -OutputPath $PullServerConfigPath

@@ -2,6 +2,7 @@
     AllNodes = @(
         @{
             NodeName = '*'
+<<<<<<< HEAD
             RegistrationKey = "2a5de1da-82c6-491f-80ec-7a64829a965a"
             PullServerEndpoint = "https://cltdev1001.dev.adatum.com:8080/PSDSCPullServer.svc"
             ConfigNames = @('SetCilentTLSProtocolValues')
@@ -18,6 +19,24 @@
             # CertificateFile = 'F:\data\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\data\pki\cert\export\cltweb1001-DocEnc.cer'
             # (Get-ChildItem -Path cert:\LocalMachine\My | Where-Object {$_.EnhancedKeyUsageList.FriendlyName -contains 'Document Encryption'} | Select-Object -Property Thumbprint).Thumbprint
             Thumbprint = 'E9A89257C9F528E4507F51CEED789963B9A665F0'
+=======
+            RegistrationKey = "<>"
+            PullServerEndpoint = "...:8080/PSDSCPullServer.svc"
+            ConfigNames = @('SetCilentTLSProtocolValues')
+        } # end node
+        @{
+            NodeName = "<>"
+            # CertificateFile = '...\*.cer'
+            # (Get-ChildItem -Path cert:\LocalMachine\My | Where-Object {$_.EnhancedKeyUsageList.FriendlyName -contains 'Document Encryption'} | Select-Object -Property Thumbprint).Thumbprint
+            Thumbprint = '<>'
+        } # end node
+        <#
+        @{
+            NodeName = "<>"
+            # CertificateFile = '..\*.cer'
+            # (Get-ChildItem -Path cert:\LocalMachine\My | Where-Object {$_.EnhancedKeyUsageList.FriendlyName -contains 'Document Encryption'} | Select-Object -Property Thumbprint).Thumbprint
+            Thumbprint = '<>'
+>>>>>>> master
         } # end node
         #>
         )
