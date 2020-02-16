@@ -11,7 +11,7 @@ This template deploys a new lab environment that can be used for training, pract
 
 ## Target State Diagram
 
-![Target state diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-infrastructure-diagram.png)
+![Target state diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-lab-infrastructure.png)
 
 ## 2.0 Prerequisites
 
@@ -64,7 +64,7 @@ Windows PowerShell
 
     .\Deploy-AzureResourceGroup.ps1
 
-4. When the script executes, answer the following prompts:
+5. When the script executes, answer the following prompts:
 
     - Authenticate to your subscription
     - Enter your target subscription name
