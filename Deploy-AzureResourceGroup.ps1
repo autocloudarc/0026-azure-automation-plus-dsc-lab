@@ -113,7 +113,7 @@ function New-ARMDeployTranscript
     $TimeStamp = $TimeStamp.Replace(":", "")
 
     # Construct transcript file full path
-    $TranscriptFile = "$LogPrefix-TRANSCRIPT" + "-" + $DeploymentOption + "-" + $TimeStamp + ".log"
+    $TranscriptFile = "$LogPrefix-TRANSCRIPT" + "-" + $TimeStamp + ".log"
     $script:Transcript = Join-Path -Path $LogDirectory -ChildPath $TranscriptFile
 
     # Create log and transcript files
@@ -200,7 +200,7 @@ Write-Output "Current directory has been changed to script root: $PSScriptRoot" 
 #endregion PATH
 
 [string]$proceed = $null
-Write-Verbose "WARNING!"
+Write-Output ""
 $proceed = Read-Host -Prompt @"
 The AzureRM modules will be removed and replaced with the Az modules.
 For details and instructions why and how to upgrade to the Az modules, see https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-3.3.0.
