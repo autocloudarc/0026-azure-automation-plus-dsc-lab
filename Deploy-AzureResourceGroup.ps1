@@ -4,29 +4,130 @@
 
 <#
 .SYNOPSIS
-   	Creates an automation lab to practice Azure automation, DSC, PowerShell and PowerShell core.
+Creates a lab infrastructure to practice Azure Automation, administration, governance, DSC, PowerShell and PowerShell core topics.
 
-    The MIT License (MIT)
-    Copyright (c) 2020 Preston K. Parsard
+.DESCRIPTION
+This script will create a lab infrastructure to practice Azure automation, administration, governance, automation, DSC, PowerShell and PowerShell core topics. The capabilities are limited only by your imagination!
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
-    to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+PRE-REQUISITES:
 
-    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+1. If you already have the Az modules installed, you may still encounter the following error:
+    The script 'Deploy-AzureResourceGroup.ps1' cannot be run because the following modules that are specified by the "#requires" statements of the script are missing: Az.
+    At line:0 char:0
+To resolve, please run the following command to import the Az modules into your current session.
+Import-Module -Name Az -Verbose
 
-    LEGAL DISCLAIMER:
-    This Sample Code is provided for the purpose of illustration only and is not intended to be used in a production environment. 
-    THIS SAMPLE CODE AND ANY RELATED INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE. 
-    We grant You a nonexclusive, royalty-free right to use and modify the Sample Code and to reproduce and distribute the object code form of the Sample Code, provided that You agree:
-    (i) to not use Our name, logo, or trademarks to market Your software product in which the Sample Code is embedded;
-    (ii) to include a valid copyright notice on Your software product in which the Sample Code is embedded; and
-    (iii) to indemnify, hold harmless, and defend Us and Our suppliers from and against any claims or lawsuits, including attorneys' fees, that arise or result from the use or distribution of the Sample Code.
-    This posting is provided "AS IS" with no warranties, and confers no rights.
+2. Before executing this script, ensure that you change the directory to the directory where the script is located. For example, if the script is in: c:\scripts\Deploy-AzureResourceGroup.ps1 then
+    change to this directory using the following command:
+    Set-Location -Path c:\scripts
+
+.EXAMPLE
+.\Deploy-AzureResourceGroup.ps1
+
+.INPUTS
+None
+
+.OUTPUTS
+The outputs generated from this script includes:
+1. A transcript log file to provide the full details of script execution. It will use the name format: Deploy-AzureResourceGroup-TRANSCRIPT-<Date-Time>.log
+
+.NOTES
+LEGAL DISCLAIMER:
+This Sample Code is provided for the purpose of illustration only and is not intended to be used in a production environment. 
+THIS SAMPLE CODE AND ANY RELATED INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE. 
+We grant You a nonexclusive, royalty-free right to use and modify the Sample Code and to reproduce and distribute the object code form of the Sample Code, provided that You agree:
+(i) to not use Our name, logo, or trademarks to market Your software product in which the Sample Code is embedded;
+(ii) to include a valid copyright notice on Your software product in which the Sample Code is embedded; and
+(iii) to indemnify, hold harmless, and defend Us and Our suppliers from and against any claims or lawsuits, including attorneys' fees, that arise or result from the use or distribution of the Sample Code.
+This posting is provided "AS IS" with no warranties, and confers no rights.
+
+.LINK
+1: https://millerb.co.uk/2019/02/28/My-Vscode-Setup.html#visual-studio-code
+2. https://www.softwaretestinghelp.com/what-is-software-testing-life-cycle-stlc/
+3. https://www.testingexcellence.com/software-testing-glossary/
+4. https://www.red-gate.com/simple-talk/cloud/infrastructure-as-a-service/azure-resource-manager-arm-templates/
+5. https://azure.microsoft.com/en-us/blog/create-flexible-arm-templates-using-conditions-and-logical-functions/
+6. https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-ip-addresses-overview-arm
+
+.COMPONENT
+Azure Infrastructure, PowerShell, ARM, JSON
+
+.ROLE
+Automation Engineer
+DevOps Engineer
+Azure Engineer
+Azure Administrator
+Azure Architect
+
+.FUNCTIONALITY
+Deploys an Azure automation lab infrastructure
+
 #>
 
 $BeginTimer = Get-Date -Verbose
+
+#region MODULES
+# Module repository setup and configuration
+Set-PSRepository -Name $PSModuleRepository -InstallationPolicy Trusted -Verbose
+Install-PackageProvider -Name Nuget -ForceBootstrap -Force
+
+# Bootstrap dependent modules
+$ARMDeployModule = "ARMDeploy"
+if (Get-InstalledModule -Name $ARMDeployModule -ErrorAction SilentlyContinue)
+{
+    # If module exists, update it
+    [string]$currentVersionADM = (Find-Module -Name $ARMDeployModule -Repository $PSModuleRepository).Version
+    [string]$installedVersionADM = (Get-InstalledModule -Name $ARMDeployModule).Version
+    If ($currentVersionADM -ne $installedVersionADM)
+    {
+            # Update modules if required
+            Update-Module -Name $ARMDeployModule -Force -ErrorAction SilentlyContinue -Verbose
+    } # end if
+} # end if
+# If the modules aren't already loaded, install and import it.
+else
+{
+    Install-Module -Name $ARMDeployModule -Repository $PSModuleRepository -Force -Verbose
+} #end If
+Import-Module -Name $ARMDeployModule -Verbose
+#endregion MODULES
+
+#region Environment setup
+# Use TLS 1.2 to support Nuget provider
+Write-Output "Configuring security protocol to use TLS 1.2 for Nuget support when installing modules." -Verbose
+[ServicePointManager]::SecurityProtocol = [SecurityProtocolType]::Tls12
+#endregion
+
+#region FUNCTIONS
+
+function New-ARMDeployTranscript
+{
+    [CmdletBinding()]
+    [OutputType([string[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$LogDirectory,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$LogPrefix
+    ) # end param
+
+    # Get curent date and time
+    $TimeStamp = (get-date -format u).Substring(0, 16)
+    $TimeStamp = $TimeStamp.Replace(" ", "-")
+    $TimeStamp = $TimeStamp.Replace(":", "")
+
+    # Construct transcript file full path
+    $TranscriptFile = "$LogPrefix-TRANSCRIPT" + "-" + $DeploymentOption + "-" + $TimeStamp + ".log"
+    $script:Transcript = Join-Path -Path $LogDirectory -ChildPath $TranscriptFile
+
+    # Create log and transcript files
+    New-Item -Path $Transcript -ItemType File -ErrorAction SilentlyContinue
+} # end function
+
 function Get-PSGalleryModule
 {
 	[CmdletBinding(PositionalBinding = $false)]
@@ -66,30 +167,84 @@ function Get-PSGalleryModule
 	} #end foreach
 } #end function
 
-[string]$proceed = $null
-[string]$azurePreferredModule = "Az"
-[string]$azureNonPreferredModule = "AzureRM"
+#endregion FUNCTIONS
 
-# https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-1.1.0
-if (Get-InstalledModule -Name $azureNonPreferredModule -ErrorAction SilentlyContinue)
+#region TRANSCRIPT
+[string]$Transcript = $null
+$scriptName = $MyInvocation.MyCommand.name
+# Use script filename without exension as a log prefix
+$LogPrefix = $scriptName.Split(".")[0]
+$modulePath = (Get-InstalledModule -Name Az).InstalledLocation | Split-Path -Parent | Split-Path -Parent
+
+$LogDirectory = Join-Path $modulePath -ChildPath $LogPrefix -Verbose
+# Create log directory if not already present
+If (-not(Test-Path -Path $LogDirectory -ErrorAction SilentlyContinue))
 {
-    Uninstall-Module -Name $azureNonPreferredModule -ErrorAction SilentlyContinue -Verbose
-    Remove-Module -Name $azureNonPreferredModule -ErrorAction SilentlyContinue -Verbose
+    New-Item -Path $LogDirectory -ItemType Directory -Verbose
 } # end if
 
-Write-Host "Your browser authentication prompt for your subscription may be opened in the background. Please resize this window to see it and log in."
+# funciton: Create log files for transcript
+New-ARMDeployTranscript -LogDirectory $LogDirectory -LogPrefix $LogPrefix -Verbose
 
-# Connect to Azure
-Connect-AzureRMAccount
+Start-Transcript -Path $Transcript -IncludeInvocationHeader -Verbose
+#endregion TRANSCRIPT
+
+#region HEADER
+$label = "AUTOCLOUDARC PROJECT 0026: DEPLOY AZURE AUTOMATION LAB"
+$headerCharCount = 200
+# function: Create new header
+$header = New-ARMDeployHeader -label $label -charCount $headerCharCount -Verbose
+
+Write-Output $header.SeparatorDouble  -Verbose
+Write-Output $Header.Title  -Verbose
+Write-Output $header.SeparatorSingle  -Verbose
+#endregion HEADER
+
+#region PATH
+# Set script path
+Write-Output "Changing path to script directory..." -Verbose
+Set-Location -Path $PSScriptRoot -Verbose
+Write-Output "Current directory has been changed to script root: $PSScriptRoot" -Verbose
+#endregion PATH
+
+[string]$proceed = $null
+Write-Verbose "WARNING!"
+$proceed = Read-Host -Prompt @"
+The AzureRM modules will be removed and replaced with the Az modules.
+For details and instructions why and how to upgrade to the Az modules, see https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-3.3.0.
+OK to proceed ['Y' or 'YES' to continue | 'N' or 'NO' to exit]?
+"@
+if ($proceed -eq "N" -OR $proceed -eq "NO")
+{
+    Write-Output "Deployment terminated by user. Exiting..."
+    PAUSE
+    EXIT
+} #end if ne Y
+elseif ($proceed -eq "Y" -OR $proceed -eq "YES")
+{
+[string]$azurePreferredModule = "Az"
+[string]$azureNonPreferredModule = "AzureRM"
+[string]$PSModuleRepository = "PSGallery"
+# https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-1.1.0
+Remove-ARMDeployPSModule -ModuleToRemove $azureNonPreferredModule -Verbose
+# Get required PowerShellGallery.com modules.
+Get-ARMDeployPSModule -ModulesToInstall $azurePreferredModule -PSRepository $PSModuleRepository -Verbose
+
+#region AUTHENTICATE-TO-AZURE
+Write-Output "Your browser authentication prompt for your subscription may be opened in the background. Please resize this window to see it and log in."
+# Clear any possible cached credentials for other subscriptions
+Clear-AzContext
+Connect-AzAccount -Environment AzureCloud -Verbose
+#endregion
 
 Do
 {
-    # Subscription name
-	(Get-AzureRMSubscription).Name
+    (Get-AzSubscription).Name
 	[string]$Subscription = Read-Host "Please enter your subscription name, i.e. [MySubscriptionName] "
 	$Subscription = $Subscription.ToUpper()
 } #end Do
-Until (Select-AzureRMSubscription -Subscription $Subscription)
+Until ($Subscription -in (Get-AzSubscription).Name)
+Select-AzSubscription -SubscriptionName $Subscription -Verbose
 
 Do
 {
@@ -129,7 +284,7 @@ Do
 {
     $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 } #end while
-While (-not((Get-AzureRMStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
+While (-not((Get-AzStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
 
 $parameters = @{}
 $parameters.Add("studentNumber", $studentNumber)
@@ -177,3 +332,42 @@ Happy scripting...
     # Open RDP prompt automatically
     mstsc /v:$fqdnDev
 }
+
+# Resource group and log files cleanup messages
+$labResourceGroupFilter = "rg??"
+Write-Warning "The list of PoC resource groups are:"
+Get-AzResourceGroup -Name $labResourceGroupFilter -Verbose
+Write-Output ""
+Write-Output "To remove the resource groups, use the command below:"
+Write-Output "Get-AzResourceGroup -Name 'rg??' | ForEach-Object { Remove-AzResourceGroup -ResourceGroupName $_.ResourceGroupName -Verbose -Force }"
+
+Write-Warning "Transcript logs are hosted in the directory: $LogDirectory to allow access for multiple users on this machine for diagnostic or auditing purposes."
+Write-Warning "To examine, archive or remove old log files to recover storage space, run this command to open the log files location: Start-Process -FilePath $LogDirectory"
+Write-Warning "You may change the value of the `$modulePath variable in this script, currently at: $modulePath to a common file server hosted share if you prefer, i.e. \\<server.domain.com>\<share>\<log-directory>"
+
+} # end else PROCEED
+
+Stop-Transcript -Verbose
+
+#region OPEN-TRANSCRIPT
+# Create prompt and response objects for continuing script and opening logs.
+$openTranscriptPrompt = "Would you like to open the transcript log now ? [YES/NO]"
+Do
+{
+    $openTranscriptResponse = read-host $openTranscriptPrompt
+    $openTranscriptResponse = $openTranscriptResponse.ToUpper()
+} # end do
+Until ($openTranscriptResponse -eq "Y" -OR $openTranscriptResponse -eq "YES" -OR $openTranscriptResponse -eq "N" -OR $openTranscriptResponse -eq "NO")
+
+# Exit if user does not want to continue
+If ($openTranscriptResponse -in 'Y', 'YES')
+{
+    Start-Process -FilePath notepad.exe $Transcript -Verbose
+} #end condition
+else
+{
+    # Terminate script
+    Write-Output "End of Script!"
+    $header.SeparatorDouble
+} # end else
+#endregion
