@@ -1,6 +1,11 @@
 ﻿#requires -version 5.1
 #requires -RunAsAdministrator
 
+using Namespace System
+using Namespace System.Net # for IP addresses
+Using Namespace System.Runtime.InteropServices # # For Azure AD service principals marshal clas
+Using Namespace Microsoft.Azure.Commands.Management.Storage.Models # for Azure storage
+Using Namespace Microsoft.Azure.Commands.Network.Models # for Azure network resources
 <#
 .SYNOPSIS
 Creates a lab infrastructure to practice Azure Automation, administration, governance, DSC, PowerShell and PowerShell core topics.
