@@ -156,10 +156,6 @@ SUGGESTED LAB CHALLENGES/EXERCISES
 
 12. Apply a configuration to the AZRLNX##01 Linux CentOS server using AA DSC.
 
-## 8.0 Target State Diagram
-
-![Target State Diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-azure-automation-plus-dsc-lab.png)
-
 ## 9.0 Notes
 
 1. *This solution does not include a hybrid connection to an on-premises environment.*
