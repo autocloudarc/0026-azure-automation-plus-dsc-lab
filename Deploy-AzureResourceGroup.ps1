@@ -322,8 +322,8 @@ else
     $subnetSrvPrefix = "SRVS"
     $subnetSrvName = $subnetSrvPrefix + $studentNumber
     $nsgPrefix = "NSG-"
-    $nsgAdsName = $nsgPrefix + $subnetAdsPrefix
-    $nsgSrvName = $nsgPrefix + $subnetSrvPrefix
+    $nsgAdsName = $nsgPrefix + $subnetAdsPrefix + $studentNumber
+    $nsgSrvName = $nsgPrefix + $subnetSrvPrefix + $studentNumber
     $subnetRangePrefix = "10.20.$studentNumber."
     $subnetRangeAdsSuffix = "0/28"
     $subnetRangeSrvSuffix = "16/28"
