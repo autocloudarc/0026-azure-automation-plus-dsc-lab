@@ -292,31 +292,6 @@
       }
     },
     {
-      "comments": "11.14.01.createNetworkInterfaces.adg01",
-      "name": "[parameters('nicCollection').adg01nic.name]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "location": "[parameters('location')]",
-      "apiVersion": "2017-10-01",
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAddress": "[variables('adg01PrivateIp')]",
-              "privateIPAllocationMethod": "Static",
-              "subnet": {
-                "id": "[parameters('subnetAddsRef')]"
-              }
-            }
-          }
-        ],
-        "dnsSettings": {
-          "dnsServers": []
-        },
-        "enableIPForwarding": false
-      }
-    },
-    {
       "comments": "11.14.01.createNetworkInterfaces.adg02",
       "name": "[parameters('nicCollection').adg02nic.name]",
       "type": "Microsoft.Network/networkInterfaces",
