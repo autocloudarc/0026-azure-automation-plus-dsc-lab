@@ -42,9 +42,7 @@
   "variables": {
     "ads03PrivateIp": "[parameters('adsPrivateIps').ads03privIp]",
     "ads01PrivateIp": "[parameters('adsPrivateIps').ads01privIp]",
-    "ads02PrivateIp": "[parameters('adsPrivateIps').ads02privIp]",
-    "adg01PrivateIp": "[parameters('adsPrivateIps').adg01privIp]",
-    "adg02PrivateIp": "[parameters('adsPrivateIps').adg02privIp]"
+    "ads02PrivateIp": "[parameters('adsPrivateIps').ads02privIp]"
   },
   "resources": [
     {
@@ -375,13 +373,6 @@
       "value": [
         "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicCollection').ads01nic.name)]",
         "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicCollection').ads02nic.name)]"
-      ],
-      "type": "array"
-    },
-    "adgNicIds": {
-      "value": [
-        "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicCollection').adg01nic.name)]",
-        "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicCollection').adg02nic.name)]"
       ],
       "type": "array"
     },
