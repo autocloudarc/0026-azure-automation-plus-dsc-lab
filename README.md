@@ -6,7 +6,7 @@ This template deploys a new lab environment that can be used for training, pract
 2. Azure Automation Desired State Configuration
 3. Windows PowerShell (version 5.1)
 4. Windows PowerShell Desired State Configuration
-5. PowerShell (PowerShell version 7.x (preview))
+5. PowerShell PowerShell version 7.x
 6. Powershell DSC for Linux
 
 ## Target State Diagram
@@ -28,7 +28,7 @@ Decscription of the prerequistes for the deployment
 
 The lab infrastructure includes the following components:
 
-1. 1 x resource group named rg##, where ## in this document represents a one or two-digit number between 0 to 16, and reflects the student number you specify during deployment.
+1. 1 x resource group named rg##, where ## in this document represents a one or two-digit number between 1 to 16, and reflects the student number you specify during deployment.
 
 2. 3 x Windows 2019 Data Center Core domain controllers, where only 1 has been promoted to a domain controller: AZRADS##03.dev.adatum.com. Both AZRADS##01 & AZRADS##02 are only member servers until you promoting them.
 
@@ -68,7 +68,7 @@ Windows PowerShell
 
     - Authenticate to your subscription
     - Enter your target subscription name
-    - Enter your student number, which is a number from 0 to 16.
+    - Enter your student number, which is a number from 1 to 16.
     - Enter your administrator password for the adm.infra.user account. Your password will not be exposed.
 
 Azure CLI (bash)
@@ -87,7 +87,7 @@ Azure CLI (bash)
     # Assign the adm.infra.user account for each VM to be deployed.
     adminUserName=adm.infra.user
 
-    # Assign a student number from [0-16] to disambiguate deployed resources from other attendees for multiple participants in a class/training scenario.
+    # Assign a student number from [1-16] to disambiguate deployed resources from other attendees for multiple participants in a class/training scenario.
     studentNumber=##
 
     # Assign a resource group for all resources, where ## is the same as your student number above.
@@ -128,7 +128,7 @@ Please NOTE that this project is primarily for training and NOT recommended for 
 
 For a hands-on excercises or training/class scenarios, where all attendees will be deploying their own lab, a single subscription can be used, but you may have to request increases in core or other resource limits by
 submitting an Azure support ticket through this subscription. You may also consider assigning a seperate subscription to each attendee so that resource limits will not be exceeded.
-Special care was taken to ensure that multiple attendees can perform simultaneous deployments without resource name conflicts within the same subscription. This is due to the student numbers assigned to each attendee, and supports numbers from 0-16. For example, the ## symbols below represents the student number of the VMs, ranging from 0-16.
+Special care was taken to ensure that multiple attendees can perform simultaneous deployments without resource name conflicts within the same subscription. This is due to the student numbers assigned to each attendee, and supports numbers from 1-16. For example, the ## symbols below represents the student number of the VMs, ranging from 1-16.
 
 SUGGESTED LAB CHALLENGES/EXERCISES
 
@@ -148,7 +148,7 @@ SUGGESTED LAB CHALLENGES/EXERCISES
 
 8. Build the AZRWEB##02 web server as a web server using Azure Automation (AA) DSC (AA DSC).
 
-9.  Build the AZRADS##02 domain controller as a domain controller using AA DSC.
+9. Build the AZRADS##02 domain controller as a domain controller using AA DSC.
 
 10. Build the AZRSQL##02 SQL 2019 server as an SQL server using AA DSC.
 
