@@ -256,7 +256,7 @@ Until (($studentNumber -is [int]) -and ($studentNumber -match '\d{2}') -and ([in
 Do
 {
     # The location refers to a geographic region of an Az data center
-    $regions = Get-AzureRMLocation | Select-Object -ExpandProperty Location
+    $regions = Get-AzLocation | Select-Object -ExpandProperty Location
     Write-Output "The list of available regions are :"
     Write-Output ""
     Write-Output $regions
@@ -269,7 +269,7 @@ Do
 } #end Do
 Until ($region -in $regions)
 
-New-AzureRMResourceGroup -Name $rg -Location $region -Verbose
+New-AzResourceGroup -Name $rg -Location $region -Verbose
 
 $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
 $adminUserName = "adm.infra.user"
