@@ -276,12 +276,8 @@ $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
 
-# Ensure that the storage account name is glbally unique in DNS
-Do
-{
-    $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
-} #end while
-While (-not((Get-AzStorageAccountNameAvailability -Name $studentRandomInfix).NameAvailable))
+# Ensure that the storage account name is globally unique in DNS
+$studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 
 $parameters = @{}
 $parameters.Add("studentNumber", $studentNumber)
