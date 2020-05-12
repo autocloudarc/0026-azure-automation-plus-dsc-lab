@@ -1,0 +1,57 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "nicLnx02": {
+      "type": "string",
+      "metadata": {
+        "description": "Network interface name."
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Azure region."
+      }
+    },
+    "subnetSrvsRef": {
+      "type": "string",
+      "metadata": {
+        "description": "ADDS subnet resource id."
+      }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "comments": "11.14.02.createNetworkInterfaces.a16s01",
+      "name": "[parameters('nicLnx02')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[parameters('location')]",
+      "apiVersion": "2017-10-01",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[parameters('subnetSrvsRef')]"
+              }
+            }
+          }
+        ],
+        "dnsSettings": {
+          "dnsServers": []
+        },
+        "enableIPForwarding": false
+      }
+    }
+  ],
+  "outputs": {
+    "lnxNic02Id": {
+      "value": "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicLnx02'))]",
+      "type": "string"
+    }
+  }
+}

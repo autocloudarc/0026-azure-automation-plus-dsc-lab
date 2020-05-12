@@ -97,6 +97,41 @@
       "metadata": {
         "description": "Log Analytics (OMS) region."
       }
+    },
+    "excludeWeb": {
+      "type": "string",
+      "metadata": {
+        "description": "Exclude web servers from deployment."
+      },
+      "defaultValue": "no"
+    },
+    "excludeSql": {
+      "type": "string",
+      "metadata": {
+        "description": "Exclude sql servers from deployment."
+      },
+      "defaultValue": "no"
+    },
+    "excludeAds": {
+      "type": "string",
+      "metadata": {
+        "description": "Exclude addtional ADS servers from deployment."
+      },
+      "defaultValue": "no"
+    },
+    "additionalLnx": {
+      "type": "string",
+      "metadata": {
+        "description": "Add an additional Linux server with the latest Ubuntu image."
+      },
+      "defaultValue": "no"
+    },
+    "additionalAds": {
+      "type": "string",
+      "metadata": {
+        "description": "Add an additional ADS server with the Windows Server 2016 core image."
+      },
+      "defaultValue": "no"
     }
   },
   "variables": {
@@ -166,6 +201,7 @@
     "rsvName": "[concat('rsv-',variables('randomInfix'),'-',parameters('studentNumber'))]",
     "cspPrefix": "AZR",
     "roleCodeAds": "ADS",
+    "roleCodeA16": "A16",
     "roleCodeWeb": "WEB",
     "roleCodeSql": "SQL",
     "roleCodePki": "PKI",
@@ -173,6 +209,7 @@
     "roleCodeLnx": "LNX",
     "seriesPrefix": "0",
     "adsPrefix": "[concat(variables('cspPrefix'),variables('roleCodeAds'),parameters('studentNumber'),variables('seriesPrefix'))]",
+    "a16Prefix": "[concat(variables('cspPrefix'),variables('roleCodeA16'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "webPrefix": "[concat(variables('cspPrefix'),variables('roleCodeWeb'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "sqlPrefix": "[concat(variables('cspPrefix'),variables('roleCodeSql'),parameters('studentNumber'),variables('seriesPrefix'))]",
     "pkiPrefix": "[concat(variables('cspPrefix'),variables('roleCodePki'),parameters('studentNumber'),variables('seriesPrefix'))]",
@@ -186,7 +223,13 @@
       "ads01PrivIp": "[concat(variables('dcNicIpPrefix'),'.4')]",
       "ads02PrivIp": "[concat(variables('dcNicIpPrefix'),'.5')]"
     },
+    "a16PrivateIps": {
+      "a1601PrivIp": "[concat(variables('dcNicIpPrefix'),'.7')]",
+      "a1602PrivIp": "[concat(variables('dcNicIpPrefix'),'.8')]"
+    },
     "createNetworkInterfacesUri": "[uri(parameters('_artifactsLocation'),concat('nested/11.14.01.createNetworkInterfaces.json',parameters('_artifactsLocationSasToken')))]",
+    "createNic2016Uri": "[uri(parameters('_artifactsLocation'),concat('nested/11.14.02.createNic2016.json',parameters('_artifactsLocationSasToken')))]",
+    "createNicLnx02Uri": "[uri(parameters('_artifactsLocation'),concat('nested/11.14.03.createNicLnx02.json',parameters('_artifactsLocationSasToken')))]",
     "nicSuffix": "-nic",
     "nicCollection": {
       "ads01nic": {
@@ -220,13 +263,24 @@
         "name": "[toLower(concat(substring(variables('lnxPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
       }
     },
+    "nicColl2016": {
+      "a1601nic": {
+        "name": "[toLower(concat(substring(variables('a16Prefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
+      },
+      "a1602nic": {
+        "name": "[toLower(concat(substring(variables('a16Prefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
+      }
+    },
+    "nicLnx02": "[toLower(concat(substring(variables('lnxPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]",
     "createAds01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/03.15.00.createDomainController.json',parameters('_artifactsLocationSasToken')))]",
     "createDev01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/14.17.00.createDevServer.json',parameters('_artifactsLocationSasToken')))]",
     "createWebServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/15.21.00.createWebServers.json',parameters('_artifactsLocationSasToken')))]",
     "createSqlServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.23.00.createSqlServers.json',parameters('_artifactsLocationSasToken')))]",
     "createPkiServerUri": "[uri(parameters('_artifactsLocation'),concat('nested/16.24.00.createPkiServer.json',parameters('_artifactsLocationSasToken')))]",
     "createAdsServersUri": "[uri(parameters('_artifactsLocation'),concat('nested/17.25.00.createAdsServers.json',parameters('_artifactsLocationSasToken')))]",
+    "createAdsServers2016Uri": "[uri(parameters('_artifactsLocation'),concat('nested/17.25.02.createAdsServers2016core.json',parameters('_artifactsLocationSasToken')))]",
     "createLnx01Uri": "[uri(parameters('_artifactsLocation'),concat('nested/18.26.01.createLnxServer.json',parameters('_artifactsLocationSasToken')))]",
+    "createLnx02Uri": "[uri(parameters('_artifactsLocation'),concat('nested/18.26.02.createLnxServerUbuntu.json',parameters('_artifactsLocationSasToken')))]",
     "updateVnetWithDNSuri": "[uri(parameters('_artifactsLocation'),concat('nested/03.16.00.updateVnetWithDNS.json',parameters('_artifactsLocationSasToken')))]",
     "installAppsAndFeaturesUri": "[uri(parameters('_artifactsLocation'),concat('cse/Install-AppsAndFeatures.ps1',parameters('_artifactsLocationSasToken')))]"
   },
@@ -498,6 +552,73 @@
       }
     },
     {
+      "comments": "11.14.02.createNic2016",
+      "condition": "[equals(parameters('additionalAds'),'yes')]",
+      "name": "11.14.02.linkedDeploymentCreateNic2016",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "dependsOn": [
+        "04.36.00.linkedDeploymentCreatePublicIP",
+        "07.03.00.linkedDeploymentCreateVnet"
+      ],
+      "properties": {
+        "templateLink": {
+          "uri": "[variables('createNic2016Uri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nicColl2016": {
+            "value": "[variables('nicColl2016')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "subnetAddsRef": {
+            "value": "[reference('07.03.00.linkedDeploymentCreateVnet').outputs.SubnetAddsId.value]"
+          },
+          "a16PrivateIps": {
+            "value": "[variables('a16PrivateIps')]"
+          }
+        },
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        }
+      }
+    },
+    {
+      "comments": "11.14.03.createNicLnx02",
+      "condition": "[equals(parameters('additionalLnx'),'yes')]",
+      "name": "11.14.03.linkedDeploymentCreateNicLnx02",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "dependsOn": [
+        "04.36.00.linkedDeploymentCreatePublicIP",
+        "07.03.00.linkedDeploymentCreateVnet"
+      ],
+      "properties": {
+        "templateLink": {
+          "uri": "[variables('createNicLnx02Uri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nicLnx02": {
+            "value": "[variables('nicLnx02')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "subnetSrvsRef": {
+            "value": "[reference('07.03.00.linkedDeploymentCreateVnet').outputs.SubnetAddsId.value]"
+          }
+        },
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        }
+      }
+    },
+    {
       "comments": "03.15.00.createDomainController",
       "name": "03.15.00.linkedDeploymentCreateDomainController",
       "type": "Microsoft.Resources/deployments",
@@ -647,6 +768,7 @@
     },
     {
       "comments": "15.21.00.createWebServers",
+      "condition": "[equals(parameters('excludeWeb'),'no')]",
       "name": "15.21.00.linkedDeploymentCreateWebServers",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
@@ -699,6 +821,7 @@
     },
     {
       "comments": "16.23.00.createSqlServers",
+      "condition": "[equals(parameters('excludeSql'),'no')]",
       "name": "16.23.00.linkedDeploymentCreateSqlServers",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
@@ -803,6 +926,7 @@
     },
     {
       "comments": "17.25.00.createAdsServers",
+      "condition": "[equals(parameters('excludeAds'),'no')]",
       "name": "17.25.00.linkedDeploymentCreateAdsServers",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
@@ -833,6 +957,59 @@
           },
           "adsNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.adsNicIds.value]"
+          },
+          "saSku": {
+            "value": "[variables('saSku')]"
+          },
+          "diagStorageUri": {
+            "value": "[variables('diagStorageUri')]"
+            },
+          "domainName": {
+            "value": "[variables('fqdnAdatumDev')]"
+          },
+          "domainJoinOptions": {
+            "value": "[variables('domainJoinOptions')]"
+          }
+        },
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        }
+      }
+    },
+    {
+      "comments": "17.25.02.createAdsServers2016core",
+      "condition": "[equals(parameters('additionalAds'),'yes')]",
+      "name": "17.25.02.linkedDeploymentCreateAdsServers2016core",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "dependsOn": [
+        "01.11.00.linkedDeploymentCreateStorageAccount",
+        "03.16.00.linkedDeploymentUpdateVnetWithDNS"
+      ],
+      "properties": {
+        "templateLink": {
+          "uri": "[variables('createAdsServers2016Uri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "a16Prefix": {
+            "value": "[variables('a16Prefix')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "adminUserName": {
+            "value": "[parameters('adminUserName')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "adsAvSetId": {
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
+          },
+          "a16NicIds": {
+            "value": "[reference('11.14.02.linkedDeploymentCreateNic2016').outputs.a16NicIds.value]"
           },
           "saSku": {
             "value": "[variables('saSku')]"
@@ -885,6 +1062,52 @@
           },
           "lnx01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.lnx01nicId.value]"
+          },
+          "saSku": {
+            "value": "[variables('saSku')]"
+          },
+          "diagStorageUri": {
+            "value": "[variables('diagStorageUri')]"
+            }
+        },
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        }
+      }
+    },
+    {
+      "comments": "18.26.02.createLnxServerUbuntu",
+      "name": "18.26.02.linkedDeploymentCreateLnxServerUbuntu",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "dependsOn": [
+        "01.11.00.linkedDeploymentCreateStorageAccount",
+        "03.16.00.linkedDeploymentUpdateVnetWithDNS"
+      ],
+      "properties": {
+        "templateLink": {
+          "uri": "[variables('createLnx02Uri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "lnxPrefix": {
+            "value": "[variables('lnxPrefix')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "adminUserName": {
+            "value": "[parameters('adminUserName')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "lnxAvSetId": {
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
+          },
+          "lnxNic02Id": {
+            "value": "[reference('11.14.03.linkedDeploymentCreateNicLnx02').outputs.lnxNic02Id.value]"
           },
           "saSku": {
             "value": "[variables('saSku')]"

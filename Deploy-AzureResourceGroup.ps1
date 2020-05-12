@@ -18,6 +18,21 @@ PRE-REQUISITES:
     change to this directory using the following command:
     Set-Location -Path c:\scripts
 
+.PARAMETER excludeWeb
+[TASK-ITEM: See GitHub Issue 12] Exclude web servers from deployment to reduce total deployment cost and deployment time.
+
+.PARAMETER excludeSql
+Exclude SQL servers from deployment to reduce total deployment cost and deployment time.
+
+.PARAMETER excludeAds
+[TASK-ITEM: See GitHub Issue 12] Exclude the two additional domain controllers that will just be provisioned initially as member servers to reduce total deployment cost and deployment time.
+
+.PARAMETER additionalLnx
+[TASK-ITEM: See GitHub Issue 12] Add an additional Linux server with the Ubuntu distribution.
+
+.PARAMETER additionalAds
+[TASK-ITEM: See GitHub Issue 12] Add a domain controller provisioned initially as a member server which is specivially a Windows 2016 Core image.
+
 .EXAMPLE
 .\Deploy-AzureResourceGroup.ps1
 
@@ -61,6 +76,22 @@ Azure Architect
 Deploys an Azure automation lab infrastructure
 
 #>
+
+[CmdletBinding()]
+param
+(
+    # Parameter help description
+    [ValidateSet("yes","no")]
+    [string]$excludeWeb = "no",
+    [ValidateSet("yes","no")]
+    [string]$excludeSql = "no",
+    [ValidateSet("yes","no")]
+    [string]$excludeAds = "no",
+    [ValidateSet("yes","no")]
+    [string]$additionalAds = "no",
+    [ValidateSet("yes","no")]
+    [string]$additionalLnx = "no"
+) # end param
 
 $BeginTimer = Get-Date -Verbose
 
@@ -280,10 +311,15 @@ $adminPassword = $adminCred.GetNetworkCredential().password
 $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 
 $parameters = @{}
-$parameters.Add("studentNumber", $studentNumber)
-$parameters.Add("adminUserName", $adminUserName)
-$parameters.Add("adminPassword", $adminPassword)
-$parameters.Add("studentRandomInfix", $studentRandomInfix)
+$parameters.Add("studentNumber",$studentNumber)
+$parameters.Add("adminUserName",$adminUserName)
+$parameters.Add("adminPassword",$adminPassword)
+$parameters.Add("studentRandomInfix",$studentRandomInfix)
+$parameters.Add("excludeWeb",$excludeWeb)
+$parameters.Add("excludeSql",$excludeSql)
+$parameters.Add("excludeAds",$excludeAds)
+$parameters.Add("additionalLnx",$additionalLnx)
+$parameters.Add("additionalAds",$additionalAds)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
 New-AzResourceGroupDeployment -ResourceGroupName $rg `
