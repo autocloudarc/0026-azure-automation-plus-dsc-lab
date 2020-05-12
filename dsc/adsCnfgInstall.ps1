@@ -42,7 +42,7 @@ Configuration adsCnfgInstall
 		} # end hashtable
 	) # end array
 
-	Node localhost
+	Node azrads1004.dev.adatum.com
 	{
   		LocalConfigurationManager
 		{
@@ -106,8 +106,10 @@ $domainAdminCredentials = Get-Credential -Message "Enter domain admin username a
 
 adsCnfgInstall -domainName dev.adatum.com -dataDiskNumber 2 -dataDriveLetter F -domainAdminCredentials
 
+$SecondDomainControllerName = "azrads1004.dev.adatum.com"
+
 # Prepare the session
 $session = New-CimSession -Credential $DomainAdministratorCredentials -ComputerName $SecondDomainControllerName -Verbose
 
 # Apply the configuration using the session
-Start-DscConfiguration -Path $configPath -CimSession $session -Verbose -Wait -Force
+Start-DscConfiguration -Path $configPath -CimSession $session -Verbose -Wait -WhatIf
