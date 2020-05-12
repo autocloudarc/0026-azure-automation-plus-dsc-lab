@@ -119,6 +119,13 @@
       },
       "defaultValue": "no"
     },
+    "excludePki": {
+      "type": "string",
+      "metadata": {
+        "description": "Exclude addtional PKI server from deployment."
+      },
+      "defaultValue": "no"
+    },
     "additionalLnx": {
       "type": "string",
       "metadata": {
@@ -874,6 +881,7 @@
     },
     {
       "comments": "16.24.00.createPkiServers",
+      "condition": "[equals(parameters('excludePki'),'no')]",
       "name": "16.24.00.linkedDeploymentCreatePkiServers",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",

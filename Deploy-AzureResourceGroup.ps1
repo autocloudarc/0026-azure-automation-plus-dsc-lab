@@ -27,6 +27,9 @@ Exclude SQL servers from deployment to reduce total deployment cost and deployme
 .PARAMETER excludeAds
 [TASK-ITEM: See GitHub Issue 12] Exclude the two additional domain controllers that will just be provisioned initially as member servers to reduce total deployment cost and deployment time.
 
+.PARAMETER excludePki
+[TASK-ITEM: See GitHub Issue 12] Exclude the PKI server from this deployment.
+
 .PARAMETER additionalLnx
 [TASK-ITEM: See GitHub Issue 12] Add an additional Linux server with the Ubuntu distribution.
 
@@ -34,7 +37,7 @@ Exclude SQL servers from deployment to reduce total deployment cost and deployme
 [TASK-ITEM: See GitHub Issue 12] Add a domain controller provisioned initially as a member server which is specivially a Windows 2016 Core image.
 
 .EXAMPLE
-.\Deploy-AzureResourceGroup.ps1
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalAds yes -additionalLnx yes -Verbose
 
 .INPUTS
 None
@@ -87,6 +90,8 @@ param
     [string]$excludeSql = "no",
     [ValidateSet("yes","no")]
     [string]$excludeAds = "no",
+    [ValidateSet("yes","no")]
+    [string]$excludePki = "no",
     [ValidateSet("yes","no")]
     [string]$additionalAds = "no",
     [ValidateSet("yes","no")]
@@ -318,6 +323,7 @@ $parameters.Add("studentRandomInfix",$studentRandomInfix)
 $parameters.Add("excludeWeb",$excludeWeb)
 $parameters.Add("excludeSql",$excludeSql)
 $parameters.Add("excludeAds",$excludeAds)
+$parameters.Add("excludePki",$excludePki)
 $parameters.Add("additionalLnx",$additionalLnx)
 $parameters.Add("additionalAds",$additionalAds)
 
