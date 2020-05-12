@@ -267,7 +267,7 @@
         "name": "[toLower(concat(substring(variables('pkiPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
       },
       "lnx01nic": {
-        "name": "[toLower(concat(substring(variables('lnxPrefix'),0,6),parameters('studentNumber'),'02',variables('nicSuffix')))]"
+        "name": "[toLower(concat(substring(variables('lnxPrefix'),0,6),parameters('studentNumber'),'01',variables('nicSuffix')))]"
       }
     },
     "nicColl2016": {
