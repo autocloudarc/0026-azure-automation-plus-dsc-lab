@@ -25,7 +25,7 @@
     },
     "diagStorageUri": {
       "type": "string"
-    },
+    }
   },
   "variables": {
     "lnx01name": "[concat(parameters('lnxPrefix'),1)]",
