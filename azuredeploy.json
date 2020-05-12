@@ -616,7 +616,7 @@
             "value": "[parameters('location')]"
           },
           "subnetSrvsRef": {
-            "value": "[reference('07.03.00.linkedDeploymentCreateVnet').outputs.SubnetAddsId.value]"
+            "value": "[reference('07.03.00.linkedDeploymentCreateVnet').outputs.SubnetSrvsId.value]"
           }
         },
         "mode": "Incremental",
