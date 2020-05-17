@@ -60,9 +60,17 @@ Windows PowerShell
 
 3. Right-click and unblock the script so that your PowerShell execution policy if set to RemoteSigned will allow it to run.
 
-4. Open and execute the script. The example below assumes you are already in the current script directory.
+4. Open and execute the script. The example below assumes you are already in the current script directory and will install the devault workloads listed in section 3.0 above.
 
-    .\Deploy-AzureResourceGroup.ps1
+  `.\Deploy-AzureResourceGroup.ps1 -Verbose`
+
+  This example deploys the infrastructure without the web, sql, additional 2019 core domain controllers and the PKI server, but adds two
+  Windows 2016 core domain controllers plus an additional Linux server with the latest Ubuntu Server distribution.
+
+  `.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalAds yes -additionalLnx yes -Verbose`
+
+  Feel free to customize your deployment with these -exclude... and additional... parameters. More details about these parameters can be obtained by reading the header information 
+  in the .\Deploy-AzureResourceGroup.ps1 file.
 
 5. When the script executes, answer the following prompts:
 
