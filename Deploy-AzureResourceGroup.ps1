@@ -39,8 +39,14 @@ Exclude SQL servers from deployment to reduce total deployment cost and deployme
 .EXAMPLE
 .\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalAds yes -additionalLnx yes -Verbose
 
-This example deploys the infrastructure without the web, sql, additional 2019 core domain controllers and the PKI server, but adds two
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the PKI server, but adds two
 Windows 2016 core domain controllers plus an additional Linux server with the latest Ubuntu Server distribution.
+
+.EXAMPLE
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalAds no -additionalLnx no -Verbose
+
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the PKI server, and also explicitly EXCLUDES the
+additional Windows 2016 core domain controllers plus the additional Linux server with the latest Ubuntu Server distribution.
 
 .INPUTS
 None
