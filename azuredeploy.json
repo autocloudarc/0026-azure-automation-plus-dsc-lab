@@ -1017,7 +1017,7 @@
             "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
           },
           "a16NicIds": {
-            "value": "[reference('11.14.02.linkedDeploymentCreateNic2016','2019-11-01','Full').outputs.a16NicIds.value]"
+            "value": "[reference('11.14.02.linkedDeploymentCreateNic2016','2019-11-01').outputs.a16NicIds.value]"
           },
           "saSku": {
             "value": "[variables('saSku')]"
@@ -1115,7 +1115,7 @@
             "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
           },
           "lnxNic02Id": {
-            "value": "[reference('11.14.03.linkedDeploymentCreateNicLnx02','2019-11-01','Full').outputs.lnxNic02Id.value]"
+            "value": "[reference('11.14.03.linkedDeploymentCreateNicLnx02','2019-11-01').outputs.lnxNic02Id.value]"
           },
           "saSku": {
             "value": "[variables('saSku')]"
