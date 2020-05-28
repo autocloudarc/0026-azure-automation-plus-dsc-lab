@@ -17,7 +17,7 @@
     "lnxAvSetId": {
       "type": "string"
     },
-    "lnxNic02Id": {
+    "lnx02NicId": {
       "type": "string"
     },
     "saSku": {
@@ -83,7 +83,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[parameters('lnxNic02Id')]"
+              "id": "[parameters('lnx02NicId')]"
             }
           ]
         },

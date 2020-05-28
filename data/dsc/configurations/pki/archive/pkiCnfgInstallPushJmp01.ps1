@@ -15,7 +15,7 @@ Domain administrator credentials
 
 .EXAMPLE
 Complile configuration
-adsCnfgInstallPushAds01 -OutputPath $devMofPath -domainAdminCred $domainAdminCred -ConfigurationData $ConfigDataPath
+pkiCnfgInstallPushJmp01 -OutputPath $devMofPath -domainAdminCred $domainAdminCred -ConfigurationData $ConfigDataPath
 
 # Configure target LCM
 Set-DscLocalConfigurationManager -Path $devMofPath -ComputerName $targetNode -Verbose -Force
@@ -72,11 +72,11 @@ Configuration ecaCnfgInstallPushDev01
     ) # end param
 
     Import-DscResource -ModuleName ActiveDirectoryCSDsc, CertificateDsc, PSDesiredStateConfiguration, xPendingReboot
-    
+
     # Get list of CA management features to add
     $caMgmtFeatures = @('RSAT-ADCS','RSAT-ADCS-Mgmt')
 
-    Node $AllNodes.NodeName 
+    Node $AllNodes.NodeName
     {
      # Install the ADCS Certificate Authority
      WindowsFeature ADCSCA
@@ -89,7 +89,7 @@ Configuration ecaCnfgInstallPushDev01
      {
          IsSingleInstance = $node.singleInstance
          CAType = $node.eca
-         Credential = $domainAdminCred 
+         Credential = $domainAdminCred
          Ensure = $node.ensure
          CACommonName = $Node.CACommonName
          CADistinguishedNameSuffix = $Node.CADistinguishedNameSuffix
@@ -103,22 +103,22 @@ Configuration ecaCnfgInstallPushDev01
          ValidityPeriod = $node.periodUnits
          ValidityPeriodUnits = $node.periodValue
          DependsOn = '[WindowsFeature]ADCSCA'
-     } # end resource     
+     } # end resource
      ForEach ($caMgmtFeature in $caMgmtFeatures)
      {
       WindowsFeature $caMgmtFeature
-      { 
+      {
           Ensure = $node.ensure
           Name = $caMgmtFeature
-          DependsOn = '[WindowsFeature]ADCSCA' 
-      } # end resource 
-     } # end foreach  
-     
+          DependsOn = '[WindowsFeature]ADCSCA'
+      } # end resource
+     } # end foreach
+
     xPendingReboot Reboot1
-    { 
+    {
         Name = "RebootServer"
         DependsOn = '[WindowsFeature]RSAT-ADCS-Mgmt'
-    } # end resource  
+    } # end resource
 
    } # end node
 } # end configuration

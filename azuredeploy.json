@@ -1114,8 +1114,8 @@
           "lnxAvSetId": {
             "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
           },
-          "lnxNic02Id": {
-            "value": "[reference('11.14.03.linkedDeploymentCreateNicLnx02','2019-11-01').outputs.lnxNic02Id.value]"
+          "lnx02NicId": {
+            "value": "[reference('11.14.03.linkedDeploymentCreateNicLnx02').outputs.lnx02NicId.value]"
           },
           "saSku": {
             "value": "[variables('saSku')]"
