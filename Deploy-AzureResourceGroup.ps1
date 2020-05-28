@@ -48,6 +48,12 @@ Windows 2016 core domain controllers plus an additional Linux server with the la
 This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the PKI server, and also explicitly EXCLUDES the
 additional Windows 2016 core domain controllers plus the additional Linux server with the latest Ubuntu Server distribution.
 
+.EXAMPLE
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -additionalAds no -additionalLnx no -Verbose
+
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers, but DOES deploy the PKI server, whilst EXCLUDING the
+additional Windows 2016 core domain controllers plus the additional Linux server with the latest Ubuntu Server distribution.
+
 .INPUTS
 None
 
