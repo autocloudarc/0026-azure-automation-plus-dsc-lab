@@ -70,6 +70,9 @@
       "name": "[variables('lnx02name')]",
       "apiVersion": "2017-03-30",
       "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/',parameters('lnx02NicName'))]"
+      ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('lnxVmSize')]"
