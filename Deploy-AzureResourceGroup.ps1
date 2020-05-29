@@ -33,26 +33,17 @@ Exclude SQL servers from deployment to reduce total deployment cost and deployme
 .PARAMETER additionalLnx
 [TASK-ITEM: See GitHub Issue 12] Add an additional Linux server with the Ubuntu distribution.
 
-.PARAMETER additionalAds
-[TASK-ITEM: See GitHub Issue 12] Add a domain controller provisioned initially as a member server which is specivially a Windows 2016 Core image.
+.EXAMPLE
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -Verbose
+
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the PKI server, but ADDS
+an additional Linux server with the latest Ubuntu Server distribution.
 
 .EXAMPLE
-.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalAds yes -additionalLnx yes -Verbose
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -Verbose
 
-This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the PKI server, but adds two
-Windows 2016 core domain controllers plus an additional Linux server with the latest Ubuntu Server distribution.
-
-.EXAMPLE
-.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalAds no -additionalLnx no -Verbose
-
-This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the PKI server, and also explicitly EXCLUDES the
-additional Windows 2016 core domain controllers plus the additional Linux server with the latest Ubuntu Server distribution.
-
-.EXAMPLE
-.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -additionalAds no -additionalLnx no -Verbose
-
-This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers, but DOES deploy the PKI server, whilst EXCLUDING the
-additional Windows 2016 core domain controllers plus the additional Linux server with the latest Ubuntu Server distribution.
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers, but WILL implicitly deploy the PKI server.
+This is due to the default parameter value that is set in the paramater block as [string]$excludePki = "no".
 
 .INPUTS
 None
@@ -107,8 +98,6 @@ param
     [string]$excludeAds = "no",
     [ValidateSet("yes","no")]
     [string]$excludePki = "no",
-    [ValidateSet("yes","no")]
-    [string]$additionalAds = "no",
     [ValidateSet("yes","no")]
     [string]$additionalLnx = "no"
 ) # end param
@@ -340,7 +329,6 @@ $parameters.Add("excludeSql",$excludeSql)
 $parameters.Add("excludeAds",$excludeAds)
 $parameters.Add("excludePki",$excludePki)
 $parameters.Add("additionalLnx",$additionalLnx)
-$parameters.Add("additionalAds",$additionalAds)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
 New-AzResourceGroupDeployment -ResourceGroupName $rg `
