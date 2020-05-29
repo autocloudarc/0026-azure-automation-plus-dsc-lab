@@ -222,7 +222,6 @@
       "ads02PrivIp": "[concat(variables('dcNicIpPrefix'),'.5')]"
     },
     "createNetworkInterfacesUri": "[uri(parameters('_artifactsLocation'),concat('nested/11.14.01.createNetworkInterfaces.json',parameters('_artifactsLocationSasToken')))]",
-    "createNicLnx02Uri": "[uri(parameters('_artifactsLocation'),concat('nested/11.14.03.createNicLnx02.json',parameters('_artifactsLocationSasToken')))]",
     "nicSuffix": "-nic",
     "nicCollection": {
       "ads01nic": {
@@ -943,6 +942,7 @@
     },
     {
       "comments": "18.26.02.createLnxServerUbuntu",
+      "condition": "[equals(parameters('additionalLnx'),'yes')]",
       "name": "18.26.02.linkedDeploymentCreateLnxServerUbuntu",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
