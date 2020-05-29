@@ -347,7 +347,7 @@ else
     $fqdnDev = (Get-AzPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
 
     $StopTimer = Get-Date -Verbose
-    Write-Output "Calculating elapsed time..." -Log $Log
+    Write-Output "Calculating elapsed time..."
     $ExecutionTime = New-TimeSpan -Start $BeginTimer -End $StopTimer
     $Footer = "TOTAL SCRIPT EXECUTION TIME: $ExecutionTime"
     Write-Output ""
