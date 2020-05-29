@@ -17,7 +17,10 @@
     "lnxAvSetId": {
       "type": "string"
     },
-    "lnx02NicId": {
+    "lnx02NicName": {
+      "type": "string"
+    },
+    "subnetSrvsRef": {
       "type": "string"
     },
     "saSku": {
@@ -37,6 +40,30 @@
     "diskNameData": "[toLower(concat(variables('lnx02name'),'-data'))]"
   },
   "resources": [
+    {
+      "comments": "11.14.03.createNicLnx02",
+      "name": "[parameters('lnx02NicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[parameters('location')]",
+      "apiVersion": "2017-10-01",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[parameters('subnetSrvsRef')]"
+              }
+            }
+          }
+        ],
+        "dnsSettings": {
+          "dnsServers": []
+        },
+        "enableIPForwarding": false
+      }
+    },
     {
       "comments": "14.17.00.createlnxServer",
       "type": "Microsoft.Compute/virtualMachines",
@@ -83,7 +110,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[parameters('lnx02NicId')]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('lnx02NicName'))]"
             }
           ]
         },

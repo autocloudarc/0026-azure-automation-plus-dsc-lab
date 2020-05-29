@@ -536,38 +536,6 @@
       }
     },
     {
-      "comments": "11.14.03.createNicLnx02",
-      "condition": "[equals(parameters('additionalLnx'),'yes')]",
-      "name": "11.14.03.linkedDeploymentCreateNicLnx02",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
-      "dependsOn": [
-        "04.36.00.linkedDeploymentCreatePublicIP",
-        "07.03.00.linkedDeploymentCreateVnet"
-      ],
-      "properties": {
-        "templateLink": {
-          "uri": "[variables('createNicLnx02Uri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "nicLnx02": {
-            "value": "[variables('nicLnx02')]"
-          },
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "subnetSrvsRef": {
-            "value": "[reference('07.03.00.linkedDeploymentCreateVnet').outputs.SubnetSrvsId.value]"
-          }
-        },
-        "mode": "Incremental",
-        "debugSetting": {
-          "detailLevel": "requestContent, responseContent"
-        }
-      }
-    },
-    {
       "comments": "03.15.00.createDomainController",
       "name": "03.15.00.linkedDeploymentCreateDomainController",
       "type": "Microsoft.Resources/deployments",
@@ -1003,8 +971,11 @@
           "lnxAvSetId": {
             "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
           },
-          "lnx02NicId": {
-            "value": "[reference('11.14.03.linkedDeploymentCreateNicLnx02', '2017-10-01').outputs.lnx02NicId.value]"
+          "lnx02NicName": {
+            "value": "[variables('nicLnx02')]"
+          },
+          "subnetSrvsRef": {
+            "value": "[reference('07.03.00.linkedDeploymentCreateVnet').outputs.SubnetSrvsId.value]"
           },
           "saSku": {
             "value": "[variables('saSku')]"
