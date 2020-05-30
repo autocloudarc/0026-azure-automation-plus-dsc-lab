@@ -364,8 +364,8 @@ if ($excludeSql -eq "no")
 $avSetIds = @{}
 
 $avSets.GetEnumerator() | ForEach-Object {
-    $provisionAvSet = New-AzAvailabilitySet -ResourceGroupName $rg -Name $avSet.value -Location $region -PlatformUpdateDomainCount $avSetUpdateDomains -PlatformFaultDomainCount $avsetFaultDomains -Sku $avSetSku -Verbose
-    $avSetIds.Add($avSet.name,$provisionAvSet.id)
+    $provisionAvSet = New-AzAvailabilitySet -ResourceGroupName $rg -Name $_.value -Location $region -PlatformUpdateDomainCount $avSetUpdateDomains -PlatformFaultDomainCount $avsetFaultDomains -Sku $avSetSku -Verbose
+    $avSetIds.Add($_.name,$provisionAvSet.id)
 } # end foreach
 
 $avSetIdsJson = $avSetIds | ConvertTo-Json
