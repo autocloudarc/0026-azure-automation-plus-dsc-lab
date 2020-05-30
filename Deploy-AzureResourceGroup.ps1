@@ -368,7 +368,8 @@ $avSets.GetEnumerator() | ForEach-Object {
     $avSetIds.Add($_.name,$provisionAvSet.id)
 } # end foreach
 
-$avSetIdsJson = [PSCustomObject]$avSetIds
+$avSetIdsJson = [PSCustomObject]$avSetIds | ConvertTo-Json
+$avSetIdsJson = $avSetIdsJson | ConvertFrom-Json
 
 #endregion
 
