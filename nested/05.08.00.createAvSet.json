@@ -50,11 +50,11 @@
     },
     "devAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[4])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[4])]"
     },
     "lnxAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[5])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[5])]"
     }
   }
 }
