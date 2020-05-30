@@ -582,7 +582,7 @@
           },
           "adsAvSetId": {
             // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').CliXml.ads]"
+            "value": "[parameters('avSetIdsJson').ads]"
           },
           "ads03nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.ads03nicId.value]"
@@ -671,7 +671,7 @@
           },
           "devAvSetId": {
             // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.devAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').CliXml.dev]"
+            "value": "[parameters('avSetIdsJson').dev]"
           },
           "dev01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.dev01nicId.value]"
@@ -731,7 +731,7 @@
           },
           "webAvSetId": {
             // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.webAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').CliXml.web]"
+            "value": "[parameters('avSetIdsJson').web]"
           },
           "webNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.webNicIds.value]"
@@ -785,7 +785,7 @@
           },
           "sqlAvSetId": {
             // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.sqlAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').CliXml.sql]"
+            "value": "[parameters('avSetIdsJson').sql]"
           },
           "sqlNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.sqlNicIds.value]"
@@ -839,7 +839,7 @@
           },
           "pkiAvSetId": {
             // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.pkiAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').CliXml.pki]"
+            "value": "[parameters('avSetIdsJson').pki]"
           },
           "pki01NicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.pki01NicId.value]"
@@ -893,7 +893,7 @@
           },
           "adsAvSetId": {
             // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').CliXml.ads]"
+            "value": "[parameters('avSetIdsJson').ads]"
           },
           "adsNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.adsNicIds.value]"
@@ -947,7 +947,7 @@
           },
           "lnxAvSetId": {
             // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').CliXml.lnx]"
+            "value": "[parameters('avSetIdsJson').lnx]"
           },
           "lnx01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.lnx01nicId.value]"
@@ -995,7 +995,7 @@
           },
           "lnxAvSetId": {
             // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').CliXml.lnx]"
+            "value": "[parameters('avSetIdsJson').lnx]"
           },
           "lnx02NicName": {
             "value": "[variables('nicLnx02')]"

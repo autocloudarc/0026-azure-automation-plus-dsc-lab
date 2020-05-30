@@ -368,7 +368,8 @@ $avSets.GetEnumerator() | ForEach-Object {
     $avSetIds.Add($_.name,$provisionAvSet.id)
 } # end foreach
 
-$avSetIdsJson = [PSCustomObject]$avSetIds
+$avSetIdsJson = [PSCustomObject]$avSetIds | ConvertTo-Json
+$avSetIdsJson = $avSetIdsJson | ConvertFrom-Json
 #endregion
 
 $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
