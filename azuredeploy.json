@@ -172,7 +172,7 @@
       "[concat(variables('AvSetPrefix'),'LNX',parameters('studentNumber'))]"
     ],
     */
-    "createAvSetUri": "[uri(parameters('_artifactsLocation'),concat('nested/05.08.00.createAvSet.json',parameters('_artifactsLocationSasToken')))]",
+    // "createAvSetUri": "[uri(parameters('_artifactsLocation'),concat('nested/05.08.00.createAvSet.json',parameters('_artifactsLocationSasToken')))]",
     "nsgPrefix": "NSG-",
     "subnet01": "ADDS",
     "subnet02": "SRVS",
@@ -558,7 +558,7 @@
       "apiVersion": "2017-05-10",
       "dependsOn": [
         "01.11.00.linkedDeploymentCreateStorageAccount",
-        "05.08.00.linkedDeploymentCreateAvSet",
+        // "05.08.00.linkedDeploymentCreateAvSet",
         "07.03.00.linkedDeploymentCreateVnet",
         "11.14.01.linkedDeploymentCreateNetworkInterfaces"
       ],
