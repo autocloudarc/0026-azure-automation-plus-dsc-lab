@@ -19,19 +19,23 @@ PRE-REQUISITES:
     Set-Location -Path c:\scripts
 
 .PARAMETER excludeWeb
-[TASK-ITEM: See GitHub Issue 12] Exclude web servers from deployment to reduce total deployment cost and deployment time.
+Exclude web servers from deployment to reduce total deployment cost and deployment time.
 
 .PARAMETER excludeSql
 Exclude SQL servers from deployment to reduce total deployment cost and deployment time.
+# TASK-ITEM: Use actual SQL 2019 Server images
 
 .PARAMETER excludeAds
-[TASK-ITEM: See GitHub Issue 12] Exclude the two additional domain controllers that will just be provisioned initially as member servers to reduce total deployment cost and deployment time.
+Exclude the two additional domain controllers that will just be provisioned initially as member servers to reduce total deployment cost and deployment time.
 
 .PARAMETER excludePki
-[TASK-ITEM: See GitHub Issue 12] Exclude the PKI server from this deployment.
+Exclude the PKI server from this deployment.
 
-.PARAMETER additionalLnx
-[TASK-ITEM: See GitHub Issue 12] Add an additional Linux server with the Ubuntu distribution.
+.PARAMETER includeCentos
+Include a CentOS server for this deployment.
+
+.PARAMETER includeUbuntu
+Inclue an Ubuntu server for this deployment.
 
 .EXAMPLE
 .\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -Verbose
@@ -44,6 +48,12 @@ an additional Linux server with the latest Ubuntu Server distribution.
 
 This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers, but WILL implicitly deploy the PKI server.
 This is due to the default parameter value that is set in the paramater block as [string]$excludePki = "no".
+
+.EXAMPLE
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -includeCentOS yes -includeUbuntu no -Verbose
+
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the Ubuntu server, but WILL implicitly deploy the PKI server and
+explicity provision the CentOS server as well. The PKI server will not be deployed due to the default parameter value that is set in the paramater block as [string]$excludePki = "no".
 
 .INPUTS
 None
@@ -99,7 +109,9 @@ param
     [ValidateSet("yes","no")]
     [string]$excludePki = "no",
     [ValidateSet("yes","no")]
-    [string]$additionalLnx = "no"
+    [string]$includeCentOS = "yes",
+    [ValidateSet("yes","no")]
+    [string]$includeUbuntu = "no"
 ) # end param
 
 $BeginTimer = Get-Date -Verbose
@@ -311,6 +323,56 @@ Until ($region -in $regions)
 
 New-AzResourceGroup -Name $rg -Location $region -Verbose
 
+#region Availability Sets
+
+# Create availability sets
+$avSetPrefix = "AvSet"
+
+$avSetAds = $avSetPrefix + "ADS" + $studentNumber
+$avSetDev = $avSetPrefix + "DEV" + $studentNumber
+$avSetLnx = $avSetPrefix + "LNX" + $studentNumber
+$avSetPki = $avSetPrefix + "PKI" + $studentNumber
+$avSetSql = $avSetPrefix + "SQL" + $studentNumber
+$avSetWeb = $avSetPrefix + "WEB" + $studentNumber
+
+# Specify the availabilty set sku
+$avSetSku = "aligned"
+$avSetUpdateDomains = 5
+$avsetFaultDomains = 3
+
+# Construct availability sets array
+$avSets = @{}
+$avSets.Add("ads",$avSetAds)
+$avSets.Add("dev",$avSetDev)
+if (($includeCentOS -eq "yes") -or ($includeUbuntu -eq "yes"))
+{
+    $avSets.Add("lnx",$avSetLnx)
+} # end if
+if ($excludePki -eq "no")
+{
+    $avSets.Add("pki",$avSetPki)
+} # end if
+if ($excludeWeb -eq "no")
+{
+    $avSets.Add("web",$avSetWeb)
+} # end if
+if ($excludeSql -eq "no")
+{
+    $avSets.Add("sql",$avSetSql)
+} # end if
+
+$avSetIds = @{}
+
+foreach ($avSet in $avsets)
+{
+    $provisionAvSet = New-AzAvailabilitySet -ResourceGroupName $rg -Name $avSet.value -Location $region -PlatformUpdateDomainCount $avSetUpdateDomains -PlatformFaultDomainCount $avsetFaultDomains -Sku $avSetSku -Verbose
+    $avSetIds.Add($avSet.name,$provisionAvSet.id)
+} # end foreach
+
+$avSetIdsJson = $avSetIds | ConvertTo-Json
+
+#endregion
+
 $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
@@ -328,7 +390,9 @@ $parameters.Add("excludeWeb",$excludeWeb)
 $parameters.Add("excludeSql",$excludeSql)
 $parameters.Add("excludeAds",$excludeAds)
 $parameters.Add("excludePki",$excludePki)
-$parameters.Add("additionalLnx",$additionalLnx)
+$parameters.Add("includeCentOS",$includeCentOS)
+$parameters.Add("includeUbuntu",$includeUbuntu)
+$parameters.Add("avSetIdsJson",$avSetIdsJson)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
 New-AzResourceGroupDeployment -ResourceGroupName $rg `

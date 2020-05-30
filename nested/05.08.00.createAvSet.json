@@ -5,8 +5,8 @@
     "location": {
       "type": "string"
     },
-    "avSet": {
-      "type": "array",
+    "avSets": {
+      "type": "object",
       "metadata": {
         "description": "Collection of availability sets names."
       }
@@ -15,12 +15,12 @@
   "resources": [
     {
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "[concat(parameters('avSet')[copyIndex()])]",
+      "name": "[concat(parameters('avSets')[copyIndex()])]",
       "apiVersion": "2017-03-30",
       "location": "[parameters('location')]",
       "copy": {
         "name": "avSetCopy",
-        "count": "[length(parameters('avSet'))]"
+        "count": "[length(parameters('avSets'))]"
       },
       "properties": {
         "platformUpdateDomainCount": 5,
@@ -34,19 +34,19 @@
   "outputs": {
     "adsAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[0])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[0])]"
     },
     "webAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[1])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[1])]"
     },
     "sqlAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[2])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[2])]"
     },
     "pkiAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[3])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[3])]"
     },
     "devAvSetID": {
       "type": "string",

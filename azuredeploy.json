@@ -126,12 +126,25 @@
       },
       "defaultValue": "no"
     },
-    "additionalLnx": {
+    "includeCentOS": {
       "type": "string",
       "metadata": {
-        "description": "Add an additional Linux server with the latest Ubuntu image."
+        "description": "Add a Linux server with the latest CentOS image."
+      },
+      "defaultValue": "yes"
+    },
+    "includeUbuntu": {
+      "type": "string",
+      "metadata": {
+        "description": "Add a Linux server with the latest Ubuntu image."
       },
       "defaultValue": "no"
+    },
+    "avSetIdsJson": {
+      "type": "object",
+      "metadata": {
+        "description": "Availability set ids."
+      }
     }
   },
   "variables": {
@@ -148,6 +161,7 @@
     "devPublicIPAddressType": "Static",
     "fqdnAzureSuffix": ".cloudapp.azure.com",
     "fqdnLocationSuffix": "[concat(variables('devPublicIPAddressName'),'.',parameters('location'),variables('fqdnAzureSuffix'))]",
+    /*
     "avSetPrefix": "AvSet",
     "avSet": [
       "[concat(variables('AvSetPrefix'),'ADS',parameters('studentNumber'))]",
@@ -157,6 +171,7 @@
       "[concat(variables('AvSetPrefix'),'DEV',parameters('studentNumber'))]",
       "[concat(variables('AvSetPrefix'),'LNX',parameters('studentNumber'))]"
     ],
+    */
     "createAvSetUri": "[uri(parameters('_artifactsLocation'),concat('nested/05.08.00.createAvSet.json',parameters('_artifactsLocationSasToken')))]",
     "nsgPrefix": "NSG-",
     "subnet01": "ADDS",
@@ -329,6 +344,7 @@
         }
       }
     },
+    /*
     {
       "comments": "05.08.00.createAvSet",
       "name": "05.08.00.linkedDeploymentCreateAvSet",
@@ -343,8 +359,8 @@
           "location": {
             "value": "[parameters('location')]"
           },
-          "avSet": {
-            "value": "[variables('avSet')]"
+          "avSets": {
+            "value": "[parameters('avSets')]"
           }
         },
         "mode": "Incremental",
@@ -353,6 +369,7 @@
         }
       }
     },
+    */
     {
       "comments": "06.06.00.createNSG",
       "name": "06.06.00.linkedDeploymentCreateNSG",
@@ -564,7 +581,8 @@
             "value": "[parameters('adminPassword')]"
           },
           "adsAvSetId": {
-            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
+            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
+            "value": "[parameters('avSetIdsJson').ads]"
           },
           "ads03nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.ads03nicId.value]"
@@ -652,7 +670,8 @@
             "value": "[parameters('adminPassword')]"
           },
           "devAvSetId": {
-            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.devAvSetId.value]"
+            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.devAvSetId.value]"
+            "value": "[parameters('avSetIdsJson').dev]"
           },
           "dev01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.dev01nicId.value]"
@@ -711,7 +730,8 @@
             "value": "[parameters('adminPassword')]"
           },
           "webAvSetId": {
-            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.webAvSetId.value]"
+            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.webAvSetId.value]"
+            "value": "[parameters('avSetIdsJson').web]"
           },
           "webNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.webNicIds.value]"
@@ -764,7 +784,8 @@
             "value": "[parameters('adminPassword')]"
           },
           "sqlAvSetId": {
-            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.sqlAvSetId.value]"
+            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.sqlAvSetId.value]"
+            "value": "[parameters('avSetIdsJson').sql]"
           },
           "sqlNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.sqlNicIds.value]"
@@ -817,7 +838,8 @@
             "value": "[parameters('adminPassword')]"
           },
           "pkiAvSetId": {
-            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.pkiAvSetId.value]"
+            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.pkiAvSetId.value]"
+            "value": "[parameters('avSetIdsJson').pki]"
           },
           "pki01NicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.pki01NicId.value]"
@@ -870,7 +892,8 @@
             "value": "[parameters('adminPassword')]"
           },
           "adsAvSetId": {
-            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
+            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
+            "value": "[parameters('avSetIdsJson').ads]"
           },
           "adsNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.adsNicIds.value]"
@@ -896,6 +919,7 @@
     },
     {
       "comments": "18.26.01.createLnxServer",
+      "condition": "[equals(parameters('includeCentOS'),'yes')]",
       "name": "18.26.01.linkedDeploymentCreateLnxServer",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
@@ -922,7 +946,8 @@
             "value": "[parameters('adminPassword')]"
           },
           "lnxAvSetId": {
-            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
+            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
+            "value": "[parameters('avSetIdsJson').lnx]"
           },
           "lnx01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.lnx01nicId.value]"
@@ -942,7 +967,7 @@
     },
     {
       "comments": "18.26.02.createLnxServerUbuntu",
-      "condition": "[equals(parameters('additionalLnx'),'yes')]",
+      "condition": "[equals(parameters('includeUbuntu'),'yes')]",
       "name": "18.26.02.linkedDeploymentCreateLnxServerUbuntu",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
@@ -969,7 +994,8 @@
             "value": "[parameters('adminPassword')]"
           },
           "lnxAvSetId": {
-            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
+            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
+            "value": "[parameters('avSetIdsJson').lnx]"
           },
           "lnx02NicName": {
             "value": "[variables('nicLnx02')]"
