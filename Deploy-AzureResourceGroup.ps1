@@ -363,8 +363,7 @@ if ($excludeSql -eq "no")
 
 $avSetIds = @{}
 
-foreach ($avSet in $avsets)
-{
+$avSets.GetEnumerator() | ForEach-Object {
     $provisionAvSet = New-AzAvailabilitySet -ResourceGroupName $rg -Name $avSet.value -Location $region -PlatformUpdateDomainCount $avSetUpdateDomains -PlatformFaultDomainCount $avsetFaultDomains -Sku $avSetSku -Verbose
     $avSetIds.Add($avSet.name,$provisionAvSet.id)
 } # end foreach

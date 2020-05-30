@@ -19,4 +19,7 @@ $avSetsPSObjectType
 $avSetsJsonType = ($avSets | ConvertTo-Json).GetType().Name
 $avSetsJsonType
 
-$avSets.Values
+foreach ($avs in $avSets)
+{
+    $avs
+} # end foreach
