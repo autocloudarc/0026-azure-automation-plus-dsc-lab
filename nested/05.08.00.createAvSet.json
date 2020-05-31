@@ -6,7 +6,7 @@
       "type": "string"
     },
     "avSet": {
-      "type": "object",
+      "type": "array",
       "metadata": {
         "description": "Collection of availability sets names."
       }
