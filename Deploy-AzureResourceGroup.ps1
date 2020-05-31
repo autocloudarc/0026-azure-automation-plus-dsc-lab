@@ -396,10 +396,10 @@ else
     $avSets = Get-AzAvailabilitySet -ResourceGroupName $rg
     foreach ($avSet in $avSets)
     {
-        # Cleanup availability sets that aren't assined to any virtual machines
-        Write-Output "Removing availability sets that are not associated with any virtual machines."
         if ($avSet.VirtualMachinesReferences.Id.Count -eq 0)
         {
+            # Cleanup availability sets that aren't assined to any virtual machines
+            Write-Output "Removing availability set that is not associated with any virtual machines."
             Remove-AzAvailabilitySet -ResourceGroupName $rg -Name $avSet.Name -Force -Verbose
         } # end if
     } # end foreach
