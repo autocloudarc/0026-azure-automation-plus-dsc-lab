@@ -391,6 +391,7 @@ else
     #region Availability Sets
 
     # Construct availability sets array
+    Write-Output "Cleaning up unused availability sets."
     Write-Output "Retrieving list of availability sets."
     $avSets = Get-AzAvailabilitySet -ResourceGroupName $rg
     foreach ($avSet in $avSets)
@@ -400,6 +401,20 @@ else
         if ($avSet.VirtualMachinesReferences.Id.Count -eq 0)
         {
             Remove-AzAvailabilitySet -ResourceGroupName $rg -Name $avSet.Name -Force -Verbose
+        } # end if
+    } # end foreach
+    #endregion
+
+    #region NetworkInterfaces
+    Write-Output "Cleaning up unused NICs."
+    Write-Output "Retrieving list of NICs."
+    $nicList = (Get-AzNetworkInterface -ResourceGroupName $rg)
+    foreach ($nic in $nicList)
+    {
+        # Remove NIC if it isn't attached to a virtual machine
+        if ($null -eq $nic.VirtualMachine.Id)
+        {
+            Remove-AzNetworkInterface -ResourceGroupName $rg -Name $nic.Name -Force -Verbose -PassThru
         } # end if
     } # end foreach
     #endregion
