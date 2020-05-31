@@ -80,6 +80,7 @@ This posting is provided "AS IS" with no warranties, and confers no rights.
 4. https://www.red-gate.com/simple-talk/cloud/infrastructure-as-a-service/azure-resource-manager-arm-templates/
 5. https://azure.microsoft.com/en-us/blog/create-flexible-arm-templates-using-conditions-and-logical-functions/
 6. https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-ip-addresses-overview-arm
+7. https://github.com/Azure/azure-quickstart-templates/tree/master/101-azure-bastion
 
 .COMPONENT
 Azure Infrastructure, PowerShell, ARM, JSON
