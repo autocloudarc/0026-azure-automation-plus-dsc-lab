@@ -414,6 +414,7 @@ else
         # Remove NIC if it isn't attached to a virtual machine
         if ($null -eq $nic.VirtualMachine.Id)
         {
+            Write-Output "Removing network interface that is not associated with a virtual machine."
             Remove-AzNetworkInterface -ResourceGroupName $rg -Name $nic.Name -Force -Verbose -PassThru
         } # end if
     } # end foreach
