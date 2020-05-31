@@ -5,7 +5,7 @@
     "location": {
       "type": "string"
     },
-    "avSets": {
+    "avSet": {
       "type": "object",
       "metadata": {
         "description": "Collection of availability sets names."
@@ -15,12 +15,12 @@
   "resources": [
     {
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "[concat(parameters('avSets')[copyIndex()])]",
+      "name": "[concat(parameters('avSet')[copyIndex()])]",
       "apiVersion": "2017-03-30",
       "location": "[parameters('location')]",
       "copy": {
         "name": "avSetCopy",
-        "count": "[length(parameters('avSets'))]"
+        "count": "[length(parameters('avSet'))]"
       },
       "properties": {
         "platformUpdateDomainCount": 5,
@@ -34,27 +34,27 @@
   "outputs": {
     "adsAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[0])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[0])]"
     },
     "webAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[1])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[1])]"
     },
     "sqlAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[2])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[2])]"
     },
     "pkiAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[3])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[3])]"
     },
     "devAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[4])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[4])]"
     },
     "lnxAvSetID": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSets')[5])]"
+      "value": "[resourceId('Microsoft.Compute/availabilitySets',parameters('avSet')[5])]"
     }
   }
 }

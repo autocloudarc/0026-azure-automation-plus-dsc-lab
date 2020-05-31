@@ -139,12 +139,6 @@
         "description": "Add a Linux server with the latest Ubuntu image."
       },
       "defaultValue": "no"
-    },
-    "avSetIdsJson": {
-      "type": "object",
-      "metadata": {
-        "description": "Availability set ids."
-      }
     }
   },
   "variables": {
@@ -161,7 +155,6 @@
     "devPublicIPAddressType": "Static",
     "fqdnAzureSuffix": ".cloudapp.azure.com",
     "fqdnLocationSuffix": "[concat(variables('devPublicIPAddressName'),'.',parameters('location'),variables('fqdnAzureSuffix'))]",
-    /*
     "avSetPrefix": "AvSet",
     "avSet": [
       "[concat(variables('AvSetPrefix'),'ADS',parameters('studentNumber'))]",
@@ -171,8 +164,7 @@
       "[concat(variables('AvSetPrefix'),'DEV',parameters('studentNumber'))]",
       "[concat(variables('AvSetPrefix'),'LNX',parameters('studentNumber'))]"
     ],
-    */
-    // "createAvSetUri": "[uri(parameters('_artifactsLocation'),concat('nested/05.08.00.createAvSet.json',parameters('_artifactsLocationSasToken')))]",
+    "createAvSetUri": "[uri(parameters('_artifactsLocation'),concat('nested/05.08.00.createAvSet.json',parameters('_artifactsLocationSasToken')))]",
     "nsgPrefix": "NSG-",
     "subnet01": "ADDS",
     "subnet02": "SRVS",
@@ -344,7 +336,6 @@
         }
       }
     },
-    /*
     {
       "comments": "05.08.00.createAvSet",
       "name": "05.08.00.linkedDeploymentCreateAvSet",
@@ -359,8 +350,8 @@
           "location": {
             "value": "[parameters('location')]"
           },
-          "avSets": {
-            "value": "[parameters('avSets')]"
+          "avSet": {
+            "value": "[variables('avSet')]"
           }
         },
         "mode": "Incremental",
@@ -369,7 +360,6 @@
         }
       }
     },
-    */
     {
       "comments": "06.06.00.createNSG",
       "name": "06.06.00.linkedDeploymentCreateNSG",
@@ -558,7 +548,7 @@
       "apiVersion": "2017-05-10",
       "dependsOn": [
         "01.11.00.linkedDeploymentCreateStorageAccount",
-        // "05.08.00.linkedDeploymentCreateAvSet",
+        "05.08.00.linkedDeploymentCreateAvSet",
         "07.03.00.linkedDeploymentCreateVnet",
         "11.14.01.linkedDeploymentCreateNetworkInterfaces"
       ],
@@ -581,8 +571,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "adsAvSetId": {
-            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').ads]"
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
           },
           "ads03nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.ads03nicId.value]"
@@ -670,8 +659,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "devAvSetId": {
-            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.devAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').dev]"
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.devAvSetId.value]"
           },
           "dev01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.dev01nicId.value]"
@@ -730,8 +718,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "webAvSetId": {
-            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.webAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').web]"
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.webAvSetId.value]"
           },
           "webNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.webNicIds.value]"
@@ -784,8 +771,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "sqlAvSetId": {
-            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.sqlAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').sql]"
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.sqlAvSetId.value]"
           },
           "sqlNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.sqlNicIds.value]"
@@ -838,8 +824,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "pkiAvSetId": {
-            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.pkiAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').pki]"
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.pkiAvSetId.value]"
           },
           "pki01NicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.pki01NicId.value]"
@@ -892,8 +877,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "adsAvSetId": {
-            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').ads]"
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.adsAvSetId.value]"
           },
           "adsNicIds": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.adsNicIds.value]"
@@ -946,8 +930,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "lnxAvSetId": {
-            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').lnx]"
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
           },
           "lnx01nicId": {
             "value": "[reference('11.14.01.linkedDeploymentCreateNetworkInterfaces').outputs.lnx01nicId.value]"
@@ -994,8 +977,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "lnxAvSetId": {
-            // "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
-            "value": "[parameters('avSetIdsJson').lnx]"
+            "value": "[reference('05.08.00.linkedDeploymentCreateAvSet').outputs.lnxAvSetId.value]"
           },
           "lnx02NicName": {
             "value": "[variables('nicLnx02')]"

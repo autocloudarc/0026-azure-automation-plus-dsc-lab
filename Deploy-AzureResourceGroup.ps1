@@ -323,55 +323,6 @@ Until ($region -in $regions)
 
 New-AzResourceGroup -Name $rg -Location $region -Verbose
 
-#region Availability Sets
-
-# Create availability sets
-$avSetPrefix = "AvSet"
-
-$avSetAds = $avSetPrefix + "ADS" + $studentNumber
-$avSetDev = $avSetPrefix + "DEV" + $studentNumber
-$avSetLnx = $avSetPrefix + "LNX" + $studentNumber
-$avSetPki = $avSetPrefix + "PKI" + $studentNumber
-$avSetSql = $avSetPrefix + "SQL" + $studentNumber
-$avSetWeb = $avSetPrefix + "WEB" + $studentNumber
-
-# Specify the availabilty set sku
-$avSetSku = "aligned"
-$avSetUpdateDomains = 5
-$avsetFaultDomains = 3
-
-# Construct availability sets array
-$avSets = @{}
-$avSets.Add("ads",$avSetAds)
-$avSets.Add("dev",$avSetDev)
-if (($includeCentOS -eq "yes") -or ($includeUbuntu -eq "yes"))
-{
-    $avSets.Add("lnx",$avSetLnx)
-} # end if
-if ($excludePki -eq "no")
-{
-    $avSets.Add("pki",$avSetPki)
-} # end if
-if ($excludeWeb -eq "no")
-{
-    $avSets.Add("web",$avSetWeb)
-} # end if
-if ($excludeSql -eq "no")
-{
-    $avSets.Add("sql",$avSetSql)
-} # end if
-
-$avSetIds = @{}
-
-$avSets.GetEnumerator() | ForEach-Object {
-    $provisionAvSet = New-AzAvailabilitySet -ResourceGroupName $rg -Name $_.value -Location $region -PlatformUpdateDomainCount $avSetUpdateDomains -PlatformFaultDomainCount $avsetFaultDomains -Sku $avSetSku -Verbose
-    $avSetIds.Add($_.name,$provisionAvSet.id)
-} # end foreach
-
-$avSetIdsJson = [PSCustomObject]$avSetIds | ConvertTo-Json
-$avSetIdsJson = $avSetIdsJson | ConvertFrom-Json
-#endregion
-
 $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
@@ -391,7 +342,6 @@ $parameters.Add("excludeAds",$excludeAds)
 $parameters.Add("excludePki",$excludePki)
 $parameters.Add("includeCentOS",$includeCentOS)
 $parameters.Add("includeUbuntu",$includeUbuntu)
-$parameters.Add("avSetIdsJson",$avSetIdsJson)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
 New-AzResourceGroupDeployment -ResourceGroupName $rg `
@@ -437,6 +387,19 @@ else
 
     New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnetName -nsgName $nsgAdsName -subnetName $subnetAdsName -subnetRange $subnetRangeAds -Verbose
     New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnetName -nsgName $nsgSrvName -subnetName $subnetSrvName -subnetRange $subnetRangeSrv -Verbose
+
+    #region Availability Sets
+
+    # Construct availability sets array
+    Write-Output "Retrieving list of availability sets."
+    $avSets = Get-AzAvailabilitySet -ResourceGroupName $rg
+    # Cleanup availability sets that aren't assined to any virtual machines
+    Write-Output "Removing availability sets that are not associated with any virtual machines."
+    if ($avSets.VirtualMachinesReferences.Id.Count -eq 0)
+    {
+        Remove-AzAvailabilitySet -ResourceGroupName $rg -Name $avSets.Name -Force -Verbose
+    } # end if
+    #endregion
 
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
