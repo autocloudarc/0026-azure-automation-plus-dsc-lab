@@ -37,6 +37,9 @@ Include a CentOS server for this deployment.
 .PARAMETER includeUbuntu
 Inclue an Ubuntu server for this deployment.
 
+.PARAMETER includeBastion
+[Feature Flag] Add Azure Bastion for secure RDP/SSH access to VMs over TLS on TCP 443 from a browser through the Azure Portal.
+
 .EXAMPLE
 .\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -Verbose
 
@@ -112,7 +115,9 @@ param
     [ValidateSet("yes","no")]
     [string]$includeCentOS = "yes",
     [ValidateSet("yes","no")]
-    [string]$includeUbuntu = "no"
+    [string]$includeUbuntu = "no",
+    [ValidateSet("yes","no")]
+    [string]$includeBastion = "no"
 ) # end param
 
 $BeginTimer = Get-Date -Verbose
@@ -420,6 +425,38 @@ else
         } # end if
     } # end foreach
     #endregion
+
+    #region Add bastion host
+    if ($includeBastion -eq "yes")
+    {
+        Write-Output "Adding bastion subnet."
+        $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg
+        $vnetAddrTwoOctetPrefix = "10.20."
+        $basSubName = "AzureBastionSubnet"
+        $basSubSuffix = ".32/27"
+        $basSubPrefix = $vnetAddrTwoOctetPrefix + $studentNumber + $basSubSuffix
+        $basSubnet = New-AzVirtualNetworkSubnetConfig -Name $basSubName -AddressPrefix $basSubPrefix
+        Add-AzureRmVirtualNetworkSubnetConfig -Name $basSubName -VirtualNetwork $vnet -AddressPrefix $basSubPrefix -Verbose
+        $vnet | Set-AzVirtualNetwork -Verbose
+
+        Write-Output "Creating bastion resource."
+        $basName = "azr-dev-bas-$studentRandomInfix-01"
+        $basPubIpName = $basName + "-pip"
+        $basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod Static -Sku Standard
+        $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIpName -VirtualNetwork $vnet -Verbose
+
+        $devServer = "azrdev" + $studentNumber + "01"
+        $devServerNicName = $devServer + "-nic"
+
+        Write-Output "Disassociating public IP address from jump/dev server $devServer"
+        $devServerNicResource = Get-AzNetworkInterface -Name $devServerNicName -ResourceGroupName $rg
+        $devServerNicResource.IpConfigurations.publicipaddress.id = $null
+        Set-AzNetworkInterface -NetworkInterface $devServerNicResource -Verbose
+        $devServerPipName = $devServer + "-pip" + $studentRandomInfix
+
+        Write-Output "Now that the bastion host is provisioned, removing public IP address: $devServerPipName"
+        Remove-AzPublicIpAddress -Name $devServerPipName -ResourceGroupName $rg -Force -Verbose -PassThru
+    } # end if
 
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
