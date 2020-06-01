@@ -37,8 +37,9 @@ Include a CentOS server for this deployment.
 .PARAMETER includeUbuntu
 Inclue an Ubuntu server for this deployment.
 
-.PARAMETER includeBastion
+<# PARAMETER includeBastion
 [Feature Flag] Add Azure Bastion for secure RDP/SSH access to VMs over TLS on TCP 443 from a browser through the Azure Portal.
+#>
 
 .EXAMPLE
 .\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -Verbose
@@ -115,9 +116,11 @@ param
     [ValidateSet("yes","no")]
     [string]$includeCentOS = "yes",
     [ValidateSet("yes","no")]
-    [string]$includeUbuntu = "no",
+    [string]$includeUbuntu = "no"
+    <# TASK-ITEM: Unresolved error - do not use this parameter.
     [ValidateSet("yes","no")]
     [string]$includeBastion = "no"
+    #>
 ) # end param
 
 $BeginTimer = Get-Date -Verbose
@@ -430,7 +433,8 @@ else
     if ($includeBastion -eq "yes")
     {
         Write-Output "Adding bastion subnet."
-        $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg
+        $vnetName = "AdatumDev-VNET" + $studentNumber
+        $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg -Name $vnetName
         $vnetAddrTwoOctetPrefix = "10.20."
         $basSubName = "AzureBastionSubnet"
         $basSubSuffix = ".32/27"
@@ -439,11 +443,31 @@ else
         Add-AzureRmVirtualNetworkSubnetConfig -Name $basSubName -VirtualNetwork $vnet -AddressPrefix $basSubPrefix -Verbose
         $vnet | Set-AzVirtualNetwork -Verbose
 
+        # Wait for 100 seconds to make sure the virtual network is fully provisioned
+        Start-Sleep -Seconds 100
+
         Write-Output "Creating bastion resource."
         $basName = "azr-dev-bas-$studentRandomInfix-01"
         $basPubIpName = $basName + "-pip"
         $basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod Static -Sku Standard
         $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
+        <#
+            TASK-ITEM:
+            New-AzBastion : Cannot parse the request.
+            StatusCode: 400
+            ReasonPhrase: Bad Request
+            ErrorCode: InvalidRequestFormat
+            ErrorMessage: Cannot parse the request.
+            Additional details:
+                Code: MissingJsonReferenceId
+                Message: Value for reference id is missing. Path properties.ipConfigurations[0].properties.subnet.
+            OperationID : d3579121-c8fd-41bd-bf50-5e5d5ce33cf4
+            At line:1 char:16
+            + ... sResource = New-AzBastion -ResourceGroupName $rg -Name $basName -Publ ...
+            +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                + CategoryInfo          : CloseError: (:) [New-AzBastion], NetworkCloudException
+                + FullyQualifiedErrorId : Microsoft.Azure.Commands.Network.Bastion.NewAzBastionCommand
+        #>
 
         $devServer = "azrdev" + $studentNumber + "01"
         $devServerNicName = $devServer + "-nic"
