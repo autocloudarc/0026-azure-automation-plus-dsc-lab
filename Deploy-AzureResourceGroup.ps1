@@ -440,7 +440,7 @@ else
         $basSubSuffix = ".32/27"
         $basSubPrefix = $vnetAddrTwoOctetPrefix + $studentNumber + $basSubSuffix
         $basSubnet = New-AzVirtualNetworkSubnetConfig -Name $basSubName -AddressPrefix $basSubPrefix
-        Add-AzureRmVirtualNetworkSubnetConfig -Name $basSubName -VirtualNetwork $vnet -AddressPrefix $basSubPrefix -Verbose
+        Add-AzVirtualNetworkSubnetConfig -Name $basSubName -VirtualNetwork $vnet -AddressPrefix $basSubPrefix -Verbose
         $vnet | Set-AzVirtualNetwork -Verbose
 
         # Wait for 100 seconds to make sure the virtual network is fully provisioned
