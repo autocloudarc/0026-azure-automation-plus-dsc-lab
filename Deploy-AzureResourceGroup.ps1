@@ -443,7 +443,7 @@ else
         $basName = "azr-dev-bas-$studentRandomInfix-01"
         $basPubIpName = $basName + "-pip"
         $basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod Static -Sku Standard
-        $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIpName -VirtualNetwork $vnet -Verbose
+        $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
 
         $devServer = "azrdev" + $studentNumber + "01"
         $devServerNicName = $devServer + "-nic"
