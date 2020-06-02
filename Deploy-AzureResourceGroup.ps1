@@ -423,6 +423,8 @@ else
     #endregion
 
     #region Add bastion host
+    <#
+    TASK-ITEM: Reserved for future use.
     if ($includeBastion -eq "yes")
     {
         Write-Output "Adding bastion subnet."
@@ -538,6 +540,7 @@ else
         Write-Output "Now that the bastion host is provisioned, removing public IP address: $devServerPipName"
         Remove-AzPublicIpAddress -Name $devServerPipName -ResourceGroupName $rg -Force -Verbose -PassThru
     } # end if
+    #>
 
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
