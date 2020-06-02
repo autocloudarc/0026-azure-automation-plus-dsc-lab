@@ -37,7 +37,7 @@ Include a CentOS server for this deployment.
 .PARAMETER includeUbuntu
 Inclue an Ubuntu server for this deployment.
 
-.PARAMETER includeBastion
+PARAMETER includeBastion
 [Feature Flag] Add Azure Bastion for secure RDP/SSH access to VMs over TLS on TCP 443 from a browser through the Azure Portal.
 
 .EXAMPLE
@@ -115,9 +115,12 @@ param
     [ValidateSet("yes","no")]
     [string]$includeCentOS = "yes",
     [ValidateSet("yes","no")]
-    [string]$includeUbuntu = "no",
+    [string]$includeUbuntu = "no"
+    <#
+    TASK-ITEM: Feature tag for future use.
     [ValidateSet("yes","no")]
     [string]$includeBastion = "no"
+    #>
 ) # end param
 
 $BeginTimer = Get-Date -Verbose
@@ -433,20 +436,84 @@ else
         $vnetName = "AdatumDev-VNET" + $studentNumber
         $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg -Name $vnetName
         $vnetAddrTwoOctetPrefix = "10.20."
+        $nsgPrefix = "NSG-"
         $basSubName = "AzureBastionSubnet"
+        $nsgBasName = $nsgPrefix + $basSubName
         $basSubSuffix = ".32/27"
         $basSubPrefix = $vnetAddrTwoOctetPrefix + $studentNumber + $basSubSuffix
         $basSubnet = New-AzVirtualNetworkSubnetConfig -Name $basSubName -AddressPrefix $basSubPrefix
         Add-AzVirtualNetworkSubnetConfig -Name $basSubName -VirtualNetwork $vnet -AddressPrefix $basSubPrefix -Verbose
         $vnet | Set-AzVirtualNetwork -Verbose
+        $vnetId = $vnet.id
+        $basSubnetId = $vnet.SubnetsText[2].id
 
-        # Wait for 100 seconds to make sure the virtual network is fully provisioned
-        Start-Sleep -Seconds 100
-
-        Write-Output "Creating bastion resource."
+        # Create public IP address for bastion
+        Write-Output "Creating bastion public IP address resource."
         $basName = "azr-dev-bas-$studentRandomInfix-01"
         $basPubIpName = $basName + "-pip"
         $basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod Static -Sku Standard
+        $basPubIpId = $basPubIp.id
+        $basPubIpAddress = $basPubIp.IpAddress
+        $basPubIpAddressCidr = $basPubIpAddress + "/32"
+
+        # Create NSG for bastion subnet
+        # https://docs.microsoft.com/en-us/azure/bastion/bastion-nsg
+
+        # INGRESS
+        # Ingress traffic from public Internet
+        $basNsgRule443FromInternet = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+        -Description  "Allow443FromInternet" `
+        -Access Allow `
+        -Protocol Tcp `
+        -Direction Inbound `
+        -Priority 100 `
+        -SourceAddressPrefix Internet `
+        -SourcePortRange * `
+        -DestinationAddressPrefix $basPubIpAddressCidr `
+        -DestinationPortRange 443
+        # Ingress traffic tfrom Azure Bastion control pane
+        $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+        -Description  "Allow443FromGatewayManager" `
+        -Access Allow `
+        -Protocol Tcp `
+        -Direction Inbound `
+        -Priority 110 `
+        -SourceAddressPrefix GatewayManager `
+        -SourcePortRange * `
+        -DestinationAddressPrefix $basPubIpAddressCidr `
+        -DestinationPortRange 443
+
+        # EGRESS
+        # To VirtualNetwork
+        $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+        -Description  "AllowRemoteToVirtualNetwork" `
+        -Access Allow `
+        -Protocol Tcp `
+        -Direction Outbound `
+        -Priority 120 `
+        -SourceAddressPrefix $basPubIpAddressCidr `
+        -SourcePortRange * `
+        -DestinationAddressPrefix VirtualNetwork `
+        -DestinationPortRange 3389,22
+        # To AzureCloud
+        $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+        -Description  "AllowRemoteToVirtualNetwork" `
+        -Access Allow `
+        -Protocol Tcp `
+        -Direction Outbound `
+        -Priority 130 `
+        -SourceAddressPrefix $basPubIpAddressCidr `
+        -SourcePortRange * `
+        -DestinationAddressPrefix AzureCloud `
+        -DestinationPortRange 443
+
+        # Create NSG
+        $basNsg = New-AzNetworkSecurityGroup -Name $rg -Location $region -Verbose
+
+        # Associate NSG to AzureBastionSubnet subnet
+        $basSubnet.NetworkSecurityGroup = $basNsg
+        $vnet | Set-AzVirtualNetwork -Verbose
+
         $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
         <#
             TASK-ITEM:
