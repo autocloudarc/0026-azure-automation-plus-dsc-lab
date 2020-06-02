@@ -11,7 +11,7 @@ This template deploys a new lab environment that can be used for training, pract
 
 ## Target State Diagram
 
-![Target state diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-lab-infrastructure.png)
+![Target state diagram](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-lab-diagram.png)
 
 ## 2.0 Prerequisites
 
@@ -69,7 +69,7 @@ Windows PowerShell
 
   `.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalAds yes -additionalLnx yes -Verbose`
 
-  Feel free to customize your deployment with these -exclude... and additional... parameters. More details about these parameters can be obtained by reading the header information 
+  Feel free to customize your deployment with these -exclude... and additional... parameters. More details about these parameters can be obtained by reading the header information
   in the .\Deploy-AzureResourceGroup.ps1 file.
 
 5. When the script executes, answer the following prompts:

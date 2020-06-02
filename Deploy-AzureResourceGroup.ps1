@@ -37,9 +37,6 @@ Include a CentOS server for this deployment.
 .PARAMETER includeUbuntu
 Inclue an Ubuntu server for this deployment.
 
-PARAMETER includeBastion
-[Feature Flag] Add Azure Bastion for secure RDP/SSH access to VMs over TLS on TCP 443 from a browser through the Azure Portal.
-
 .EXAMPLE
 .\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -Verbose
 
@@ -116,10 +113,6 @@ param
     [string]$includeCentOS = "yes",
     [ValidateSet("yes","no")]
     [string]$includeUbuntu = "no"
-    <#
-    TASK-ITEM: Feature tag for future use.
-    [ValidateSet("yes","no")]
-    [string]$includeBastion = "no"
     #>
 ) # end param
 
