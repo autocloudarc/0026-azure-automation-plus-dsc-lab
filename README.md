@@ -60,19 +60,35 @@ Windows PowerShell
 
 3. Right-click and unblock the script so that your PowerShell execution policy if set to RemoteSigned will allow it to run.
 
-4. Open and execute the script. The example below assumes you are already in the current script directory and will install the devault workloads listed in section 3.0 above.
+4. Open and execute the script. The examples below assumes you are already in the current script directory and will install the devault workloads listed in section 3.0 above.
 
-  `.\Deploy-AzureResourceGroup.ps1 -Verbose`
+EXAMPLE 1
+`.\Deploy-AzureResourceGroup.ps1 -Verbose`
 
-  This example deploys the infrastructure without the web, sql, additional 2019 core domain controllers and the PKI server, but adds two
-  Windows 2016 core domain controllers plus an additional Linux server with the latest Ubuntu Server distribution.
+This example deploys will deploy all the VMs outlined in section 3.0 above.
 
-  `.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalAds yes -additionalLnx yes -Verbose`
+EXAMPLE 2
+`.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -Verbose`
 
-  Feel free to customize your deployment with these -exclude... and additional... parameters. More details about these parameters can be obtained by reading the header information
-  in the .\Deploy-AzureResourceGroup.ps1 file.
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the PKI server, but ADDS
+an additional Linux server with the latest Ubuntu Server distribution.
 
-5. When the script executes, answer the following prompts:
+EXAMPLE 3
+`.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -Verbose`
+
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers, but WILL implicitly deploy the PKI server.
+This is due to the default parameter value that is set in the paramater block as $excludePki = "no".
+
+EXAMPLE 4
+`.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -includeCentOS yes -includeUbuntu no -Verbose`
+
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the Ubuntu server, but WILL implicitly deploy the PKI server and
+explicity provision the CentOS server as well. The PKI server will not be deployed due to the default parameter value that is set in the paramater block as [string]$excludePki = "no".
+
+Feel free to customize your deployment with these -exclude... and additional... parameters. More details about these parameters can be obtained by reading the header information
+in the .\Deploy-AzureResourceGroup.ps1 file.
+
+1. When the script executes, answer the following prompts:
 
     - Authenticate to your subscription
     - Enter your target subscription name
@@ -90,7 +106,7 @@ Azure CLI (bash)
     adminPassword={'specify your own password here'}
 
     # Create a random student infix that will be used to name the storage account, automation account, OMS workspace and recovery services vault.
-    studentRandomInfix=$(uuidgen | cut -c1-8)
+    studentRandomInfix=<enter 8 character string here, numbers and lower case characters only, no uppercase or special characters, i.e. abcd1234>
 
     # Assign the adm.infra.user account for each VM to be deployed.
     adminUserName=adm.infra.user
