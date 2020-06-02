@@ -525,7 +525,7 @@ else
             Additional details:
                 Code: MissingJsonReferenceId
                 Message: Value for reference id is missing. Path properties.ipConfigurations[0].properties.subnet.
-            OperationID : d3579121-c8fd-41bd-bf50-5e5d5ce33cf4
+            OperationID :
             At line:1 char:16
             + ... sResource = New-AzBastion -ResourceGroupName $rg -Name $basName -Publ ...
             +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
