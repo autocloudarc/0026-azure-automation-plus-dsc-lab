@@ -199,7 +199,7 @@
     "vnet1Location": "[parameters('location')]",
     "vnet1AddressPrefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixVNET'))]",
     "subnet1Name": "[concat(variables('subnet01'),parameters('studentNumber'))]",
-    "subnet2Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixADDS'))]",
+    "subnet1Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixADDS'))]",
     "subnet2Name": "[concat(variables('subnet02'),parameters('studentNumber'))]",
     "subnet2Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixSRVS'))]",
     "subnet3Name": "[concat(variables('subnet03'),parameters('studentNumber'))]",
