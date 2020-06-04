@@ -183,7 +183,7 @@
     "subnet03": "AzureBastionSubnet",
     "nsgADDS": "[concat(variables('nsgPrefix'),variables('subnet01'),parameters('studentNumber'))]",
     "nsgSRVS": "[concat(variables('nsgPrefix'),variables('subnet02'),parameters('studentNumber'))]",
-    "nsgBSTN": "[concat(variables('nsgPrefix'),variables('subnet03'))]",
+    "nsgBSTN": "[concat(variables('nsgPrefix'),variables('subnet03'),parameters('studentNumber'))]",
     "nsgCollection": [
       "[variables('nsgADDS')]",
       "[variables('nsgSRVS')]",
@@ -203,7 +203,7 @@
     "subnet1Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixADDS'))]",
     "subnet2Name": "[concat(variables('subnet02'),parameters('studentNumber'))]",
     "subnet2Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixSRVS'))]",
-    "subnet3Name": "[concat(variables('subnet03'),parameters('studentNumber'))]",
+    "subnet3Name": "[concat(variables('subnet03'))]",
     "subnet3Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixBSTN'))]",
     "createVnetUri": "[uri(parameters('_artifactsLocation'),concat('nested/07.03.00.createVnet.json',parameters('_artifactsLocationSasToken')))]",
      "vnet": {
