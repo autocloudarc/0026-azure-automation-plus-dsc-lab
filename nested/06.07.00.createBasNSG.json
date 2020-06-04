@@ -83,20 +83,20 @@
       "properties": {
         "copy": [
           {
-            "name": "nsgRulesCopy",
+            "name": "securityRules",
             "count": "[length(variables('nsgBasRules'))]",
             "input": {
-              "name": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy').name]]",
+              "name": "[variables('nsgBasRules')[copyIndex('securityRules').name]]",
               "properties": {
-                "access": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].access]",
-                "description": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].description]",
-                "destinationAddressPrefix": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].destinationAddressPrefix]",
-                "destinationPortRange": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].destinationPortRange]",
-                "direction": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].direction]",
-                "priority": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].priority]",
-                "protocol": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].protocol]",
-                "sourceAddressPrefix": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].sourceAddressPrefix]",
-                "sourcePortRange": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].sourcePortRange]"
+                "access": "[variables('nsgBasRules')[copyIndex('securityRules')].access]",
+                "description": "[variables('nsgBasRules')[copyIndex('securityRules')].description]",
+                "destinationAddressPrefix": "[variables('nsgBasRules')[copyIndex('securityRules')].destinationAddressPrefix]",
+                "destinationPortRange": "[variables('nsgBasRules')[copyIndex('securityRules')].destinationPortRange]",
+                "direction": "[variables('nsgBasRules')[copyIndex('securityRules')].direction]",
+                "priority": "[variables('nsgBasRules')[copyIndex('securityRules')].priority]",
+                "protocol": "[variables('nsgBasRules')[copyIndex('securityRules')].protocol]",
+                "sourceAddressPrefix": "[variables('nsgBasRules')[copyIndex('securityRules')].sourceAddressPrefix]",
+                "sourcePortRange": "[variables('nsgBasRules')[copyIndex('securityRules')].sourcePortRange]"
               }
             }
           }
