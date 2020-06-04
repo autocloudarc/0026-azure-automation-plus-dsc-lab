@@ -24,59 +24,51 @@
   "variables": {
     "nsgRuleIng01": {
       "name": "Allow443FromInternet",
-      "properties": {
-        "access": "Allow",
-        "description": "Allow inbound HTTPS from Internet.",
-        "destinationAddressPrefix": "[parameters('basPubIpAddressCidr')]",
-        "destinationPortRange": "443",
-        "direction": "Inbound",
-        "priority": 100,
-        "protocol": "Tcp",
-        "sourceAddressPrefix": "Internet",
-        "sourcePortRange": "*"
-      }
+      "access": "Allow",
+      "description": "Allow inbound HTTPS from Internet.",
+      "destinationAddressPrefix": "[parameters('basPubIpAddressCidr')]",
+      "destinationPortRange": "443",
+      "direction": "Inbound",
+      "priority": 100,
+      "protocol": "Tcp",
+      "sourceAddressPrefix": "Internet",
+      "sourcePortRange": "*"
     },
     "nsgRuleIng02": {
       "name": "Allow443FromGatewayMgr",
-      "properties": {
-        "access": "Allow",
-        "description": "Allow inbound HTTPS traffic from Gateway Manager.",
-        "destinationAddressPrefix": "VirtualNetwork",
-        "destinationPortRange": "[parameters('basPubIpAddressCidr')]",
-        "direction": "Inbound",
-        "priority": 110,
-        "protocol": "Tcp",
-        "sourceAddressPrefix": "GatewayManager",
-        "sourcePortRange": "*"
-      }
+      "access": "Allow",
+      "description": "Allow inbound HTTPS traffic from Gateway Manager.",
+      "destinationAddressPrefix": "VirtualNetwork",
+      "destinationPortRange": "[parameters('basPubIpAddressCidr')]",
+      "direction": "Inbound",
+      "priority": 110,
+      "protocol": "Tcp",
+      "sourceAddressPrefix": "GatewayManager",
+      "sourcePortRange": "*"
     },
     "nsgRuleEgr01": {
       "name": "AllowRemoteToVirtualNetwork",
-      "properties": {
-        "access": "Allow",
-        "description": "Allow outbound RDP or SSH traffic from bastion to virtual network.",
-        "destinationAddressPrefix": "VirtualNetwork",
-        "destinationPortRange": "3389,22",
-        "direction": "Outbound",
-        "priority": 200,
-        "protocol": "Tcp",
-        "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
-        "sourcePortRange": "3389,22"
-      }
+      "access": "Allow",
+      "description": "Allow outbound RDP or SSH traffic from bastion to virtual network.",
+      "destinationAddressPrefix": "VirtualNetwork",
+      "destinationPortRange": "3389,22",
+      "direction": "Outbound",
+      "priority": 200,
+      "protocol": "Tcp",
+      "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
+      "sourcePortRange": "3389,22"
     },
     "nsgRuleEgr02": {
       "name": "AllowAzureServices",
-      "properties": {
-        "access": "Allow",
-        "description": "Allow outbound HTTPS traffic to Azure Services.",
-        "destinationAddressPrefix": "VirtualNetwork",
-        "destinationPortRange": "443",
-        "direction": "Outbound",
-        "priority": 210,
-        "protocol": "Tcp",
-        "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
-        "sourcePortRange": "443"
-      }
+      "access": "Allow",
+      "description": "Allow outbound HTTPS traffic to Azure Services.",
+      "destinationAddressPrefix": "VirtualNetwork",
+      "destinationPortRange": "443",
+      "direction": "Outbound",
+      "priority": 210,
+      "protocol": "Tcp",
+      "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
+      "sourcePortRange": "443"
     },
     "nsgBasRules": [
       "[variables('nsgRuleIng01')]",
@@ -93,23 +85,23 @@
       "apiVersion": "2017-10-01",
       "location": "[parameters('location')]",
       "properties": {
-        "copy": {
-          "name": "nsgRulesCopy",
-          "count": "[length(variables('nsgBasRules'))]"
-        },
-        "securityRules": [
+        "copy": [
           {
-            "name": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].name]",
-            "properties": {
-              "access": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].properties.access]",
-              "description": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].properties.description]",
-              "destinationAddressPrefix": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].properties.destinationAddressPrefix]",
-              "destinationPortRange": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].properties.destinationPortRange]",
-              "direction": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].properties.direction]",
-              "priority": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].properties.priority]",
-              "protocol": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].properties.protocol]",
-              "sourceAddressPrefix": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].properties.sourceAddressPrefix]",
-              "sourcePortRange": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].properties.sourcePortRange]"
+            "name": "nsgRulesCopy",
+            "count": "[length(variables('nsgBasRules'))]",
+            "input": {
+              "name": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy').name]]",
+              "properties": {
+                "access": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].access]",
+                "description": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].description]",
+                "destinationAddressPrefix": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].destinationAddressPrefix]",
+                "destinationPortRange": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].destinationPortRange]",
+                "direction": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].direction]",
+                "priority": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].priority]",
+                "protocol": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].protocol]",
+                "sourceAddressPrefix": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].sourceAddressPrefix]",
+                "sourcePortRange": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].sourcePortRange]"
+              }
             }
           }
         ]
