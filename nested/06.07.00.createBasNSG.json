@@ -90,8 +90,8 @@
             "name": "nsgRulesCopy",
             "count": "[length(variables('nsgBasRules'))]",
             "input": {
-              "name": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy').name]]",
               "properties": {
+                "name": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy').name]]",
                 "access": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].access]",
                 "description": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].description]",
                 "destinationAddressPrefix": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].destinationAddressPrefix]",
