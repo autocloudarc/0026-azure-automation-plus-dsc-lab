@@ -365,15 +365,17 @@ New-AzResourceGroupDeployment -ResourceGroupName $rg `
 -TemplateParameterObject $parameters `
 -Force -Verbose `
 -ErrorVariable ErrorMessages
+
+# TASK-ITEM: Remove jump server public IP address after Azure Bastion is fully implemented.
+$jumpDevMachine = "AZRDEV" + $studentNumber + "01"
+$fqdnDev = (Get-AzPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
+
 if ($ErrorMessages)
 {
     Write-Output '', 'Template deployment returned the following errors:', @(@($ErrorMessages) | ForEach-Object { $_.Exception.Message.TrimEnd("`r`n") })
 }
 else
 {
-    $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
-    $fqdnDev = (Get-AzPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
-
     $StopTimer = Get-Date -Verbose
     Write-Output "Calculating elapsed time..."
     $ExecutionTime = New-TimeSpan -Start $BeginTimer -End $StopTimer
