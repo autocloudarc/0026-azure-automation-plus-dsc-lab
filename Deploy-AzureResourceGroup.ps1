@@ -383,26 +383,6 @@ else
     $fqdnUpnSuffix = "@dev.adatum.com"
     $adminUserName = $adminUserName + $fqdnUpnSuffix
 
-    #region NSG/SUBNETS
-    $vnetPrefix = "AdatumDev-VNET"
-    $vnetName = $vnetPrefix + $studentNumber
-    $subnetAdsPrefix = "ADDS"
-    $subnetAdsName = $subnetAdsPrefix + $studentNumber
-    $subnetSrvPrefix = "SRVS"
-    $subnetSrvName = $subnetSrvPrefix + $studentNumber
-    $nsgPrefix = "NSG-"
-    $nsgAdsName = $nsgPrefix + $subnetAdsPrefix + $studentNumber
-    $nsgSrvName = $nsgPrefix + $subnetSrvPrefix + $studentNumber
-    $subnetRangePrefix = "10.20.$studentNumber."
-    $subnetRangeAdsSuffix = "0/28"
-    $subnetRangeSrvSuffix = "16/28"
-    $subnetRangeAds = $subnetRangePrefix + $subnetRangeAdsSuffix
-    $subnetRangeSrv = $subnetRangePrefix + $subnetRangeSrvSuffix
-    #endregion
-
-    New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnetName -nsgName $nsgAdsName -subnetName $subnetAdsName -subnetRange $subnetRangeAds -Verbose
-    New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnetName -nsgName $nsgSrvName -subnetName $subnetSrvName -subnetRange $subnetRangeSrv -Verbose
-
     #region Availability Sets
 
     # Construct availability sets array
