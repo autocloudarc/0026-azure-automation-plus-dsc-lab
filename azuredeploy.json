@@ -468,10 +468,12 @@
           },
           "nsgId2": {
             "value": "[reference('06.06.00.linkedDeploymentCreateNSG').outputs.nsgResourceId2.value]"
-          },
+          }
+          /*
           "nsgId3": {
             "value": "[reference('06.07.00.linkedDeploymentCreateBasNSG').outputs.nsgBasId.value]"
           }
+          */
         },
         "mode": "Incremental",
         "debugSetting": {
