@@ -183,7 +183,7 @@
     "subnet03": "AzureBastionSubnet",
     "nsgADDS": "[concat(variables('nsgPrefix'),variables('subnet01'),parameters('studentNumber'))]",
     "nsgSRVS": "[concat(variables('nsgPrefix'),variables('subnet02'),parameters('studentNumber'))]",
-    "nsgBSTN": "[concat(variables('nsgPrefix'),variables('subnet03'),parameters('studentNumber'))]",
+    "nsgBSTN": "[concat(variables('nsgPrefix'),variables('subnet03'))]",
     "nsgCollection": [
       "[variables('nsgADDS')]",
       "[variables('nsgSRVS')]",
