@@ -194,7 +194,7 @@
       "[variables('nsgADDS')]",
       "[variables('nsgSRVS')]"
     ],
-    "createBasNSGUri": "[uri(parameters('_artifactsLocation'),concat('nested/06.07.00.createBasNSG.json',parameters('_artifactsLocationSasToken')))]",
+    // "createBasNSGUri": "[uri(parameters('_artifactsLocation'),concat('nested/06.07.00.createBasNSG.json',parameters('_artifactsLocationSasToken')))]",
     "createNSGUri": "[uri(parameters('_artifactsLocation'),concat('nested/06.06.00.createNSG.json',parameters('_artifactsLocationSasToken')))]",
     "netPrefix": "10.20.",
     "netSuffixVNET": ".0/26",
