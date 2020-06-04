@@ -11,23 +11,25 @@
     "subnetPrefixes": {
       "type": "array"
     },
-    "nsgs": {
-      "type": "array"
-    },
     "nsgId1": {
       "type": "string"
     },
     "nsgId2": {
+      "type": "string"
+    },
+    "nsgId3": {
       "type": "string"
     }
   },
   "variables": {
     "nsgIds": [
       "[parameters('nsgId1')]",
-      "[parameters('nsgid2')]"
+      "[parameters('nsgid2')]",
+      "[parameters('nsgId3')]"
     ],
     "subnetRefAdds": "[resourceid('Microsoft.Network/virtualNetworks/subnets',parameters('vnet').name,parameters('subnetNames')[0])]",
-    "subnetRefSrvs": "[resourceid('Microsoft.Network/virtualNetworks/subnets',parameters('vnet').name,parameters('subnetNames')[1])]"
+    "subnetRefSrvs": "[resourceid('Microsoft.Network/virtualNetworks/subnets',parameters('vnet').name,parameters('subnetNames')[1])]",
+    "subnetRefBstn": "[resourceid('Microsoft.Network/virtualNetworks/subnets',parameters('vnet').name,parameters('subnetNames')[2])]"
   },
   "resources": [
     {
@@ -44,14 +46,14 @@
         },
         "copy": [
           {
-            "name": "subnets",
-            "count": 2,
+            "name": "subnetsCopy",
+            "count": "[length(parameters('subnetNames'))]",
             "input": {
-              "name": "[parameters('subnetNames')[copyIndex('subnets')]]",
+              "name": "[parameters('subnetNames')[copyIndex('subnetsCopy')]]",
               "properties": {
-                "addressPrefix": "[parameters('subnetPrefixes')[copyIndex('subnets')]]",
+                "addressPrefix": "[parameters('subnetPrefixes')[copyIndex('subnetsCopy')]]",
                 "networkSecurityGroup": {
-                  "id": "[variables('nsgIds')[copyIndex('subnets')]]"
+                  "id": "[variables('nsgIds')[copyIndex('subnetsCopy')]]"
                 }
               }
             }
@@ -68,6 +70,10 @@
     "subnetSrvsId": {
       "type": "string",
       "value": "[variables('subnetRefSrvs')]"
+    },
+    "subnetBstnId": {
+      "type": "string",
+      "value": "[variables('subnetRefBstn')]"
     },
     "vnetGuid": {
       "type": "string",

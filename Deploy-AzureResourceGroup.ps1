@@ -81,6 +81,7 @@ This posting is provided "AS IS" with no warranties, and confers no rights.
 5. https://azure.microsoft.com/en-us/blog/create-flexible-arm-templates-using-conditions-and-logical-functions/
 6. https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-ip-addresses-overview-arm
 7. https://github.com/Azure/azure-quickstart-templates/tree/master/101-azure-bastion
+8. https://github.com/ans-rfroggatt/Imperial-POC/blob/master/Networking/Networking-NSG.json
 
 .COMPONENT
 Azure Infrastructure, PowerShell, ARM, JSON
@@ -330,6 +331,16 @@ $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
 
+# Create public IP address for bastion
+Write-Output "Creating bastion public IP address resource."
+$basName = "azr-dev-bas-$studentRandomInfix-01"
+$basPubIpName = $basName + "-pip"
+$alloc = "Static"
+$basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod $alloc -Sku Standard
+$basPubIpId = $basPubIp.id
+$basPubIpAddress = $basPubIp.IpAddress
+$basPubIpAddressCidr = $basPubIpAddress + "/32"
+
 # Ensure that the storage account name is globally unique in DNS
 $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 
@@ -344,6 +355,8 @@ $parameters.Add("excludeAds",$excludeAds)
 $parameters.Add("excludePki",$excludePki)
 $parameters.Add("includeCentOS",$includeCentOS)
 $parameters.Add("includeUbuntu",$includeUbuntu)
+$parameters.Add("basPubIpAddressCidr",$basPubIpAddressCidr)
+$parameters.Add("basPubIpId",$basPubIpId)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
 New-AzResourceGroupDeployment -ResourceGroupName $rg `
@@ -442,15 +455,6 @@ else
         $vnetId = $vnet.id
         $basSubnetId = $vnet.SubnetsText[2].id
 
-        # Create public IP address for bastion
-        Write-Output "Creating bastion public IP address resource."
-        $basName = "azr-dev-bas-$studentRandomInfix-01"
-        $basPubIpName = $basName + "-pip"
-        $basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod Static -Sku Standard
-        $basPubIpId = $basPubIp.id
-        $basPubIpAddress = $basPubIp.IpAddress
-        $basPubIpAddressCidr = $basPubIpAddress + "/32"
-
         # Create NSG for bastion subnet
         # https://docs.microsoft.com/en-us/azure/bastion/bastion-nsg
 
@@ -492,7 +496,7 @@ else
         -DestinationPortRange 3389,22
         # To AzureCloud
         $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-        -Description  "AllowRemoteToVirtualNetwork" `
+        -Description  "AllowAzureServices" `
         -Access Allow `
         -Protocol Tcp `
         -Direction Outbound `
@@ -526,7 +530,7 @@ else
             +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 + CategoryInfo          : CloseError: (:) [New-AzBastion], NetworkCloudException
                 + FullyQualifiedErrorId : Microsoft.Azure.Commands.Network.Bastion.NewAzBastionCommand
-        #>
+    #>
 
         $devServer = "azrdev" + $studentNumber + "01"
         $devServerNicName = $devServer + "-nic"
@@ -539,8 +543,7 @@ else
 
         Write-Output "Now that the bastion host is provisioned, removing public IP address: $devServerPipName"
         Remove-AzPublicIpAddress -Name $devServerPipName -ResourceGroupName $rg -Force -Verbose -PassThru
-    } # end if
-    #>
+} # end else
 
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...

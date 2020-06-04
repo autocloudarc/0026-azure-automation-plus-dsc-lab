@@ -139,6 +139,18 @@
         "description": "Add a Linux server with the latest Ubuntu image."
       },
       "defaultValue": "no"
+    },
+    "basPubIpAddressCidr": {
+      "type": "string",
+      "metadata": {
+        "description": "Public IP address in CIDR notation for bastion host."
+      }
+    },
+    "basPubIpId": {
+      "type": "string",
+      "metadata": {
+        "description": "Public IP resource id for bastion."
+      }
     }
   },
   "variables": {
@@ -168,24 +180,30 @@
     "nsgPrefix": "NSG-",
     "subnet01": "ADDS",
     "subnet02": "SRVS",
+    "subnet03": "AzureBastionSubnet",
     "nsgADDS": "[concat(variables('nsgPrefix'),variables('subnet01'),parameters('studentNumber'))]",
     "nsgSRVS": "[concat(variables('nsgPrefix'),variables('subnet02'),parameters('studentNumber'))]",
+    "nsgBSTN": "[concat(variables('nsgPrefix'),variables('subnet03'),parameters('studentNumber'))]",
     "nsgCollection": [
       "[variables('nsgADDS')]",
       "[variables('nsgSRVS')]"
     ],
+    "createBasNSGUri": "[uri(parameters('_artifactsLocation'),concat('nested/06.07.00.createBasNSG.json',parameters('_artifactsLocationSasToken')))]",
     "createNSGUri": "[uri(parameters('_artifactsLocation'),concat('nested/06.06.00.createNSG.json',parameters('_artifactsLocationSasToken')))]",
     "netPrefix": "10.20.",
     "netSuffixVNET": ".0/26",
     "netSuffixADDS": ".0/28",
     "netSuffixSRVS": ".16/28",
+    "netSuffixBSTN": ".32/27",
     "vnet1Name": "[concat('AdatumDev-VNET',parameters('studentNumber'))]",
     "vnet1Location": "[parameters('location')]",
     "vnet1AddressPrefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixVNET'))]",
     "subnet1Name": "[concat(variables('subnet01'),parameters('studentNumber'))]",
-    "subnet1Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixADDS'))]",
+    "subnet2Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixADDS'))]",
     "subnet2Name": "[concat(variables('subnet02'),parameters('studentNumber'))]",
     "subnet2Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixSRVS'))]",
+    "subnet3Name": "[concat(variables('subnet03'),parameters('studentNumber'))]",
+    "subnet3Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixBSTN'))]",
     "createVnetUri": "[uri(parameters('_artifactsLocation'),concat('nested/07.03.00.createVnet.json',parameters('_artifactsLocationSasToken')))]",
      "vnet": {
       "name": "[variables('vnet1Name')]",
@@ -194,11 +212,13 @@
     },
     "subnetNameCollection": [
       "[variables('subnet1Name')]",
-      "[variables('subnet2Name')]"
+      "[variables('subnet2Name')]",
+      "[variables('subnet3Name')]"
     ],
     "subnetPrefixCollection": [
       "[variables('subnet1Prefix')]",
-      "[variables('subnet2Prefix')]"
+      "[variables('subnet2Prefix')]",
+      "[variables('subnet3Prefix')]"
     ],
     "autoAcctName": "[concat('aaa-',variables('randomInfix'),'-',parameters('studentNumber'))]",
     "createAutoAcctUri": "[uri(parameters('_artifactsLocation'),concat('nested/09.12.00.createAutoAcct.json',parameters('_artifactsLocationSasToken')))]",
@@ -374,11 +394,38 @@
           "location": {
             "value": "[parameters('location')]"
           },
-          "vnet1AddressPrefix": {
-            "value": "[variables('vnet1AddressPrefix')]"
-          },
           "nsgCollection": {
             "value": "[variables('nsgCollection')]"
+          }
+        },
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        }
+      }
+    },
+    {
+      "comments": "06.07.00.createBasNSG",
+      "name": "06.07.00.linkedDeploymentCreateBasNSG",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "properties": {
+        "templateLink": {
+          "uri": "[variables('createBasNSGUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "nsgBastion": {
+            "value": "[variables('nsgBSTN')]"
+          },
+          "basPubIpId": {
+            "value": "[parameters('basPubIpId')]"
+          },
+          "basPubIpAddressCidr": {
+            "value": "[parameters('basPubIpAddressCidr')]"
           }
         },
         "mode": "Incremental",
@@ -410,14 +457,14 @@
           "subnetPrefixes": {
             "value": "[variables('subnetPrefixCollection')]"
           },
-          "nsgs": {
-            "value": "[variables('nsgCollection')]"
-          },
           "nsgId1": {
             "value": "[reference('06.06.00.linkedDeploymentCreateNSG').outputs.nsgResourceId1.value]"
           },
           "nsgId2": {
             "value": "[reference('06.06.00.linkedDeploymentCreateNSG').outputs.nsgResourceId2.value]"
+          },
+          "nsgId3": {
+            "value": "[reference('06.07.00.linkedDeploymentCreateBasNSG').outputs.nsgBasId.value]"
           }
         },
         "mode": "Incremental",

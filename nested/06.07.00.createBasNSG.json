@@ -14,7 +14,7 @@
         "description": "Name of bastion host."
       }
     },
-    "basPubIpCidr": {
+    "basPubIpAddressCidr": {
       "type": "string",
       "metadata": {
         "description": "Public IP of bastion host."
@@ -27,7 +27,7 @@
       "properties": {
         "access": "Allow",
         "description": "Allow inbound HTTPS from Internet.",
-        "destinationAddressPrefix": "[parameters('basPubIpCidr')]",
+        "destinationAddressPrefix": "[parameters('basPubIpAddressCidr')]",
         "destinationPortRange": "443",
         "direction": "Inbound",
         "priority": 100,
@@ -42,7 +42,7 @@
         "access": "Allow",
         "description": "Allow inbound HTTPS traffic from Gateway Manager.",
         "destinationAddressPrefix": "VirtualNetwork",
-        "destinationPortRange": "[parameters('basPubIpCidr')]",
+        "destinationPortRange": "[parameters('basPubIpAddressCidr')]",
         "direction": "Inbound",
         "priority": 110,
         "protocol": "Tcp",
@@ -60,7 +60,7 @@
         "direction": "Outbound",
         "priority": 200,
         "protocol": "Tcp",
-        "sourceAddressPrefix": "[parameters('basPubIpCidr')]",
+        "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
         "sourcePortRange": "3389,22"
       }
     },
@@ -74,7 +74,7 @@
         "direction": "Outbound",
         "priority": 210,
         "protocol": "Tcp",
-        "sourceAddressPrefix": "[parameters('basPubIpCidr')]",
+        "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
         "sourcePortRange": "443"
       }
     },

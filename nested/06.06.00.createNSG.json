@@ -8,12 +8,6 @@
         "description": "Selected region where resources will be deployed."
       }
     },
-    "vnet1AddressPrefix": {
-      "type": "string",
-      "metadata": {
-        "description": "VNET address space."
-      }
-    },
     "nsgCollection": {
       "type": "array",
       "metadata": {
