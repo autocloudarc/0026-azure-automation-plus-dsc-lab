@@ -411,6 +411,7 @@
         }
       }
     },
+    /*
     {
       "comments": "06.07.00.createBasNSG",
       "name": "06.07.00.linkedDeploymentCreateBasNSG",
@@ -438,6 +439,7 @@
         }
       }
     },
+    */
     {
       "comments": "07.03.00.createVnet",
       "name": "07.03.00.linkedDeploymentCreateVnet",
