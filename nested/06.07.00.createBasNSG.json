@@ -22,59 +22,55 @@
     }
   },
   "variables": {
-    "nsgRuleIng01": {
-      "name": "Allow443FromInternet",
-      "access": "Allow",
-      "description": "Allow inbound HTTPS from Internet.",
-      "destinationAddressPrefix": "[parameters('basPubIpAddressCidr')]",
-      "destinationPortRange": "443",
-      "direction": "Inbound",
-      "priority": 100,
-      "protocol": "Tcp",
-      "sourceAddressPrefix": "Internet",
-      "sourcePortRange": "*"
-    },
-    "nsgRuleIng02": {
-      "name": "Allow443FromGatewayMgr",
-      "access": "Allow",
-      "description": "Allow inbound HTTPS traffic from Gateway Manager.",
-      "destinationAddressPrefix": "VirtualNetwork",
-      "destinationPortRange": "[parameters('basPubIpAddressCidr')]",
-      "direction": "Inbound",
-      "priority": 110,
-      "protocol": "Tcp",
-      "sourceAddressPrefix": "GatewayManager",
-      "sourcePortRange": "*"
-    },
-    "nsgRuleEgr01": {
-      "name": "AllowRemoteToVirtualNetwork",
-      "access": "Allow",
-      "description": "Allow outbound RDP or SSH traffic from bastion to virtual network.",
-      "destinationAddressPrefix": "VirtualNetwork",
-      "destinationPortRange": "3389,22",
-      "direction": "Outbound",
-      "priority": 200,
-      "protocol": "Tcp",
-      "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
-      "sourcePortRange": "3389,22"
-    },
-    "nsgRuleEgr02": {
-      "name": "AllowAzureServices",
-      "access": "Allow",
-      "description": "Allow outbound HTTPS traffic to Azure Services.",
-      "destinationAddressPrefix": "VirtualNetwork",
-      "destinationPortRange": "443",
-      "direction": "Outbound",
-      "priority": 210,
-      "protocol": "Tcp",
-      "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
-      "sourcePortRange": "443"
-    },
     "nsgBasRules": [
-      "[variables('nsgRuleIng01')]",
-      "[variables('nsgRuleIng02')]",
-      "[variables('nsgRuleEgr01')]",
-      "[variables('nsgRuleEgr02')]"
+      {
+        "name": "Allow443FromInternet",
+        "access": "Allow",
+        "description": "Allow inbound HTTPS from Internet.",
+        "destinationAddressPrefix": "[parameters('basPubIpAddressCidr')]",
+        "destinationPortRange": "443",
+        "direction": "Inbound",
+        "priority": 100,
+        "protocol": "Tcp",
+        "sourceAddressPrefix": "Internet",
+        "sourcePortRange": "*"
+      },
+      {
+        "name": "Allow443FromGatewayMgr",
+        "access": "Allow",
+        "description": "Allow inbound HTTPS traffic from Gateway Manager.",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationPortRange": "[parameters('basPubIpAddressCidr')]",
+        "direction": "Inbound",
+        "priority": 110,
+        "protocol": "Tcp",
+        "sourceAddressPrefix": "GatewayManager",
+        "sourcePortRange": "*"
+       },
+       {
+        "name": "AllowRemoteToVirtualNetwork",
+        "access": "Allow",
+        "description": "Allow outbound RDP or SSH traffic from bastion to virtual network.",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationPortRange": "3389,22",
+        "direction": "Outbound",
+        "priority": 200,
+        "protocol": "Tcp",
+        "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
+        "sourcePortRange": "3389,22"
+      },
+      {
+        "name": "AllowAzureServices",
+        "access": "Allow",
+        "description": "Allow outbound HTTPS traffic to Azure Services.",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationPortRange": "443",
+        "direction": "Outbound",
+        "priority": 210,
+        "protocol": "Tcp",
+        "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
+        "sourcePortRange": "443"
+      }
     ]
   },
   "resources": [
@@ -90,8 +86,8 @@
             "name": "nsgRulesCopy",
             "count": "[length(variables('nsgBasRules'))]",
             "input": {
+              "name": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy').name]]",
               "properties": {
-                "name": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy').name]]",
                 "access": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].access]",
                 "description": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].description]",
                 "destinationAddressPrefix": "[variables('nsgBasRules')[copyIndex('nsgRulesCopy')].destinationAddressPrefix]",
