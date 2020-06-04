@@ -533,6 +533,7 @@ else
                 + FullyQualifiedErrorId : Microsoft.Azure.Commands.Network.Bastion.NewAzBastionCommand
     #>
 
+<#
         $devServer = "azrdev" + $studentNumber + "01"
         $devServerNicName = $devServer + "-nic"
 
@@ -541,9 +542,9 @@ else
         $devServerNicResource.IpConfigurations.publicipaddress.id = $null
         Set-AzNetworkInterface -NetworkInterface $devServerNicResource -Verbose
         $devServerPipName = $devServer + "-pip" + $studentRandomInfix
-
         Write-Output "Now that the bastion host is provisioned, removing public IP address: $devServerPipName"
         Remove-AzPublicIpAddress -Name $devServerPipName -ResourceGroupName $rg -Force -Verbose -PassThru
+#>
 } # end else
 
 $connectionMessage = @"
