@@ -140,12 +140,6 @@
       },
       "defaultValue": "no"
     },
-    "basPubIpAddressCidr": {
-      "type": "string",
-      "metadata": {
-        "description": "Public IP address in CIDR notation for bastion host."
-      }
-    },
     "basPubIpId": {
       "type": "string",
       "metadata": {
@@ -192,8 +186,10 @@
     "nsgBSTN": "[concat(variables('nsgPrefix'),variables('subnet03'),parameters('studentNumber'))]",
     "nsgCollection": [
       "[variables('nsgADDS')]",
-      "[variables('nsgSRVS')]"
+      "[variables('nsgSRVS')]",
+      "[variables('nsgBSTN')]"
     ],
+    "createBasNSGUri": "[uri(parameters('_artifactsLocation'),concat('nested/06.07.00.createBasNSG.json',parameters('_artifactsLocationSasToken')))]",
     "createNSGUri": "[uri(parameters('_artifactsLocation'),concat('nested/06.06.00.createNSG.json',parameters('_artifactsLocationSasToken')))]",
     "netPrefix": "10.20.",
     "netSuffixVNET": ".0/26",
@@ -410,6 +406,30 @@
         }
       }
     },
+        {
+      "comments": "06.07.00.createBasNSG",
+      "name": "06.07.00.linkedDeploymentCreateBasNSG",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "properties": {
+        "templateLink": {
+          "uri": "[variables('createBasNSGUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "nsgBastion": {
+            "value": "[variables('nsgBSTN')]"
+          }
+        },
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        }
+      }
+    },
     {
       "comments": "07.03.00.createVnet",
       "name": "07.03.00.linkedDeploymentCreateVnet",
@@ -438,6 +458,9 @@
           },
           "nsgId2": {
             "value": "[reference('06.06.00.linkedDeploymentCreateNSG').outputs.nsgResourceId2.value]"
+          },
+          "nsgId3": {
+          "value": "[reference('06.07.00.linkedDeploymentCreateBasNSG').outputs.nsgBasId.value]"
           }
         },
         "mode": "Incremental",

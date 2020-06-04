@@ -355,7 +355,6 @@ $parameters.Add("excludeAds",$excludeAds)
 $parameters.Add("excludePki",$excludePki)
 $parameters.Add("includeCentOS",$includeCentOS)
 $parameters.Add("includeUbuntu",$includeUbuntu)
-$parameters.Add("basPubIpAddressCidr",$basPubIpAddressCidr)
 $parameters.Add("basPubIpId",$basPubIpId)
 $parameters.Add("basName",$basName)
 
