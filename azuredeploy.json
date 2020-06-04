@@ -151,6 +151,12 @@
       "metadata": {
         "description": "Public IP resource id for bastion."
       }
+    },
+    "basName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of bastion host."
+      }
     }
   },
   "variables": {
@@ -220,6 +226,7 @@
       "[variables('subnet2Prefix')]",
       "[variables('subnet3Prefix')]"
     ],
+    "createBastionUri": "[uri(parameters('_artifactsLocation'),concat('nested/08.00.00.createBastion.json',parameters('_artifactsLocationSasToken')))]",
     "autoAcctName": "[concat('aaa-',variables('randomInfix'),'-',parameters('studentNumber'))]",
     "createAutoAcctUri": "[uri(parameters('_artifactsLocation'),concat('nested/09.12.00.createAutoAcct.json',parameters('_artifactsLocationSasToken')))]",
     "omsWorkspaceName": "[concat('oms-',variables('randomInfix'),'-',parameters('studentNumber'))]",
@@ -465,6 +472,39 @@
           },
           "nsgId3": {
             "value": "[reference('06.07.00.linkedDeploymentCreateBasNSG').outputs.nsgBasId.value]"
+          }
+        },
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        }
+      }
+    },
+    {
+      "comments": "08.00.00.createBastion",
+      "name": "08.00.00.linkedDeploymentCreateBastion",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "dependsOn": [
+        "07.03.00.linkedDeploymentCreateVnet"
+      ],
+      "properties": {
+        "templateLink": {
+          "uri": "[variables('createBastionUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "basPubIpId": {
+            "value": "[parameters('basPubIpId')]"
+          },
+          "basSubnetId": {
+            "value": "[reference('07.03.00.linkedDeploymentCreateVnet').outputs.subnetBstnId.value]"
+          },
+          "basName": {
+            "value": "[parameters('basName')]"
           }
         },
         "mode": "Incremental",
