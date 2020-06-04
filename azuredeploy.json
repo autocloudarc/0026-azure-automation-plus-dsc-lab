@@ -428,9 +428,6 @@
           "nsgBastion": {
             "value": "[variables('nsgBSTN')]"
           },
-          "basPubIpId": {
-            "value": "[parameters('basPubIpId')]"
-          },
           "basPubIpAddressCidr": {
             "value": "[parameters('basPubIpAddressCidr')]"
           }
