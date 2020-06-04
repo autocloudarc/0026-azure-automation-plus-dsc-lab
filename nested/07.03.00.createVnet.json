@@ -46,14 +46,14 @@
         },
         "copy": [
           {
-            "name": "subnetsCopy",
+            "name": "subnets",
             "count": "[length(parameters('subnetNames'))]",
             "input": {
-              "name": "[parameters('subnetNames')[copyIndex('subnetsCopy')]]",
+              "name": "[parameters('subnetNames')[copyIndex('subnets')]]",
               "properties": {
-                "addressPrefix": "[parameters('subnetPrefixes')[copyIndex('subnetsCopy')]]",
+                "addressPrefix": "[parameters('subnetPrefixes')[copyIndex('subnets')]]",
                 "networkSecurityGroup": {
-                  "id": "[variables('nsgIds')[copyIndex('subnetsCopy')]]"
+                  "id": "[variables('nsgIds')[copyIndex('subnets')]]"
                 }
               }
             }
