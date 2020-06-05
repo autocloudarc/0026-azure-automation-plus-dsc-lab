@@ -139,24 +139,6 @@
         "description": "Add a Linux server with the latest Ubuntu image."
       },
       "defaultValue": "no"
-    },
-    "basPubIpId": {
-      "type": "string",
-      "metadata": {
-        "description": "Public IP resource id for bastion."
-      }
-    },
-    "basName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of bastion host."
-      }
-    },
-    "basPubIpAddressCidr": {
-      "type": "string",
-      "metadata": {
-        "description": "Public IP address in CIDR notation for bastion."
-      }
     }
   },
   "variables": {
@@ -186,22 +168,17 @@
     "nsgPrefix": "NSG-",
     "subnet01": "ADDS",
     "subnet02": "SRVS",
-    "subnet03": "AzureBastionSubnet",
     "nsgADDS": "[concat(variables('nsgPrefix'),variables('subnet01'),parameters('studentNumber'))]",
     "nsgSRVS": "[concat(variables('nsgPrefix'),variables('subnet02'),parameters('studentNumber'))]",
-    "nsgBSTN": "[concat(variables('nsgPrefix'),variables('subnet03'),parameters('studentNumber'))]",
     "nsgCollection": [
       "[variables('nsgADDS')]",
-      "[variables('nsgSRVS')]",
-      "[variables('nsgBSTN')]"
+      "[variables('nsgSRVS')]"
     ],
-    "createBasNSGUri": "[uri(parameters('_artifactsLocation'),concat('nested/06.07.00.createBasNSG.json',parameters('_artifactsLocationSasToken')))]",
     "createNSGUri": "[uri(parameters('_artifactsLocation'),concat('nested/06.06.00.createNSG.json',parameters('_artifactsLocationSasToken')))]",
     "netPrefix": "10.20.",
     "netSuffixVNET": ".0/26",
     "netSuffixADDS": ".0/28",
     "netSuffixSRVS": ".16/28",
-    "netSuffixBSTN": ".32/27",
     "vnet1Name": "[concat('AdatumDev-VNET',parameters('studentNumber'))]",
     "vnet1Location": "[parameters('location')]",
     "vnet1AddressPrefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixVNET'))]",
@@ -209,8 +186,6 @@
     "subnet1Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixADDS'))]",
     "subnet2Name": "[concat(variables('subnet02'),parameters('studentNumber'))]",
     "subnet2Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixSRVS'))]",
-    "subnet3Name": "[concat(variables('subnet03'))]",
-    "subnet3Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixBSTN'))]",
     "createVnetUri": "[uri(parameters('_artifactsLocation'),concat('nested/07.03.00.createVnet.json',parameters('_artifactsLocationSasToken')))]",
      "vnet": {
       "name": "[variables('vnet1Name')]",
@@ -219,15 +194,12 @@
     },
     "subnetNameCollection": [
       "[variables('subnet1Name')]",
-      "[variables('subnet2Name')]",
-      "[variables('subnet3Name')]"
+      "[variables('subnet2Name')]"
     ],
     "subnetPrefixCollection": [
       "[variables('subnet1Prefix')]",
-      "[variables('subnet2Prefix')]",
-      "[variables('subnet3Prefix')]"
+      "[variables('subnet2Prefix')]"
     ],
-    "createBastionUri": "[uri(parameters('_artifactsLocation'),concat('nested/08.00.00.createBastion.json',parameters('_artifactsLocationSasToken')))]",
     "autoAcctName": "[concat('aaa-',variables('randomInfix'),'-',parameters('studentNumber'))]",
     "createAutoAcctUri": "[uri(parameters('_artifactsLocation'),concat('nested/09.12.00.createAutoAcct.json',parameters('_artifactsLocationSasToken')))]",
     "omsWorkspaceName": "[concat('oms-',variables('randomInfix'),'-',parameters('studentNumber'))]",
@@ -412,30 +384,6 @@
         }
       }
     },
-        {
-      "comments": "06.07.00.createBasNSG",
-      "name": "06.07.00.linkedDeploymentCreateBasNSG",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
-      "properties": {
-        "templateLink": {
-          "uri": "[variables('createBasNSGUri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "nsgBastion": {
-            "value": "[variables('nsgBSTN')]"
-          }
-        },
-        "mode": "Incremental",
-        "debugSetting": {
-          "detailLevel": "requestContent, responseContent"
-        }
-      }
-    },
     {
       "comments": "07.03.00.createVnet",
       "name": "07.03.00.linkedDeploymentCreateVnet",
@@ -467,39 +415,6 @@
           },
           "nsgId3": {
           "value": "[reference('06.07.00.linkedDeploymentCreateBasNSG').outputs.nsgBasId.value]"
-          }
-        },
-        "mode": "Incremental",
-        "debugSetting": {
-          "detailLevel": "requestContent, responseContent"
-        }
-      }
-    },
-    {
-      "comments": "08.00.00.createBastion",
-      "name": "08.00.00.linkedDeploymentCreateBastion",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
-      "dependsOn": [
-        "07.03.00.linkedDeploymentCreateVnet"
-      ],
-      "properties": {
-        "templateLink": {
-          "uri": "[variables('createBastionUri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "basPubIpId": {
-            "value": "[parameters('basPubIpId')]"
-          },
-          "basSubnetId": {
-            "value": "[reference('07.03.00.linkedDeploymentCreateVnet').outputs.subnetBstnId.value]"
-          },
-          "basName": {
-            "value": "[parameters('basName')]"
           }
         },
         "mode": "Incremental",
