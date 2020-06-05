@@ -15,66 +15,7 @@
       }
     }
   },
-  "variables": {
-    "nsgBasRules": [
-      {
-        "name": "Allow443FromInternet",
-		    "properties": {
-          "access": "Allow",
-          "description": "Allow inbound HTTPS from Internet.",
-          "destinationAddressPrefix": "[parameters('basPubIpAddressCidr')]",
-          "destinationPortRange": "443",
-          "direction": "Inbound",
-          "priority": 110,
-          "protocol": "Tcp",
-          "sourceAddressPrefix": "Internet",
-          "sourcePortRange": "*"
-		    }
-      },
-      {
-        "name": "Allow443FromGatewayMgr",
-		    "properties": {
-          "access": "Allow",
-          "description": "Allow inbound HTTPS traffic from Gateway Manager.",
-          "destinationAddressPrefix": "VirtualNetwork",
-          "destinationPortRange": "[parameters('basPubIpAddressCidr')]",
-          "direction": "Inbound",
-          "priority": 120,
-          "protocol": "Tcp",
-          "sourceAddressPrefix": "GatewayManager",
-          "sourcePortRange": "*"
-	  	  }
-      },
-      {
-        "name": "AllowRemoteToVirtualNetwork",
-        "properties": {
-			    "access": "Allow",
-          "description": "Allow outbound RDP or SSH traffic from bastion to virtual network.",
-          "destinationAddressPrefix": "VirtualNetwork",
-          "destinationPortRange": "3389,22",
-          "direction": "Outbound",
-          "priority": 210,
-          "protocol": "Tcp",
-          "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
-          "sourcePortRange": "3389,22"
-		    }
-      },
-      {
-        "name": "AllowAzureServices",
-		    "properties": {
-          "access": "Allow",
-          "description": "Allow outbound HTTPS traffic to Azure Services.",
-          "destinationAddressPrefix": "VirtualNetwork",
-          "destinationPortRange": "443",
-          "direction": "Outbound",
-          "priority": 210,
-          "protocol": "Tcp",
-          "sourceAddressPrefix": "[parameters('basPubIpAddressCidr')]",
-          "sourcePortRange": "443"
-        }
-      }
-    ]
-  },
+  "variables": {},
   "resources": [
     {
       "comments": "06.06.00.createBasNSG",
