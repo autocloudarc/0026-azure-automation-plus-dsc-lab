@@ -16,20 +16,15 @@
     },
     "nsgId2": {
       "type": "string"
-    },
-    "nsgId3": {
-      "type": "string"
     }
   },
   "variables": {
     "nsgIds": [
       "[parameters('nsgId1')]",
-      "[parameters('nsgid2')]",
-      "[parameters('nsgId3')]"
+      "[parameters('nsgid2')]"
     ],
     "subnetRefAdds": "[resourceid('Microsoft.Network/virtualNetworks/subnets',parameters('vnet').name,parameters('subnetNames')[0])]",
-    "subnetRefSrvs": "[resourceid('Microsoft.Network/virtualNetworks/subnets',parameters('vnet').name,parameters('subnetNames')[1])]",
-    "subnetRefBstn": "[resourceid('Microsoft.Network/virtualNetworks/subnets',parameters('vnet').name,parameters('subnetNames')[2])]"
+    "subnetRefSrvs": "[resourceid('Microsoft.Network/virtualNetworks/subnets',parameters('vnet').name,parameters('subnetNames')[1])]"
   },
   "resources": [
     {
@@ -70,10 +65,6 @@
     "subnetSrvsId": {
       "type": "string",
       "value": "[variables('subnetRefSrvs')]"
-    },
-    "subnetBstnId": {
-      "type": "string",
-      "value": "[variables('subnetRefBstn')]"
     },
     "vnetGuid": {
       "type": "string",

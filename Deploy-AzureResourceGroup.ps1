@@ -326,25 +326,21 @@ Until ($region -in $regions)
 
 New-AzResourceGroup -Name $rg -Location $region -Verbose
 
-$templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
+# TASK-ITEM: master branch uir. Uncomment before release.
+# $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
+# TASK-ITEM: dev branch uri. Comment before release.
+$templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/azuredeploy.json'
+# TASK-ITEM: dev branch uri. Comment before release. This is for testing in the dev branch only, otherwise the default value of the parameter in the parameters file will be used.
+$artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/'
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
-
-# Create public IP address for bastion
-Write-Output "Creating bastion public IP address resource."
-$basName = "azr-dev-bas-$studentRandomInfix-01"
-$basPubIpName = $basName + "-pip"
-$alloc = "Static"
-$basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod $alloc -Sku Standard
-$basPubIpId = $basPubIp.id
-$basPubIpAddress = $basPubIp.IpAddress
-$basPubIpAddressCidr = $basPubIpAddress + "/32"
 
 # Ensure that the storage account name is globally unique in DNS
 $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 
 $parameters = @{}
+$parameters.Add("_artifactsLocation",$artifactsLocation)
 $parameters.Add("studentNumber",$studentNumber)
 $parameters.Add("adminUserName",$adminUserName)
 $parameters.Add("adminPassword",$adminPassword)
@@ -354,9 +350,6 @@ $parameters.Add("excludeSql",$excludeSql)
 $parameters.Add("excludeAds",$excludeAds)
 $parameters.Add("excludePki",$excludePki)
 $parameters.Add("includeCentOS",$includeCentOS)
-$parameters.Add("includeUbuntu",$includeUbuntu)
-$parameters.Add("basPubIpId",$basPubIpId)
-$parameters.Add("basName",$basName)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
 New-AzResourceGroupDeployment -ResourceGroupName $rg `
@@ -420,113 +413,103 @@ else
     #region Add bastion host
     <#
     TASK-ITEM: Reserved for future use.
-    if ($includeBastion -eq "yes")
-    {
-        Write-Output "Adding bastion subnet."
-        $vnetName = "AdatumDev-VNET" + $studentNumber
-        $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg -Name $vnetName
-        $vnetAddrTwoOctetPrefix = "10.20."
-        $nsgPrefix = "NSG-"
-        $basSubName = "AzureBastionSubnet"
-        $nsgBasName = $nsgPrefix + $basSubName
-        $basSubSuffix = ".32/27"
-        $basSubPrefix = $vnetAddrTwoOctetPrefix + $studentNumber + $basSubSuffix
-        $basSubnet = New-AzVirtualNetworkSubnetConfig -Name $basSubName -AddressPrefix $basSubPrefix
-        Add-AzVirtualNetworkSubnetConfig -Name $basSubName -VirtualNetwork $vnet -AddressPrefix $basSubPrefix -Verbose
-        $vnet | Set-AzVirtualNetwork -Verbose
-        $vnetId = $vnet.id
-        $basSubnetId = $vnet.SubnetsText[2].id
+    Write-Output "Adding bastion subnet."
+    $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg
+    $vnetName = $vnet.Name
+    $vnetAddrTwoOctetPrefix = "10.20."
+    $nsgPrefix = "NSG-"
+    $basSubName = "AzureBastionSubnet"
+    $nsgBasName = $nsgPrefix + $basSubName
+    $basSubSuffix = ".32/27"
+    $basSubPrefix = $vnetAddrTwoOctetPrefix + $studentNumber + $basSubSuffix
+    $basSubnet = New-AzVirtualNetworkSubnetConfig -Name $basSubName -AddressPrefix $basSubPrefix
+    Add-AzVirtualNetworkSubnetConfig -Name $basSubName -VirtualNetwork $vnet -AddressPrefix $basSubPrefix -Verbose
+    $vnet | Set-AzVirtualNetwork -Verbose
+    $vnetId = $vnet.id
+    $basSubnetId = $vnet.SubnetsText[2].id
 
-        # Create NSG for bastion subnet
-        # https://docs.microsoft.com/en-us/azure/bastion/bastion-nsg
+    # Create NSG for bastion subnet
+    # https://docs.microsoft.com/en-us/azure/bastion/bastion-nsg
 
-        # INGRESS
-        # Ingress traffic from public Internet
-        $basNsgRule443FromInternet = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-        -Description  "Allow443FromInternet" `
-        -Access Allow `
-        -Protocol Tcp `
-        -Direction Inbound `
-        -Priority 100 `
-        -SourceAddressPrefix Internet `
-        -SourcePortRange * `
-        -DestinationAddressPrefix $basPubIpAddressCidr `
-        -DestinationPortRange 443
-        # Ingress traffic tfrom Azure Bastion control pane
-        $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-        -Description  "Allow443FromGatewayManager" `
-        -Access Allow `
-        -Protocol Tcp `
-        -Direction Inbound `
-        -Priority 110 `
-        -SourceAddressPrefix GatewayManager `
-        -SourcePortRange * `
-        -DestinationAddressPrefix $basPubIpAddressCidr `
-        -DestinationPortRange 443
+    # INGRESS
+    # Ingress traffic from public Internet
+    $basNsgRule443FromInternet = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+    -Description  "Allow443FromInternet" `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Inbound `
+    -Priority 100 `
+    -SourceAddressPrefix Internet `
+    -SourcePortRange * `
+    -DestinationAddressPrefix $basPubIpAddressCidr `
+    -DestinationPortRange 443
+    # Ingress traffic tfrom Azure Bastion control pane
+    $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+    -Description  "Allow443FromGatewayManager" `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Inbound `
+    -Priority 110 `
+    -SourceAddressPrefix GatewayManager `
+    -SourcePortRange * `
+    -DestinationAddressPrefix $basPubIpAddressCidr `
+    -DestinationPortRange 443
 
-        # EGRESS
-        # To VirtualNetwork
-        $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-        -Description  "AllowRemoteToVirtualNetwork" `
-        -Access Allow `
-        -Protocol Tcp `
-        -Direction Outbound `
-        -Priority 120 `
-        -SourceAddressPrefix $basPubIpAddressCidr `
-        -SourcePortRange * `
-        -DestinationAddressPrefix VirtualNetwork `
-        -DestinationPortRange 3389,22
-        # To AzureCloud
-        $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-        -Description  "AllowAzureServices" `
-        -Access Allow `
-        -Protocol Tcp `
-        -Direction Outbound `
-        -Priority 130 `
-        -SourceAddressPrefix $basPubIpAddressCidr `
-        -SourcePortRange * `
-        -DestinationAddressPrefix AzureCloud `
-        -DestinationPortRange 443
+    # EGRESS
+    # To VirtualNetwork
+    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+    -Description  "AllowRemoteToVirtualNetwork" `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Outbound `
+    -Priority 120 `
+    -SourceAddressPrefix $basPubIpAddressCidr `
+    -SourcePortRange * `
+    -DestinationAddressPrefix VirtualNetwork `
+    -DestinationPortRange 3389,22
+    # To AzureCloud
+    $allowAzureServices = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+    -Description  "AllowAzureServices" `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Outbound `
+    -Priority 130 `
+    -SourceAddressPrefix $basPubIpAddressCidr `
+    -SourcePortRange * `
+    -DestinationAddressPrefix AzureCloud `
+    -DestinationPortRange 443
 
-        # Create NSG
-        $basNsg = New-AzNetworkSecurityGroup -Name $rg -Location $region -Verbose
+    # Create NSG
+    $basNsg = New-AzNetworkSecurityGroup -Name $rg -Location $region -SecurityRules $basNsgRule443FromInternet,$basNsgRule443FromGatewayManager,$allowRemoteToVirtualNetwork,$allowAzureServices
 
-        # Associate NSG to AzureBastionSubnet subnet
-        $basSubnet.NetworkSecurityGroup = $basNsg
-        $vnet | Set-AzVirtualNetwork -Verbose
+    # Associate NSG to AzureBastionSubnet subnet
+    $basSubnet.NetworkSecurityGroup = $basNsg
+    $vnet | Set-AzVirtualNetwork -Verbose
 
-        $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
-        <#
-            TASK-ITEM:
-            New-AzBastion : Cannot parse the request.
-            StatusCode: 400
-            ReasonPhrase: Bad Request
-            ErrorCode: InvalidRequestFormat
-            ErrorMessage: Cannot parse the request.
-            Additional details:
-                Code: MissingJsonReferenceId
-                Message: Value for reference id is missing. Path properties.ipConfigurations[0].properties.subnet.
-            OperationID :
-            At line:1 char:16
-            + ... sResource = New-AzBastion -ResourceGroupName $rg -Name $basName -Publ ...
-            +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                + CategoryInfo          : CloseError: (:) [New-AzBastion], NetworkCloudException
-                + FullyQualifiedErrorId : Microsoft.Azure.Commands.Network.Bastion.NewAzBastionCommand
-    #>
+    $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
+    <#
+    $devServer = "azrdev" + $studentNumber + "01"
+    $devServerNicName = $devServer + "-nic"
 
-<#
-        $devServer = "azrdev" + $studentNumber + "01"
-        $devServerNicName = $devServer + "-nic"
-
-        Write-Output "Disassociating public IP address from jump/dev server $devServer"
-        $devServerNicResource = Get-AzNetworkInterface -Name $devServerNicName -ResourceGroupName $rg
-        $devServerNicResource.IpConfigurations.publicipaddress.id = $null
-        Set-AzNetworkInterface -NetworkInterface $devServerNicResource -Verbose
-        $devServerPipName = $devServer + "-pip" + $studentRandomInfix
-        Write-Output "Now that the bastion host is provisioned, removing public IP address: $devServerPipName"
-        Remove-AzPublicIpAddress -Name $devServerPipName -ResourceGroupName $rg -Force -Verbose -PassThru
+    Write-Output "Disassociating public IP address from jump/dev server $devServer"
+    $devServerNicResource = Get-AzNetworkInterface -Name $devServerNicName -ResourceGroupName $rg
+    $devServerNicResource.IpConfigurations.publicipaddress.id = $null
+    Set-AzNetworkInterface -NetworkInterface $devServerNicResource -Verbose
+    $devServerPipName = $devServer + "-pip" + $studentRandomInfix
+    Write-Output "Now that the bastion host is provisioned, removing public IP address: $devServerPipName"
+    Remove-AzPublicIpAddress -Name $devServerPipName -ResourceGroupName $rg -Force -Verbose -PassThru
 #>
 } # end else
+
+# Create public IP address for bastion
+Write-Output "Creating bastion public IP address resource."
+$basName = "azr-dev-bas-$studentRandomInfix-01"
+$basPubIpName = $basName + "-pip"
+$alloc = "Static"
+$basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod $alloc -Sku Standard
+$basPubIpId = $basPubIp.id
+$basPubIpAddress = $basPubIp.IpAddress
+$basPubIpAddressCidr = $basPubIpAddress + "/32"
 
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
@@ -542,7 +525,7 @@ Happy scripting...
     pause
     # Open RDP prompt automatically
     mstsc /v:$fqdnDev
-} # end elseif
+} # end else if
 
 # Resource group and log files cleanup messages
 $labResourceGroupFilter = "rg??"
