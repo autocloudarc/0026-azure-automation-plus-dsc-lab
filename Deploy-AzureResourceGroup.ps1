@@ -357,6 +357,7 @@ $parameters.Add("includeCentOS",$includeCentOS)
 $parameters.Add("includeUbuntu",$includeUbuntu)
 $parameters.Add("basPubIpId",$basPubIpId)
 $parameters.Add("basName",$basName)
+$parameters.Add("basPubIpAddressCidr",$basPubIpAddressCidr)
 
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
 New-AzResourceGroupDeployment -ResourceGroupName $rg `

@@ -151,6 +151,12 @@
       "metadata": {
         "description": "Name of bastion host."
       }
+    },
+    "basPubIpAddressCidr": {
+      "type": "string",
+      "metadata": {
+        "description": "Public IP address in CIDR notation for bastion."
+      }
     }
   },
   "variables": {
@@ -422,6 +428,9 @@
           },
           "nsgBastion": {
             "value": "[variables('nsgBSTN')]"
+          },
+          "basPubIpAddressCidr": {
+            "value": "[parameters('basPubIpAddressCidr')]"
           }
         },
         "mode": "Incremental",
