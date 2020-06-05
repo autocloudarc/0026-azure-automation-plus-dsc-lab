@@ -330,6 +330,7 @@ New-AzResourceGroup -Name $rg -Location $region -Verbose
 # $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
 # TASK-ITEM: dev branch uri. Comment before release.
 $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/azuredeploy.json'
+$artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/'
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
@@ -348,6 +349,7 @@ $basPubIpAddress = $basPubIp.IpAddress
 $basPubIpAddressCidr = $basPubIpAddress + "/32"
 
 $parameters = @{}
+$parameters.Add("_artifactsLocation",$artifactsLocation)
 $parameters.Add("studentNumber",$studentNumber)
 $parameters.Add("adminUserName",$adminUserName)
 $parameters.Add("adminPassword",$adminPassword)
