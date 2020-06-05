@@ -414,8 +414,8 @@ else
     <#
     TASK-ITEM: Reserved for future use.
     Write-Output "Adding bastion subnet."
-    $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg -Name $vnetName
-    $vnetName = ""
+    $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg
+    $vnetName = $vnet.Name
     $vnetAddrTwoOctetPrefix = "10.20."
     $nsgPrefix = "NSG-"
     $basSubName = "AzureBastionSubnet"
@@ -457,7 +457,7 @@ else
 
     # EGRESS
     # To VirtualNetwork
-    $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
     -Description  "AllowRemoteToVirtualNetwork" `
     -Access Allow `
     -Protocol Tcp `
@@ -468,7 +468,7 @@ else
     -DestinationAddressPrefix VirtualNetwork `
     -DestinationPortRange 3389,22
     # To AzureCloud
-    $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+    $allowAzureServices = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
     -Description  "AllowAzureServices" `
     -Access Allow `
     -Protocol Tcp `
@@ -480,7 +480,7 @@ else
     -DestinationPortRange 443
 
     # Create NSG
-    $basNsg = New-AzNetworkSecurityGroup -Name $rg -Location $region -Verbose
+    $basNsg = New-AzNetworkSecurityGroup -Name $rg -Location $region -SecurityRules $basNsgRule443FromInternet,$basNsgRule443FromGatewayManager,$allowRemoteToVirtualNetwork,$allowAzureServices
 
     # Associate NSG to AzureBastionSubnet subnet
     $basSubnet.NetworkSecurityGroup = $basNsg
