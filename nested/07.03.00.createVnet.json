@@ -24,6 +24,7 @@
       "[parameters('nsgid2')]"
     ],
     "subnetRefAdds": "[resourceid('Microsoft.Network/virtualNetworks/subnets',parameters('vnet').name,parameters('subnetNames')[0])]",
+    "subnetRefSrvs": "[resourceid('Microsoft.Network/virtualNetworks/subnets',parameters('vnet').name,parameters('subnetNames')[1])]"
   },
   "resources": [
     {
@@ -64,10 +65,6 @@
     "subnetSrvsId": {
       "type": "string",
       "value": "[variables('subnetRefSrvs')]"
-    },
-    "subnetBstnId": {
-      "type": "string",
-      "value": "[variables('subnetRefBstn')]"
     },
     "vnetGuid": {
       "type": "string",
