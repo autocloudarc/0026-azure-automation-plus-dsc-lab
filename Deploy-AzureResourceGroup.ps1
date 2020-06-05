@@ -331,6 +331,9 @@ $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
 
+# Ensure that the storage account name is globally unique in DNS
+$studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
+
 # Create public IP address for bastion
 Write-Output "Creating bastion public IP address resource."
 $basName = "azr-dev-bas-$studentRandomInfix-01"
@@ -340,9 +343,6 @@ $basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -lo
 $basPubIpId = $basPubIp.id
 $basPubIpAddress = $basPubIp.IpAddress
 $basPubIpAddressCidr = $basPubIpAddress + "/32"
-
-# Ensure that the storage account name is globally unique in DNS
-$studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 
 $parameters = @{}
 $parameters.Add("studentNumber",$studentNumber)
