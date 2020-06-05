@@ -326,7 +326,10 @@ Until ($region -in $regions)
 
 New-AzResourceGroup -Name $rg -Location $region -Verbose
 
-$templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
+# TASK-ITEM: master branch uir. Uncomment before release.
+# $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
+# TASK-ITEM: dev branch uri. Comment before release.
+$templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/azuredeploy.json'
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
