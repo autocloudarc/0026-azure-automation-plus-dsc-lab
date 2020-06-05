@@ -330,6 +330,7 @@ New-AzResourceGroup -Name $rg -Location $region -Verbose
 # $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
 # TASK-ITEM: dev branch uri. Comment before release.
 $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/azuredeploy.json'
+# TASK-ITEM: dev branch uri. Comment before release. This is for testing in the dev branch only, otherwise the default value of the parameter in the parameters file will be used.
 $artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/'
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
@@ -548,7 +549,7 @@ Happy scripting...
     pause
     # Open RDP prompt automatically
     mstsc /v:$fqdnDev
-} # end elseif
+} # end else if
 
 # Resource group and log files cleanup messages
 $labResourceGroupFilter = "rg??"
