@@ -13,12 +13,6 @@
       "metadata": {
         "description": "Name of bastion host."
       }
-    },
-    "basPubIpAddressCidr": {
-      "type": "string",
-      "metadata": {
-        "description": "Public IP address for bastion in CIDR notation."
-      }
     }
   },
   "variables": {
@@ -88,28 +82,7 @@
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2017-10-01",
       "location": "[parameters('location')]",
-      "properties": {
-        "copy": [
-          {
-            "name": "securityRules",
-            "count": "[length(variables('nsgBasRules'))]",
-            "input": {
-              "name": "[variables('nsgBasRules')[copyIndex('securityRules').name]]",
-              "properties": {
-                "access": "[variables('nsgBasRules')[copyIndex('securityRules').access]]",
-                "description": "[variables('nsgBasRules')[copyIndex('securityRules').description]]",
-                "destinationAddressPrefix": "[variables('nsgBasRules')[copyIndex('securityRules').destinationAddressPrefix]]",
-                "destinationPortRange": "[variables('nsgBasRules')[copyIndex('securityRules').destinationPortRange]]",
-                "direction": "[variables('nsgBasRules')[copyIndex('securityRules').direction]]",
-                "priority": "[variables('nsgBasRules')[copyIndex('securityRules').priority]]",
-                "protocol": "[variables('nsgBasRules')[copyIndex('securityRules').protocol]]",
-                "sourceAddressPrefix": "[variables('nsgBasRules')[copyIndex('securityRules').sourceAddressPrefix]]",
-                "sourcPortRange": "[variables('nsgBasRules')[copyIndex('securityRules').sourcePortRange]]"
-              }
-            }
-          }
-        ]
-      }
+      "properties": {}
     }
   ],
   "outputs": {

@@ -428,9 +428,6 @@
           },
           "nsgBastion": {
             "value": "[variables('nsgBSTN')]"
-          },
-          "basPubIpAddressCidr": {
-            "value": "[parameters('basPubIpAddressCidr')]"
           }
         },
         "mode": "Incremental",
