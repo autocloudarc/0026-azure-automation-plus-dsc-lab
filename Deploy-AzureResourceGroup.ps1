@@ -431,6 +431,16 @@ else
     $vnetId = $vnet.id
     $basSubnetId = $vnet.SubnetsText[2].id
 
+    # Create public IP address for bastion
+    Write-Output "Creating bastion public IP address resource."
+    $basName = "azr-dev-bas-$studentRandomInfix-01"
+    $basPubIpName = $basName + "-pip"
+    $alloc = "Static"
+    $basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod $alloc -Sku Standard
+    $basPubIpId = $basPubIp.id
+    $basPubIpAddress = $basPubIp.IpAddress
+    $basPubIpAddressCidr = $basPubIpAddress + "/32"
+
     # Create NSG for bastion subnet
     # https://docs.microsoft.com/en-us/azure/bastion/bastion-nsg
 
@@ -501,16 +511,6 @@ else
     Remove-AzPublicIpAddress -Name $devServerPipName -ResourceGroupName $rg -Force -Verbose -PassThru
 #>
 } # end else
-
-# Create public IP address for bastion
-Write-Output "Creating bastion public IP address resource."
-$basName = "azr-dev-bas-$studentRandomInfix-01"
-$basPubIpName = $basName + "-pip"
-$alloc = "Static"
-$basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod $alloc -Sku Standard
-$basPubIpId = $basPubIp.id
-$basPubIpAddress = $basPubIp.IpAddress
-$basPubIpAddressCidr = $basPubIpAddress + "/32"
 
 # $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
 
