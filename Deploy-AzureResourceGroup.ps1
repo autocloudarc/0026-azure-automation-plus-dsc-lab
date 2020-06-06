@@ -411,8 +411,6 @@ else
     #endregion
 
     #region Add bastion host
-    <#
-    TASK-ITEM: Reserved for future use.
     Write-Output "Adding bastion subnet."
     $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg
     $vnetName = $vnet.Name
@@ -485,9 +483,7 @@ else
     # Associate NSG to AzureBastionSubnet subnet
     $basSubnet.NetworkSecurityGroup = $basNsg
     $vnet | Set-AzVirtualNetwork -Verbose
-
-    $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
-    <#
+<#
     $devServer = "azrdev" + $studentNumber + "01"
     $devServerNicName = $devServer + "-nic"
 
@@ -510,6 +506,8 @@ $basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -lo
 $basPubIpId = $basPubIp.id
 $basPubIpAddress = $basPubIp.IpAddress
 $basPubIpAddressCidr = $basPubIpAddress + "/32"
+
+# $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
 
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
