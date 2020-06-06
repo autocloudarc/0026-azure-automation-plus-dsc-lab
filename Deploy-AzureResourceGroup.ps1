@@ -55,6 +55,9 @@ This is due to the default parameter value that is set in the paramater block as
 This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the Ubuntu server, but WILL implicitly deploy the PKI server and
 explicity provision the CentOS server as well. The PKI server will not be deployed due to the default parameter value that is set in the paramater block as [string]$excludePki = "no".
 
+.EXAMPLE
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -TemplateUri <TemplateUri> -Verbose
+
 .INPUTS
 None
 
@@ -113,7 +116,16 @@ param
     [ValidateSet("yes","no")]
     [string]$includeCentOS = "yes",
     [ValidateSet("yes","no")]
-    [string]$includeUbuntu = "no"
+    [string]$includeUbuntu = "no",
+    $templateFile = "azuredeploy.json",
+    $artifactsLocationPrd = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/',
+    $artifactsLocationDev = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/',
+    $templateUriPrd = ($artifactsLocationPrd + $templateFile),
+    $templateUriDev = ($artifactsLocationDev + $templateFile),
+    # TASK-ITEM: The .../master/azuredeploy.json template is used for production, while .../dev/azuredeploy.json is only used for the development branch.
+    [string]$templateUri = $templateUriDev,
+    # TASK-ITEM: The .../master/ location is used for production, while the .../dev/ location is for devlopment.
+    [string]$artifactsLocation = $artifactsLocationDev
     #>
 ) # end param
 
@@ -325,13 +337,6 @@ Do
 Until ($region -in $regions)
 
 New-AzResourceGroup -Name $rg -Location $region -Verbose
-
-# TASK-ITEM: master branch uir. Uncomment before release.
-# $templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/azuredeploy.json'
-# TASK-ITEM: dev branch uri. Comment before release.
-$templateUri = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/azuredeploy.json'
-# TASK-ITEM: dev branch uri. Comment before release. This is for testing in the dev branch only, otherwise the default value of the parameter in the parameters file will be used.
-$artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/'
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
