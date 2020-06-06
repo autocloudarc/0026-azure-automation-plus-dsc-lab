@@ -446,8 +446,9 @@ else
 
     # INGRESS
     # Ingress traffic from public Internet
-    $basNsgRule443FromInternet = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-    -Description  "Allow443FromInternet" `
+    $basNsgRule443FromInternetRuleName = "Allow443FromInternet"
+    $basNsgRule443FromInternet = New-AzNetworkSecurityRuleConfig -Name $basNsgRule443FromInternetRuleName `
+    -Description  $basNsgRule443FromInternetRuleName `
     -Access Allow `
     -Protocol Tcp `
     -Direction Inbound `
@@ -457,8 +458,9 @@ else
     -DestinationAddressPrefix $basPubIpAddressCidr `
     -DestinationPortRange 443
     # Ingress traffic tfrom Azure Bastion control pane
-    $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-    -Description  "Allow443FromGatewayManager" `
+    $basNsgRule443FromGatewayManagerRuleName = "Allow443FromGatewayManager"
+    $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $basNsgRule443FromGatewayManagerRuleName `
+    -Description  $basNsgRule443FromGatewayManagerRuleName `
     -Access Allow `
     -Protocol Tcp `
     -Direction Inbound `
@@ -470,8 +472,9 @@ else
 
     # EGRESS
     # To VirtualNetwork
-    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-    -Description  "AllowRemoteToVirtualNetwork" `
+    $allowRemoteToVirtualNetworkRuleName = "AllowRemoteToVirtualNetwork"
+    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $allowRemoteToVirtualNetworkRuleName `
+    -Description  $allowRemoteToVirtualNetworkRuleName `
     -Access Allow `
     -Protocol Tcp `
     -Direction Outbound `
@@ -481,7 +484,8 @@ else
     -DestinationAddressPrefix VirtualNetwork `
     -DestinationPortRange 3389,22
     # To AzureCloud
-    $allowAzureServices = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+    $allowAzureServicesRuleName = "AllowAzureServices"
+    $allowAzureServices = New-AzNetworkSecurityRuleConfig -Name $allowAzureServicesRuleName `
     -Description  "AllowAzureServices" `
     -Access Allow `
     -Protocol Tcp `
@@ -493,11 +497,42 @@ else
     -DestinationPortRange 443
 
     # Create NSG
-    $basNsg = New-AzNetworkSecurityGroup -Name $rg -Location $region -SecurityRules $basNsgRule443FromInternet,$basNsgRule443FromGatewayManager,$allowRemoteToVirtualNetwork,$allowAzureServices
+    $basNsg = New-AzNetworkSecurityGroup -Name $nsgBasName -ResourceGroupName $rg -Location $region -SecurityRules $basNsgRule443FromInternet,$basNsgRule443FromGatewayManager,$allowRemoteToVirtualNetwork,$allowAzureServices -Verbose
 
     # Associate NSG to AzureBastionSubnet subnet
     $basSubnet.NetworkSecurityGroup = $basNsg
     $vnet | Set-AzVirtualNetwork -Verbose
+
+    # Add new rule NSG-ADDS
+    $allowRemoteFromBastionRuleName = "AllowAzureServices"
+    $nsgAddsName = "NSG-ADDS" + $studentNumber
+    Get-AzNetworkSecurityGroup -Name $nsgAddsName -ResourceGroupName $rg |
+    Add-AzNetworkSecurityRuleConfig -Name $allowRemoteFromBastionRuleName `
+    -Description  $allowRemoteFromBastionRuleName `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Inbound `
+    -Priority 110 `
+    -SourceAddressPrefix $basSubPrefix `
+    -SourcePortRange * `
+    -DestinationAddressPrefix VirtualNetwork `
+    -DestinationPortRange 3389,22
+    | Set-AzNetworkSecurityGroup
+
+    # Add new rule to NSG-SRVS
+    $nsgSrvsName = "NSG-SRVS" + $studentNumber
+    Get-AzNetworkSecurityGroup -Name $nsgSrvsName -ResourceGroupName $rg |
+    Add-AzNetworkSecurityRuleConfig -Name $allowRemoteFromBastionRuleName `
+    -Description  $allowRemoteFromBastionRuleName `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Inbound `
+    -Priority 110 `
+    -SourceAddressPrefix $basSubPrefix `
+    -SourcePortRange * `
+    -DestinationAddressPrefix VirtualNetwork `
+    -DestinationPortRange 3389,22
+    | Set-AzNetworkSecurityGroup
 <#
     $devServer = "azrdev" + $studentNumber + "01"
     $devServerNicName = $devServer + "-nic"
@@ -512,7 +547,7 @@ else
 #>
 } # end else
 
-# $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
+$basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
 
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
