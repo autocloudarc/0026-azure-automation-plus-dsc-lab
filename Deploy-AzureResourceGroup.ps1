@@ -516,8 +516,8 @@ else
     -SourceAddressPrefix $basSubPrefix `
     -SourcePortRange * `
     -DestinationAddressPrefix VirtualNetwork `
-    -DestinationPortRange 3389,22
-    | Set-AzNetworkSecurityGroup
+    -DestinationPortRange 3389,22 |
+    Set-AzNetworkSecurityGroup
 
     # Add new rule to NSG-SRVS
     $nsgSrvsName = "NSG-SRVS" + $studentNumber
@@ -531,8 +531,8 @@ else
     -SourceAddressPrefix $basSubPrefix `
     -SourcePortRange * `
     -DestinationAddressPrefix VirtualNetwork `
-    -DestinationPortRange 3389,22
-    | Set-AzNetworkSecurityGroup
+    -DestinationPortRange 3389,22 |
+    Set-AzNetworkSecurityGroup
 <#
     $devServer = "azrdev" + $studentNumber + "01"
     $devServerNicName = $devServer + "-nic"
