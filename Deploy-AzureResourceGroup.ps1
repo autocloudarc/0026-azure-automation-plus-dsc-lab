@@ -56,7 +56,9 @@ This example deploys the infrastructure WITHOUT the web, sql, additional 2019 co
 explicity provision the CentOS server as well. The PKI server will not be deployed due to the default parameter value that is set in the paramater block as [string]$excludePki = "no".
 
 .EXAMPLE
-.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -TemplateUri <TemplateUri> -Verbose
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -includeCentOS no -includeUbuntu no -artifactsLocation 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/' -Verbose
+
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the Linux servers, and also excludes the PKI server. In addition, the artifacts location for the dev branch will be used. The default is to use the master branch.
 
 .INPUTS
 None
@@ -118,14 +120,11 @@ param
     [ValidateSet("yes","no")]
     [string]$includeUbuntu = "no",
     $templateFile = "azuredeploy.json",
-    $artifactsLocationPrd = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/',
-    $artifactsLocationDev = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/',
-    $templateUriPrd = ($artifactsLocationPrd + $templateFile),
-    $templateUriDev = ($artifactsLocationDev + $templateFile),
     # TASK-ITEM: The .../master/azuredeploy.json template is used for production, while .../dev/azuredeploy.json is only used for the development branch.
-    [string]$templateUri = $templateUriDev,
-    # TASK-ITEM: The .../master/ location is used for production, while the .../dev/ location is for devlopment.
-    [string]$artifactsLocation = $artifactsLocationDev
+    [parameter(Mandatory=$true)]
+    [ValidateSet('https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/','https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/')]
+    [string]$artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/',
+    [string]$templateUri = ($artifactsLocation + $templateFile)
     #>
 ) # end param
 
