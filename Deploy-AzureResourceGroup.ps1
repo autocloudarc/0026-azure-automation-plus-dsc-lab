@@ -504,7 +504,7 @@ else
     $vnet | Set-AzVirtualNetwork -Verbose
 
     # Add new rule NSG-ADDS
-    $allowRemoteFromBastionRuleName = "AllowAzureServices"
+    $allowRemoteFromBastionRuleName = "AllowRemoteFromBastion"
     $nsgAddsName = "NSG-ADDS" + $studentNumber
     Get-AzNetworkSecurityGroup -Name $nsgAddsName -ResourceGroupName $rg |
     Add-AzNetworkSecurityRuleConfig -Name $allowRemoteFromBastionRuleName `
