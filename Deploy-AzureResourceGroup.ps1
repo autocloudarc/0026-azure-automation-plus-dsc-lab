@@ -548,7 +548,23 @@ else
 } # end else
 
 $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
-
+<#
+TASK-ITEM: Bug report
+New-AzBastion : Cannot parse the request.
+StatusCode: 400
+ReasonPhrase: Bad Request
+ErrorCode: InvalidRequestFormat
+ErrorMessage: Cannot parse the request.
+Additional details:
+    Code: MissingJsonReferenceId
+    Message: Value for reference id is missing. Path properties.ipConfigurations[0].properties.subnet.
+OperationID : 82269f80-339f-48e4-a3fa-972b977d30a1
+At C:\OneDrivePersonal\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\Deploy-AzureResourceGroup.ps1:550 char:16
++ ... sResource = New-AzBastion -ResourceGroupName $rg -Name $basName -Publ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : CloseError: (:) [New-AzBastion], NetworkCloudException
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.Network.Bastion.NewAzBastionCommand
+#>
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
 
