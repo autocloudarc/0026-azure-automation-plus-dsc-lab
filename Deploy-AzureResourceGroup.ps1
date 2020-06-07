@@ -546,7 +546,7 @@ else
 #>
 } # end else
 
-$basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
+$basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddressId $basPubIpId -VirtualNetwork $vnet -Verbose
 <#
 TASK-ITEM: Bug report
 New-AzBastion : Cannot parse the request.
