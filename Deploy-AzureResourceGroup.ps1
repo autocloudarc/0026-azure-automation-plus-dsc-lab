@@ -37,6 +37,10 @@ Include a CentOS server for this deployment.
 .PARAMETER includeUbuntu
 Inclue an Ubuntu server for this deployment.
 
+TASK-ITEM: New parameter to add.
+PARAMETER removeJumpServerPubIp
+Remove the jump server public IP address to reduce the attack surface if you know that the Azure bastion deployment will be successful.
+
 .EXAMPLE
 .\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -includeUbuntu yes -Verbose
 
@@ -87,6 +91,7 @@ This posting is provided "AS IS" with no warranties, and confers no rights.
 6. https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-ip-addresses-overview-arm
 7. https://github.com/Azure/azure-quickstart-templates/tree/master/101-azure-bastion
 8. https://github.com/ans-rfroggatt/Imperial-POC/blob/master/Networking/Networking-NSG.json
+9. http://sql.pawlikowski.pro/2020/01/22/azure-bastion-creating-proper-nsg-rules/
 
 .COMPONENT
 Azure Infrastructure, PowerShell, ARM, JSON
@@ -454,7 +459,7 @@ else
     -Priority 100 `
     -SourceAddressPrefix Internet `
     -SourcePortRange * `
-    -DestinationAddressPrefix $basPubIpAddressCidr `
+    -DestinationAddressPrefix * `
     -DestinationPortRange 443
     # Ingress traffic tfrom Azure Bastion control pane
     $basNsgRule443FromGatewayManagerRuleName = "Allow443FromGatewayManager"
@@ -466,22 +471,10 @@ else
     -Priority 110 `
     -SourceAddressPrefix GatewayManager `
     -SourcePortRange * `
-    -DestinationAddressPrefix $basPubIpAddressCidr `
-    -DestinationPortRange 443
+    -DestinationAddressPrefix * `
+    -DestinationPortRange 443,4443
 
     # EGRESS
-    # To VirtualNetwork
-    $allowRemoteToVirtualNetworkRuleName = "AllowRemoteToVirtualNetwork"
-    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $allowRemoteToVirtualNetworkRuleName `
-    -Description  $allowRemoteToVirtualNetworkRuleName `
-    -Access Allow `
-    -Protocol Tcp `
-    -Direction Outbound `
-    -Priority 120 `
-    -SourceAddressPrefix $basPubIpAddressCidr `
-    -SourcePortRange * `
-    -DestinationAddressPrefix VirtualNetwork `
-    -DestinationPortRange 3389,22
     # To AzureCloud
     $allowAzureServicesRuleName = "AllowAzureServices"
     $allowAzureServices = New-AzNetworkSecurityRuleConfig -Name $allowAzureServicesRuleName `
@@ -489,11 +482,35 @@ else
     -Access Allow `
     -Protocol Tcp `
     -Direction Outbound `
-    -Priority 130 `
-    -SourceAddressPrefix $basPubIpAddressCidr `
+    -Priority 120 `
+    -SourceAddressPrefix * `
     -SourcePortRange * `
     -DestinationAddressPrefix AzureCloud `
     -DestinationPortRange 443
+    # To VirtualNetwork
+    $allowRemoteToVirtualNetworkRuleNameRDP = "AllowRemoteToVirtualNetworkRDP"
+    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $allowRemoteToVirtualNetworkRuleNameRDP `
+    -Description  $allowRemoteToVirtualNetworkRuleNameRDP `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Outbound `
+    -Priority 130 `
+    -SourceAddressPrefix $basPubIpAddressCidr `
+    -SourcePortRange * `
+    -DestinationAddressPrefix VirtualNetwork `
+    -DestinationPortRange 3389
+
+    $allowRemoteToVirtualNetworkRuleNameSSH = "AllowRemoteToVirtualNetworkSSH"
+    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $allowRemoteToVirtualNetworkRuleNameSSH `
+    -Description  $allowRemoteToVirtualNetworkRuleNameSSH `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Outbound `
+    -Priority 130 `
+    -SourceAddressPrefix * `
+    -SourcePortRange * `
+    -DestinationAddressPrefix VirtualNetwork `
+    -DestinationPortRange 22
 
     # Create NSG
     $basNsg = New-AzNetworkSecurityGroup -Name $nsgBasName -ResourceGroupName $rg -Location $region -SecurityRules $basNsgRule443FromInternet,$basNsgRule443FromGatewayManager,$allowRemoteToVirtualNetwork,$allowAzureServices -Verbose
