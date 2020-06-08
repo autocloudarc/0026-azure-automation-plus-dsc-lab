@@ -38,7 +38,7 @@ Include a CentOS server for this deployment.
 Inclue an Ubuntu server for this deployment.
 
 .EXAMPLE
-.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -Verbose
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -includeUbuntu yes -Verbose
 
 This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the PKI server, but ADDS
 an additional Linux server with the latest Ubuntu Server distribution.
@@ -499,12 +499,14 @@ else
     $basNsg = New-AzNetworkSecurityGroup -Name $nsgBasName -ResourceGroupName $rg -Location $region -SecurityRules $basNsgRule443FromInternet,$basNsgRule443FromGatewayManager,$allowRemoteToVirtualNetwork,$allowAzureServices -Verbose
 
     # Associate NSG to AzureBastionSubnet subnet
-    $basSubnet.NetworkSecurityGroup = $basNsg
-    $vnet | Set-AzVirtualNetwork -Verbose
+    New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnet.name -nsgName $nsgBasName -subnetName $basSubName -subnetRange $basSubPrefix -Verbose
 
     # Add new rule NSG-ADDS
     $allowRemoteFromBastionRuleName = "AllowRemoteFromBastion"
     $nsgAddsName = "NSG-ADDS" + $studentNumber
+    $subAddsName = $vnet.subnets.name | Where-Object {$_ -match 'ADDS'}
+    $subAddsPrefix = $vnet.subnets.addressPrefix | Where-Object {$_ -match '.0/28'}
+
     Get-AzNetworkSecurityGroup -Name $nsgAddsName -ResourceGroupName $rg |
     Add-AzNetworkSecurityRuleConfig -Name $allowRemoteFromBastionRuleName `
     -Description  $allowRemoteFromBastionRuleName `
@@ -518,8 +520,13 @@ else
     -DestinationPortRange 3389,22 |
     Set-AzNetworkSecurityGroup
 
+    # Associate NSG to ADDS subnet
+    New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnet.name -nsgName $nsgAddsName -subnetName $subAddsName -subnetRange $subAddsPrefix -Verbose
+
     # Add new rule to NSG-SRVS
     $nsgSrvsName = "NSG-SRVS" + $studentNumber
+    $subSrvsName = $vnet.subnets.name | Where-Object {$_ -match 'SRVS'}
+    $subSrvsPrefix = $vnet.subnets.addressPrefix | Where-Object {$_ -match '.16/28'}
     Get-AzNetworkSecurityGroup -Name $nsgSrvsName -ResourceGroupName $rg |
     Add-AzNetworkSecurityRuleConfig -Name $allowRemoteFromBastionRuleName `
     -Description  $allowRemoteFromBastionRuleName `
@@ -532,6 +539,10 @@ else
     -DestinationAddressPrefix VirtualNetwork `
     -DestinationPortRange 3389,22 |
     Set-AzNetworkSecurityGroup
+
+    # Associate NSG to SRVS subnet
+    New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnet.name -nsgName $nsgSrvsName -subnetName $subSrvsName -subnetRange $subSrvsPrefix -Verbose
+
 <#
     $devServer = "azrdev" + $studentNumber + "01"
     $devServerNicName = $devServer + "-nic"
@@ -546,9 +557,10 @@ else
 #>
 } # end else
 
-$basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddressId $basPubIpId -VirtualNetwork $vnet -Verbose
+# $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddressId $basPubIpId -VirtualNetwork $vnet -Verbose
 <#
-TASK-ITEM: Bug report
+TASK-ITEM: See: https://github.com/MicrosoftDocs/azure-docs/issues/56580
+TASK-ITEM: As a workaround, deploy bastion resource using ARM template.
 New-AzBastion : Cannot parse the request.
 StatusCode: 400
 ReasonPhrase: Bad Request
