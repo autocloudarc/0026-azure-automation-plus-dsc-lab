@@ -125,12 +125,12 @@ param
     [ValidateSet("yes","no")]
     [string]$includeUbuntu = "no",
     [string]$templateFile = "azuredeploy.json",
-    [string]$bastionFile = "nested/08.00.00.createBastion.json"
+    [string]$bastionFile = "nested/08.00.00.createBastion.json",
     # TASK-ITEM: The .../master/azuredeploy.json template is used for production, while .../dev/azuredeploy.json is only used for the development branch.
     [parameter(Mandatory=$true)]
     [ValidateSet('https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/','https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/')]
     [string]$artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/',
-    [string]$templateUri = ($artifactsLocation + $templateFile)
+    [string]$templateUri = ($artifactsLocation + $templateFile),
     [string]$bastionUri = ($artifactsLocation + $bastionFile)
     #>
 ) # end param
