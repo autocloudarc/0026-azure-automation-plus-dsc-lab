@@ -124,12 +124,14 @@ param
     [string]$includeCentOS = "yes",
     [ValidateSet("yes","no")]
     [string]$includeUbuntu = "no",
-    $templateFile = "azuredeploy.json",
+    [string]$templateFile = "azuredeploy.json",
+    [string]$bastionFile = "nested/08.00.00.createBastion.json"
     # TASK-ITEM: The .../master/azuredeploy.json template is used for production, while .../dev/azuredeploy.json is only used for the development branch.
     [parameter(Mandatory=$true)]
     [ValidateSet('https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/','https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/')]
     [string]$artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/',
     [string]$templateUri = ($artifactsLocation + $templateFile)
+    [string]$bastionUri = ($artifactsLocation + $bastionFile)
     #>
 ) # end param
 
@@ -538,6 +540,27 @@ else
 
     # Associate NSG to SRVS subnet
     New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnet.name -nsgName $nsgSrvsName -subnetName $subSrvsName -subnetRange $subSrvsPrefix -Verbose
+
+    $basParams = @{}
+    $basParams.Add("location",$region)
+    $basParams.Add("basPubIpId",$basPubIpId)
+    $basParams.Add("basSubnetId", $basSubnetId)
+    $basParams.Add("basName",$basName)
+
+    $rgBasDeployment = 'azBasDeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
+
+    New-AzResourceGroupDeployment -ResourceGroupName $rg `
+    -TemplateUri $bastionUri `
+    -Name $rgBasDeployment `
+    -TemplateParameterObject $basParams `
+    -Force -Verbose `
+    -ErrorVariable basErrorMessages
+
+    if ($basErrorMessages)
+    {
+        Write-Output '', 'Template deployment returned the following errors:', @(@($basErrorMessages) | ForEach-Object { $_.Exception.Message.TrimEnd("`r`n") })
+    } # end if
+
 
 <#
     $devServer = "azrdev" + $studentNumber + "01"
