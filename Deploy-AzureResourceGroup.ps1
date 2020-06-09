@@ -378,15 +378,6 @@ if ($ErrorMessages)
 }
 else
 {
-    $StopTimer = Get-Date -Verbose
-    Write-Output "Calculating elapsed time..."
-    $ExecutionTime = New-TimeSpan -Start $BeginTimer -End $StopTimer
-    $Footer = "TOTAL SCRIPT EXECUTION TIME: $ExecutionTime"
-    Write-Output ""
-    Write-Output $Footer
-    $fqdnUpnSuffix = "@dev.adatum.com"
-    $adminUserName = $adminUserName + $fqdnUpnSuffix
-
     #region Availability Sets
 
     # Construct availability sets array
@@ -581,6 +572,16 @@ At C:\OneDrivePersonal\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation
     + CategoryInfo          : CloseError: (:) [New-AzBastion], NetworkCloudException
     + FullyQualifiedErrorId : Microsoft.Azure.Commands.Network.Bastion.NewAzBastionCommand
 #>
+
+$StopTimer = Get-Date -Verbose
+Write-Output "Calculating elapsed time..."
+$ExecutionTime = New-TimeSpan -Start $BeginTimer -End $StopTimer
+$Footer = "TOTAL SCRIPT EXECUTION TIME: $ExecutionTime"
+Write-Output ""
+Write-Output $Footer
+$fqdnUpnSuffix = "@dev.adatum.com"
+$adminUserName = $adminUserName + $fqdnUpnSuffix
+
 $connectionMessage = @"
 Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
 
