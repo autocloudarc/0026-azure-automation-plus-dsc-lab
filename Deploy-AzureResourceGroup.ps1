@@ -457,7 +457,7 @@ else
     -Protocol Tcp `
     -Direction Inbound `
     -Priority 100 `
-    -SourceAddressPrefix Internet `
+    -SourceAddressPrefix * `
     -SourcePortRange * `
     -DestinationAddressPrefix * `
     -DestinationPortRange 443
@@ -488,21 +488,9 @@ else
     -DestinationAddressPrefix AzureCloud `
     -DestinationPortRange 443
     # To VirtualNetwork
-    $allowRemoteToVirtualNetworkRuleNameRDP = "AllowRemoteToVirtualNetworkRDP"
-    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $allowRemoteToVirtualNetworkRuleNameRDP `
-    -Description  $allowRemoteToVirtualNetworkRuleNameRDP `
-    -Access Allow `
-    -Protocol Tcp `
-    -Direction Outbound `
-    -Priority 130 `
-    -SourceAddressPrefix $basPubIpAddressCidr `
-    -SourcePortRange * `
-    -DestinationAddressPrefix VirtualNetwork `
-    -DestinationPortRange 3389
-
-    $allowRemoteToVirtualNetworkRuleNameSSH = "AllowRemoteToVirtualNetworkSSH"
-    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $allowRemoteToVirtualNetworkRuleNameSSH `
-    -Description  $allowRemoteToVirtualNetworkRuleNameSSH `
+    $allowRemoteToVirtualNetworkRuleName = "AllowRemoteToVirtualNetwork"
+    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $allowRemoteToVirtualNetworkRuleName `
+    -Description  $allowRemoteToVirtualNetworkRuleName `
     -Access Allow `
     -Protocol Tcp `
     -Direction Outbound `
@@ -510,7 +498,7 @@ else
     -SourceAddressPrefix * `
     -SourcePortRange * `
     -DestinationAddressPrefix VirtualNetwork `
-    -DestinationPortRange 22
+    -DestinationPortRange 3389,22
 
     # Create NSG
     $basNsg = New-AzNetworkSecurityGroup -Name $nsgBasName -ResourceGroupName $rg -Location $region -SecurityRules $basNsgRule443FromInternet,$basNsgRule443FromGatewayManager,$allowRemoteToVirtualNetwork,$allowAzureServices -Verbose
