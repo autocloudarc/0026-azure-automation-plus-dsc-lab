@@ -426,7 +426,9 @@ else
     Add-AzVirtualNetworkSubnetConfig -Name $basSubName -VirtualNetwork $vnet -AddressPrefix $basSubPrefix -Verbose
     $vnet | Set-AzVirtualNetwork -Verbose
     $vnetId = $vnet.id
-    $basSubnetId = $vnet.SubnetsText[2].id
+    # refresh VNET info
+    $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg
+    $basSubnetId = $vnet.Subnets.id | Where-Object {$_ -match 'AzureBastionSubnet'}
 
     # Create public IP address for bastion
     Write-Output "Creating bastion public IP address resource."
