@@ -68,7 +68,7 @@ EXAMPLE 1
 This example deploys will deploy all the VMs outlined in section 3.0 above.
 
 EXAMPLE 2
-`.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -Verbose`
+`.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -includeCentOS yes -Verbose`
 
 This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the PKI server, but ADDS
 an additional Linux server with the latest Ubuntu Server distribution.

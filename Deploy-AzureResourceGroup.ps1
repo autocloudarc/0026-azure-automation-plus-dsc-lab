@@ -37,8 +37,12 @@ Include a CentOS server for this deployment.
 .PARAMETER includeUbuntu
 Inclue an Ubuntu server for this deployment.
 
+TASK-ITEM: New parameter to add.
+PARAMETER removeJumpServerPubIp
+Remove the jump server public IP address to reduce the attack surface if you know that the Azure bastion deployment will be successful.
+
 .EXAMPLE
-.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -additionalLnx yes -Verbose
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -includeUbuntu yes -Verbose
 
 This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the PKI server, but ADDS
 an additional Linux server with the latest Ubuntu Server distribution.
@@ -54,6 +58,11 @@ This is due to the default parameter value that is set in the paramater block as
 
 This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the Ubuntu server, but WILL implicitly deploy the PKI server and
 explicity provision the CentOS server as well. The PKI server will not be deployed due to the default parameter value that is set in the paramater block as [string]$excludePki = "no".
+
+.EXAMPLE
+.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -includeCentOS no -includeUbuntu no -artifactsLocation 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/' -Verbose
+
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the Linux servers, and also excludes the PKI server. In addition, the artifacts location for the dev branch will be used. The default is to use the master branch.
 
 .INPUTS
 None
@@ -82,6 +91,7 @@ This posting is provided "AS IS" with no warranties, and confers no rights.
 6. https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-ip-addresses-overview-arm
 7. https://github.com/Azure/azure-quickstart-templates/tree/master/101-azure-bastion
 8. https://github.com/ans-rfroggatt/Imperial-POC/blob/master/Networking/Networking-NSG.json
+9. http://sql.pawlikowski.pro/2020/01/22/azure-bastion-creating-proper-nsg-rules/
 
 .COMPONENT
 Azure Infrastructure, PowerShell, ARM, JSON
@@ -113,7 +123,15 @@ param
     [ValidateSet("yes","no")]
     [string]$includeCentOS = "yes",
     [ValidateSet("yes","no")]
-    [string]$includeUbuntu = "no"
+    [string]$includeUbuntu = "no",
+    [string]$templateFile = "azuredeploy.json",
+    [string]$bastionFile = "nested/08.00.00.createBastion.json",
+    # TASK-ITEM: The .../master/azuredeploy.json template is used for production, while .../dev/azuredeploy.json is only used for the development branch.
+    [parameter(Mandatory=$true)]
+    [ValidateSet('https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/','https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/')]
+    [string]$artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/',
+    [string]$templateUri = ($artifactsLocation + $templateFile),
+    [string]$bastionUri = ($artifactsLocation + $bastionFile)
     #>
 ) # end param
 
@@ -362,15 +380,6 @@ if ($ErrorMessages)
 }
 else
 {
-    $StopTimer = Get-Date -Verbose
-    Write-Output "Calculating elapsed time..."
-    $ExecutionTime = New-TimeSpan -Start $BeginTimer -End $StopTimer
-    $Footer = "TOTAL SCRIPT EXECUTION TIME: $ExecutionTime"
-    Write-Output ""
-    Write-Output $Footer
-    $fqdnUpnSuffix = "@dev.adatum.com"
-    $adminUserName = $adminUserName + $fqdnUpnSuffix
-
     #region Availability Sets
 
     # Construct availability sets array
@@ -404,8 +413,6 @@ else
     #endregion
 
     #region Add bastion host
-    <#
-    TASK-ITEM: Reserved for future use.
     Write-Output "Adding bastion subnet."
     $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg
     $vnetName = $vnet.Name
@@ -419,68 +426,200 @@ else
     Add-AzVirtualNetworkSubnetConfig -Name $basSubName -VirtualNetwork $vnet -AddressPrefix $basSubPrefix -Verbose
     $vnet | Set-AzVirtualNetwork -Verbose
     $vnetId = $vnet.id
-    $basSubnetId = $vnet.SubnetsText[2].id
+    # refresh VNET info
+    $vnet = Get-AzVirtualNetwork -ResourceGroupName $rg
+    $basSubnetId = $vnet.Subnets.id | Where-Object {$_ -match 'AzureBastionSubnet'}
+
+    # Create public IP address for bastion
+    Write-Output "Creating bastion public IP address resource."
+    $basName = "azr-dev-bas-$studentRandomInfix-01"
+    $basPubIpName = $basName + "-pip"
+    $alloc = "Static"
+    $basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod $alloc -Sku Standard
+    $basPubIpId = $basPubIp.id
+    $basPubIpAddress = $basPubIp.IpAddress
+    $basPubIpAddressCidr = $basPubIpAddress + "/32"
 
     # Create NSG for bastion subnet
     # https://docs.microsoft.com/en-us/azure/bastion/bastion-nsg
 
     # INGRESS
     # Ingress traffic from public Internet
-    $basNsgRule443FromInternet = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-    -Description  "Allow443FromInternet" `
+    $basNsgRule443FromInternetRuleName = "Allow443FromInternet"
+    $basNsgRule443FromInternet = New-AzNetworkSecurityRuleConfig -Name $basNsgRule443FromInternetRuleName `
+    -Description  $basNsgRule443FromInternetRuleName `
     -Access Allow `
     -Protocol Tcp `
     -Direction Inbound `
     -Priority 100 `
-    -SourceAddressPrefix Internet `
+    -SourceAddressPrefix * `
     -SourcePortRange * `
-    -DestinationAddressPrefix $basPubIpAddressCidr `
+    -DestinationAddressPrefix * `
     -DestinationPortRange 443
     # Ingress traffic tfrom Azure Bastion control pane
-    $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-    -Description  "Allow443FromGatewayManager" `
+    $basNsgRule443FromGatewayManagerRuleName = "Allow443FromGatewayManager"
+    $basNsgRule443FromGatewayManager = New-AzNetworkSecurityRuleConfig -Name $basNsgRule443FromGatewayManagerRuleName `
+    -Description  $basNsgRule443FromGatewayManagerRuleName `
     -Access Allow `
     -Protocol Tcp `
     -Direction Inbound `
     -Priority 110 `
     -SourceAddressPrefix GatewayManager `
     -SourcePortRange * `
-    -DestinationAddressPrefix $basPubIpAddressCidr `
-    -DestinationPortRange 443
+    -DestinationAddressPrefix * `
+    -DestinationPortRange 443,4443
 
     # EGRESS
-    # To VirtualNetwork
-    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
-    -Description  "AllowRemoteToVirtualNetwork" `
-    -Access Allow `
-    -Protocol Tcp `
-    -Direction Outbound `
-    -Priority 120 `
-    -SourceAddressPrefix $basPubIpAddressCidr `
-    -SourcePortRange * `
-    -DestinationAddressPrefix VirtualNetwork `
-    -DestinationPortRange 3389,22
     # To AzureCloud
-    $allowAzureServices = New-AzNetworkSecurityRuleConfig -Name $nsgBasName `
+    $allowAzureServicesRuleName = "AllowAzureServices"
+    $allowAzureServices = New-AzNetworkSecurityRuleConfig -Name $allowAzureServicesRuleName `
     -Description  "AllowAzureServices" `
     -Access Allow `
     -Protocol Tcp `
     -Direction Outbound `
-    -Priority 130 `
-    -SourceAddressPrefix $basPubIpAddressCidr `
+    -Priority 120 `
+    -SourceAddressPrefix * `
     -SourcePortRange * `
     -DestinationAddressPrefix AzureCloud `
     -DestinationPortRange 443
+    # To VirtualNetwork
+    $allowRemoteToVirtualNetworkRuleName = "AllowRemoteToVirtualNetwork"
+    $allowRemoteToVirtualNetwork = New-AzNetworkSecurityRuleConfig -Name $allowRemoteToVirtualNetworkRuleName `
+    -Description  $allowRemoteToVirtualNetworkRuleName `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Outbound `
+    -Priority 130 `
+    -SourceAddressPrefix * `
+    -SourcePortRange * `
+    -DestinationAddressPrefix VirtualNetwork `
+    -DestinationPortRange 3389,22
 
     # Create NSG
-    $basNsg = New-AzNetworkSecurityGroup -Name $rg -Location $region -SecurityRules $basNsgRule443FromInternet,$basNsgRule443FromGatewayManager,$allowRemoteToVirtualNetwork,$allowAzureServices
+    $basNsg = New-AzNetworkSecurityGroup -Name $nsgBasName -ResourceGroupName $rg -Location $region -SecurityRules $basNsgRule443FromInternet,$basNsgRule443FromGatewayManager,$allowRemoteToVirtualNetwork,$allowAzureServices -Verbose
 
     # Associate NSG to AzureBastionSubnet subnet
-    $basSubnet.NetworkSecurityGroup = $basNsg
-    $vnet | Set-AzVirtualNetwork -Verbose
+    New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnet.name -nsgName $nsgBasName -subnetName $basSubName -subnetRange $basSubPrefix -Verbose
 
-    $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddress $basPubIp -VirtualNetwork $vnet -Verbose
-    <#
+    # Add new rule NSG-ADDS
+    $allowRemoteFromBastionRuleName = "AllowRemoteFromBastion"
+    $nsgAddsName = "NSG-ADDS" + $studentNumber
+    $subAddsName = $vnet.subnets.name | Where-Object {$_ -match 'ADDS'}
+    $subAddsPrefix = $vnet.subnets.addressPrefix | Where-Object {$_ -match '.0/28'}
+
+    Get-AzNetworkSecurityGroup -Name $nsgAddsName -ResourceGroupName $rg |
+    Add-AzNetworkSecurityRuleConfig -Name $allowRemoteFromBastionRuleName `
+    -Description  $allowRemoteFromBastionRuleName `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Inbound `
+    -Priority 110 `
+    -SourceAddressPrefix $basSubPrefix `
+    -SourcePortRange * `
+    -DestinationAddressPrefix VirtualNetwork `
+    -DestinationPortRange 3389,22 |
+    Set-AzNetworkSecurityGroup
+
+    # Associate NSG to ADDS subnet
+    New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnet.name -nsgName $nsgAddsName -subnetName $subAddsName -subnetRange $subAddsPrefix -Verbose
+
+    # Add new rule to NSG-SRVS
+    $nsgSrvsName = "NSG-SRVS" + $studentNumber
+    $subSrvsName = $vnet.subnets.name | Where-Object {$_ -match 'SRVS'}
+    $subSrvsPrefix = $vnet.subnets.addressPrefix | Where-Object {$_ -match '.16/28'}
+    Get-AzNetworkSecurityGroup -Name $nsgSrvsName -ResourceGroupName $rg |
+    Add-AzNetworkSecurityRuleConfig -Name $allowRemoteFromBastionRuleName `
+    -Description  $allowRemoteFromBastionRuleName `
+    -Access Allow `
+    -Protocol Tcp `
+    -Direction Inbound `
+    -Priority 110 `
+    -SourceAddressPrefix $basSubPrefix `
+    -SourcePortRange * `
+    -DestinationAddressPrefix VirtualNetwork `
+    -DestinationPortRange 3389,22 |
+    Set-AzNetworkSecurityGroup
+
+    # Associate NSG to SRVS subnet
+    New-ARMDeployAssociateSubnetToNsg -resGroupName $rg -vnetName $vnet.name -nsgName $nsgSrvsName -subnetName $subSrvsName -subnetRange $subSrvsPrefix -Verbose
+
+    $basParams = @{}
+    $basParams.Add("location",$region)
+    $basParams.Add("basPubIpId",$basPubIpId)
+    $basParams.Add("basSubnetId", $basSubnetId)
+    $basParams.Add("basName",$basName)
+
+    $rgBasDeployment = 'azBasDeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
+
+    New-AzResourceGroupDeployment -ResourceGroupName $rg `
+    -TemplateUri $bastionUri `
+    -Name $rgBasDeployment `
+    -TemplateParameterObject $basParams `
+    -Force -Verbose `
+    -ErrorVariable basErrorMessages
+
+    if ($basErrorMessages)
+    {
+        Write-Output '', 'Template deployment returned the following errors:', @(@($basErrorMessages) | ForEach-Object { $_.Exception.Message.TrimEnd("`r`n") })
+    } # end if
+
+    $fqdnUpnSuffix = "@dev.adatum.com"
+    $adminUserName = $adminUserName + $fqdnUpnSuffix
+
+    # Check if bastion host deployed properly
+    $isBastionNsgAssociated = (Get-AzVirtualNetwork -ResourceGroupName $rg -Verbose).Subnets.NetworkSecurityGroup.Id | Split-Path -leaf | Where-Object {$_ -match 'AzureBastionSubnet'}
+    $isBastionHostProvisioned = (Get-AzResource -ResourceGroupName $rg -ResourceType 'Microsoft.Network/bastionHosts')
+
+    if ($isBastionNsgAssociated -and $isBastionHostProvisioned)
+    {
+        #region REMOVE Jump/Dev server public IP
+        # Disconnect jump server public IP
+        # https://docs.microsoft.com/en-us/azure/virtual-network/remove-public-ip-address-vm
+        # Disassociate public IP from NIC
+        $azrDevNic = Get-AzNetworkInterface -Name *azrdev* -ResourceGroup $rg
+        $azrDevNic.IpConfigurations.publicipaddress.id = $null
+        Set-AzNetworkInterface -NetworkInterface $azrDevNic -Verbose
+        # Remove Public IP
+        $azrDevPipName = (Get-AzPublicIpAddress -ResourceGroupName $rg | Where-Object {$_.Name -like 'azrdev*pip*'}).Name
+        Remove-AzPublicIpAddress -Name $azrDevPipName -ResourceGroupName $rg -PassThru -Force -Verbose
+
+        # Remove RDP NSG rules
+        # Get NSGs with RDP inbound from internet
+        $ruleToRemove = "AllowRdpInbound"
+        $allowRdpInbound = (Get-AzNetworkSecurityGroup -ResourceGroupName $rg | Where-Object {($_.SecurityRules.Name -eq $ruleToRemove) -and ($_.SecurityRules.DestinationPortRange -eq '3389')}).Name
+        $allowRdpInbound | ForEach-Object {Get-AzNetworkSecurityGroup -Name $_ | Remove-AzNetworkSecurityRuleConfig -Name $ruleToRemove -Verbose}
+        # Provide Bastion connection message
+
+$connectionMessage = @"
+To log into your any of your lab virtual machines, use Azure bastion by logging into the portal at https://portal.azure.com, select the virtual machine, and click connect in the overview pane, then select the 'bastion' option and login with your credentials.
+The user name is: $adminUserName and specify the corresponding password you entered at the begining of this script.
+You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
+For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
+If you like this script, follow me on GitHub at https://github.com/autocloudarc, send feedback or submit issues so we can build a better experience for everyone.
+Happy scripting...
+"@
+        Write-Output $connectionMessage
+        #endregion
+    }
+    else
+    {
+        $connectionMessage = @"
+Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
+
+To log into your new automation lab jump server $jumpDevMachine, you must change your login name to: $adminUserName and specify the corresponding password you entered at the begining of this script.
+You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
+For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
+If you like this script, follow me on GitHub at https://github.com/autocloudarc, send feedback or submit issues so we can build a better experience for everyone.
+Happy scripting...
+"@
+        Write-Output $connectionMessage
+        # Allow engineer to pause and read connection message before continuing
+        pause
+        # Open RDP prompt automatically
+        mstsc /v:$fqdnDev
+    } # end else
+
+<#
     $devServer = "azrdev" + $studentNumber + "01"
     $devServerNicName = $devServer + "-nic"
 
@@ -494,30 +633,33 @@ else
 #>
 } # end else
 
-# Create public IP address for bastion
-Write-Output "Creating bastion public IP address resource."
-$basName = "azr-dev-bas-$studentRandomInfix-01"
-$basPubIpName = $basName + "-pip"
-$alloc = "Static"
-$basPubIp = New-AzPublicIpAddress -ResourceGroupName $rg -name $basPubIpName -location $region -AllocationMethod $alloc -Sku Standard
-$basPubIpId = $basPubIp.id
-$basPubIpAddress = $basPubIp.IpAddress
-$basPubIpAddressCidr = $basPubIpAddress + "/32"
+# $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddressId $basPubIpId -VirtualNetwork $vnet -Verbose
+<#
+TASK-ITEM: See: https://github.com/MicrosoftDocs/azure-docs/issues/56580
+TASK-ITEM: As a workaround, deploy bastion resource using ARM template.
+New-AzBastion : Cannot parse the request.
+StatusCode: 400
+ReasonPhrase: Bad Request
+ErrorCode: InvalidRequestFormat
+ErrorMessage: Cannot parse the request.
+Additional details:
+    Code: MissingJsonReferenceId
+    Message: Value for reference id is missing. Path properties.ipConfigurations[0].properties.subnet.
+OperationID : 82269f80-339f-48e4-a3fa-972b977d30a1
+At C:\OneDrivePersonal\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation-plus-dsc-lab\Deploy-AzureResourceGroup.ps1:550 char:16
++ ... sResource = New-AzBastion -ResourceGroupName $rg -Name $basName -Publ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : CloseError: (:) [New-AzBastion], NetworkCloudException
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.Network.Bastion.NewAzBastionCommand
+#>
 
-$connectionMessage = @"
-Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
+$StopTimer = Get-Date -Verbose
+Write-Output "Calculating elapsed time..."
+$ExecutionTime = New-TimeSpan -Start $BeginTimer -End $StopTimer
+$Footer = "TOTAL SCRIPT EXECUTION TIME: $ExecutionTime"
+Write-Output ""
+Write-Output $Footer
 
-To log into your new automation lab jump server $jumpDevMachine, you must change your login name to: $adminUserName and specify the corresponding password you entered at the begining of this script.
-You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
-For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
-If you like this script, follow me on GitHub at https://github.com/autocloudarc, send feedback or submit issues so we can build a better experience for everyone.
-Happy scripting...
-"@
-    Write-Output $connectionMessage
-    # Allow engineer to pause and read connection message before continuing
-    pause
-    # Open RDP prompt automatically
-    mstsc /v:$fqdnDev
 } # end else if
 
 # Resource group and log files cleanup messages
