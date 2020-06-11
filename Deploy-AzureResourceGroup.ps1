@@ -325,7 +325,6 @@ Do
 Until ($region -in $regions)
 
 New-AzResourceGroup -Name $rg -Location $region -Verbose
-
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
