@@ -567,7 +567,7 @@ else
     $adminUserName = $adminUserName + $fqdnUpnSuffix
 
     # Check if bastion host deployed properly
-    $isBastionNsgAssociated = (Get-AzVirtualNetwork -ResourceGroupName rg14 -Verbose).Subnets.NetworkSecurityGroup.Id | Split-Path -leaf | Where-Object {$_ -match 'AzureBastionSubnet'}
+    $isBastionNsgAssociated = (Get-AzVirtualNetwork -ResourceGroupName $rg -Verbose).Subnets.NetworkSecurityGroup.Id | Split-Path -leaf | Where-Object {$_ -match 'AzureBastionSubnet'}
     $isBastionHostProvisioned = (Get-AzResource -ResourceGroupName $rg -ResourceType 'Microsoft.Network/bastionHosts')
 
     if ($isBastionNsgAssociated -and $isBastionHostProvisioned)
