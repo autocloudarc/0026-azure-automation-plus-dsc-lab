@@ -563,6 +563,61 @@ else
         Write-Output '', 'Template deployment returned the following errors:', @(@($basErrorMessages) | ForEach-Object { $_.Exception.Message.TrimEnd("`r`n") })
     } # end if
 
+    $fqdnUpnSuffix = "@dev.adatum.com"
+    $adminUserName = $adminUserName + $fqdnUpnSuffix
+
+    # Check if bastion host deployed properly
+    $isBastionNsgAssociated = (Get-AzVirtualNetwork -ResourceGroupName rg14 -Verbose).Subnets.NetworkSecurityGroup.Id | Split-Path -leaf | Where-Object {$_ -match 'AzureBastionSubnet'}
+    $isBastionHostProvisioned = (Get-AzResource -ResourceGroupName $rg -ResourceType 'Microsoft.Network/bastionHosts')
+
+    if ($isBastionNsgAssociated -and $isBastionHostProvisioned)
+    {
+        #region REMOVE Jump/Dev server public IP
+        # Disconnect jump server public IP
+        # https://docs.microsoft.com/en-us/azure/virtual-network/remove-public-ip-address-vm
+        # Disassociate public IP from NIC
+        $azrDevNic = Get-AzNetworkInterface -Name *azrdev* -ResourceGroup $rg
+        $azrDevNic.IpConfigurations.publicipaddress.id = $null
+        Set-AzNetworkInterface -NetworkInterface $azrDevNic -Verbose
+        # Remove Public IP
+        $azrDevPipName = (Get-AzPublicIpAddress -ResourceGroupName $rg | Where-Object {$_.Name -like 'azrdev*pip*'}).Name
+        Remove-AzPublicIpAddress -Name $azrDevPipName -ResourceGroupName $rg -PassThru -Force -Verbose
+
+        # Remove RDP NSG rules
+        # Get NSGs with RDP inbound from internet
+        $ruleToRemove = "AllowRdpInbound"
+        $allowRdpInbound = (Get-AzNetworkSecurityGroup -ResourceGroupName $rg | Where-Object {($_.SecurityRules.Name -eq $ruleToRemove) -and ($_.SecurityRules.DestinationPortRange -eq '3389')}).Name
+        $allowRdpInbound | ForEach-Object {Get-AzNetworkSecurityGroup -Name $_ | Remove-AzNetworkSecurityRuleConfig -Name $ruleToRemove -Verbose}
+        # Provide Bastion connection message
+
+$connectionMessage = @"
+To log into your any of your lab virtual machines, use Azure bastion by logging into the portal at https://portal.azure.com, select the virtual machine, and click connect in the overview pane, then select the 'bastion' option and login with your credentials.
+The user name is: $adminUserName and specify the corresponding password you entered at the begining of this script.
+You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
+For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
+If you like this script, follow me on GitHub at https://github.com/autocloudarc, send feedback or submit issues so we can build a better experience for everyone.
+Happy scripting...
+"@
+        Write-Output $connectionMessage
+        #endregion
+    }
+    else
+    {
+        $connectionMessage = @"
+Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
+
+To log into your new automation lab jump server $jumpDevMachine, you must change your login name to: $adminUserName and specify the corresponding password you entered at the begining of this script.
+You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
+For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
+If you like this script, follow me on GitHub at https://github.com/autocloudarc, send feedback or submit issues so we can build a better experience for everyone.
+Happy scripting...
+"@
+        Write-Output $connectionMessage
+        # Allow engineer to pause and read connection message before continuing
+        pause
+        # Open RDP prompt automatically
+        mstsc /v:$fqdnDev
+    } # end else
 
 <#
     $devServer = "azrdev" + $studentNumber + "01"
@@ -604,23 +659,7 @@ $ExecutionTime = New-TimeSpan -Start $BeginTimer -End $StopTimer
 $Footer = "TOTAL SCRIPT EXECUTION TIME: $ExecutionTime"
 Write-Output ""
 Write-Output $Footer
-$fqdnUpnSuffix = "@dev.adatum.com"
-$adminUserName = $adminUserName + $fqdnUpnSuffix
 
-$connectionMessage = @"
-Your RDP connection prompt will open auotmatically after you read this message and press Enter to continue...
-
-To log into your new automation lab jump server $jumpDevMachine, you must change your login name to: $adminUserName and specify the corresponding password you entered at the begining of this script.
-You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
-For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
-If you like this script, follow me on GitHub at https://github.com/autocloudarc, send feedback or submit issues so we can build a better experience for everyone.
-Happy scripting...
-"@
-    Write-Output $connectionMessage
-    # Allow engineer to pause and read connection message before continuing
-    pause
-    # Open RDP prompt automatically
-    mstsc /v:$fqdnDev
 } # end else if
 
 # Resource group and log files cleanup messages

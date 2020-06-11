@@ -102,7 +102,7 @@ Configuration adsCnfgInstall
 	} # end node
 } # end configuration
 
-$domainAdminCredentials = Get-Credential -Message "Enter domain admin username and password" 
+$domainAdminCredentials = Get-Credential -Message "Enter domain admin username and password"
 
 adsCnfgInstall -domainName dev.adatum.com -dataDiskNumber 2 -dataDriveLetter F -domainAdminCredentials
 
