@@ -28,9 +28,10 @@ Decscription of the prerequistes for the deployment
 
 The lab infrastructure includes the following components:
 
-1. 1 x resource group named rg##, where ## in this document represents a one or two-digit number between 1 to 16, and reflects the student number you specify during deployment.
+1. 1 x resource group named rg##, where ## in this document represents a one or two-digit number between 10 t6, and reflects the student number you specify during deployment.
 
-2. 3 x Windows 2019 Data Center Core domain controllers, where only 1 has been promoted to a domain controller: AZRADS##03.dev.adatum.com. Both AZRADS##01 & AZRADS##02 are only member servers until you promoting them.
+2. 3 x Windows 2019 Data Center Core domain controllers, where only 1 has been promoted to a domain controller: AZRADS##03.dev.adatum.com.
+   Both AZRADS##01 & AZRADS##02 are optional based on the value of the -excludeAds parameter and are initially deployed only as member servers until you promote them.
 
 3. 1 x Widnows 2019 Data Center Development/Jump/DSCPull/DSCPush server w/the Visual Studio 2019 Community Edition VM image. This will be AZRDEV##01.dev.adatum.com.
 
@@ -38,17 +39,19 @@ The lab infrastructure includes the following components:
 
 5. 2 x Widnows 2019 Data Center servers (without the SQL image), initially deployed as standalone servers but which can be configured after deployment as SQL 2019 servers using DSC. These are AZRSQL##01 and AZRSQL##02.
 
-6. 1 x CentOS 7 server, which can be used to demonstrate or practice PowerShell Core 6.0 or PowerShell DSC for Linux concepts. This is AZRLNX##01.
+6. 1 x CentOS 7 server (optional based on the value of the -includeCentOS parameter), which can be used to demonstrate or practice PowerShell Core 6.0 or PowerShell DSC for Linux concepts. This is AZRLNX##01.
 
-7. 1 x Windows 2019 Data Center with GUI PKI server. This is really just a base Windows VM image that you can also practice configuring as a PKI server.
+7. 1 x Ubuntu 18.04 server (optional based on the value of the -includeUbuntu parameter), that can also be used as an additional Linux workload if necessary.
 
-8. 1 x Automation account for Azure automation topics. This resource is named aaa-{studentRandomInfix}-##.
+8. 1 x Windows 2019 Data Center with GUI PKI server (optional based on the value of the -excludePki parameter). This is really just a base Windows VM image that you can also practice configuring as a PKI server.
 
-9. 1 x OMS Workspace for Runbook monitoring integration, named oms-{studentRandomInfix}-##.
+9.  1 x Automation account for Azure automation topics. This resource is named aaa-{studentRandomInfix}-##.
 
-10. 1 x storage account used for boot diagnostics and diagnostics logging for each VM. The name will be globally unique in DNS if you deploy from the Powershell script
+10. 1 x OMS Workspace for Runbook monitoring integration, named oms-{studentRandomInfix}-##.
 
-11. 1 x recovery services vault for VM backup and recovery.
+11. 1 x storage account used for boot diagnostics and diagnostics logging for each VM. The name will be globally unique in DNS if you deploy from the Powershell script
+
+12. 1 x recovery services vault for VM backup and recovery.
 
 ## 4.0 Deploying The Template
 
@@ -83,16 +86,20 @@ EXAMPLE 4
 `.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -includeCentOS yes -includeUbuntu no -Verbose`
 
 This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the Ubuntu server, but WILL implicitly deploy the PKI server and
-explicity provision the CentOS server as well. The PKI server will not be deployed due to the default parameter value that is set in the paramater block as [string]$excludePki = "no".
+explicity provision the CentOS server as well. The PKI server will be deployed due to the default parameter value that is set in the paramater block as [string]$excludePki = "no".
 
-Feel free to customize your deployment with these -exclude... and additional... parameters. More details about these parameters can be obtained by reading the header information
-in the .\Deploy-AzureResourceGroup.ps1 file.
+EXAMPLE 5
+`.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -includeCentOS yes -includeUbuntu no -excludePki yes -Verbose`
+
+This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the Ubuntu server, but WILL explicitly deploy the PKI server and
+explicity provision the CentOS server as well. Feel free to customize your deployment with these -exclude... and additional... parameters.
+More details about these parameters can be obtained by reading the header information in the .\Deploy-AzureResourceGroup.ps1 file.
 
 1. When the script executes, answer the following prompts:
 
     - Authenticate to your subscription
     - Enter your target subscription name
-    - Enter your student number, which is a number from 1 to 16.
+    - Enter your student number, which is a number from 10 to 26.
     - Enter your administrator password for the adm.infra.user account. Your password will not be exposed.
 
 Azure CLI (bash)
@@ -111,7 +118,7 @@ Azure CLI (bash)
     # Assign the adm.infra.user account for each VM to be deployed.
     adminUserName=adm.infra.user
 
-    # Assign a student number from [1-16] to disambiguate deployed resources from other attendees for multiple participants in a class/training scenario.
+    # Assign a student number from [10-26] to disambiguate deployed resources from other attendees for multiple participants in a class/training scenario.
     studentNumber=##
 
     # Assign a resource group for all resources, where ## is the same as your student number above.
@@ -179,6 +186,8 @@ SUGGESTED LAB CHALLENGES/EXERCISES
 11. Apply a configuration to the AZRLNX##01 Linux CentOS server using the push mode remotely from AZRDEV##01.
 
 12. Apply a configuration to the AZRLNX##01 Linux CentOS server using AA DSC.
+
+13. Use the AZRPKI##01 server for PKI services.
 
 ## 9.0 Notes
 

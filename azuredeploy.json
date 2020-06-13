@@ -52,31 +52,31 @@
       "defaultValue": "AzureCloud"
     },
     "studentNumber": {
-      "defaultValue": 0,
+      "defaultValue": 10,
       "allowedValues": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
         10,
         11,
         12,
         13,
         14,
         15,
-        16
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
       ],
-      "minValue": 0,
-      "maxValue": 16,
+      "minValue": 10,
+      "maxValue": 26,
       "type": "int",
       "metadata": {
-        "description": "Enter a two digit number from 0 to 16."
+        "description": "Enter a two digit number from 10 to 26."
       }
     },
     "omsLocation": {
