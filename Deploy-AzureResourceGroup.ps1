@@ -126,8 +126,6 @@ param
     [string]$includeUbuntu = "no",
     [string]$templateFile = "azuredeploy.json",
     [string]$bastionFile = "nested/08.00.00.createBastion.json",
-    # TASK-ITEM: The .../master/azuredeploy.json template is used for production, while .../dev/azuredeploy.json is only used for the development branch.
-    [parameter(Mandatory=$true)]
     [ValidateSet('https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/','https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/')]
     [string]$artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/',
     [string]$templateUri = ($artifactsLocation + $templateFile),
@@ -245,7 +243,7 @@ function Get-PSGalleryModule
 $scriptName = $MyInvocation.MyCommand.name
 # Use script filename without exension as a log prefix
 $LogPrefix = $scriptName.Split(".")[0]
-$modulePath = (Get-InstalledModule -Name Az).InstalledLocation | Split-Path -Parent | Split-Path -Parent
+$modulePath = "$env:systemdrive\Program Files\WindowsPowerShell\Modules"
 
 $LogDirectory = Join-Path $modulePath -ChildPath $LogPrefix -Verbose
 # Create log directory if not already present
