@@ -45,7 +45,7 @@ The lab infrastructure includes the following components:
 
 8. 1 x Windows 2019 Data Center with GUI PKI server (optional based on the value of the -excludePki parameter). This is really just a base Windows VM image that you can also practice configuring as a PKI server.
 
-9.  1 x Automation account for Azure automation topics. This resource is named aaa-{studentRandomInfix}-##.
+9. 1 x Automation account for Azure automation topics. This resource is named aaa-{studentRandomInfix}-##.
 
 10. 1 x OMS Workspace for Runbook monitoring integration, named oms-{studentRandomInfix}-##.
 
