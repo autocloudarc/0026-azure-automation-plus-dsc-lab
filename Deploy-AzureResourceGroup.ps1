@@ -319,7 +319,7 @@ Do
     # Student number
     [int]$studentNumber = Read-Host "Please enter your student number, which must be a number from [10-26]. NOTE: Your resource group name will be rg##, where ## represents the number you entered."
 } #end Do
-Until (($studentNumber -is [int]) -and ($studentNumber -match '\d{2}') -and ([int]$studentNumber -ge 10) -and ([int]$studentNumber -le 16))
+Until (($studentNumber -is [int]) -and ($studentNumber -match '\d{2}') -and ([int]$studentNumber -ge 10) -and ([int]$studentNumber -le 26))
 
 # Resource Group name
 [string]$rg = "rg" + [int]$studentNumber
