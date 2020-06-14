@@ -156,6 +156,10 @@ The username to use is: adm.infra.user@dev.adatum.com
 To log into your any of your lab virtual machines, use Azure bastion by logging into the portal at <https://portal.azure.com>, select the virtual machine, and click connect in the overview pane,
 then select the 'bastion' option and login with your credentials.
 
+![Access Bastion from VM](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-ConnectWithBastion-1to2.png)
+
+![Connect With Bastion](https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/master/images/0026-ConnectWithBastion-3to5.png)
+
 Although particular scenarios or specific sets of excercises are not provided as part of this project to practice these skills, listed here is the recommended outline of training objectives as a basic guide.
 You may deviate, ommit, add or re-sequence these steps as necessary to meet your test/dev/training requirements.
 Please NOTE that this project is primarily for training and NOT recommended for production.
