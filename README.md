@@ -145,7 +145,7 @@ Azure CLI (bash)
 
 ## 5.0 Connecting to your Lab
 
-1. If you use the PowerShell script method to deploy this lab, and the Bastion deployment is not successful (for example, Bastion is not yet supported in your region) your RDP prompt will open automatically to the development/jump server AZRDEV##01 VM. If the Bastion deployment was successful, then log into your selected VM with Bastion. For the most up-to-date information for Bastion regional availability, please see: <https://docs.microsoft.com/en-us/azure/bastion/bastion-overview#faq>.
+1. If you use the PowerShell script method to deploy this lab, and the Bastion deployment is not successful (for example, if Azure bastion is not yet supported in your region) your RDP prompt will open automatically to the development/jump server AZRDEV##01 VM. If the Bastion deployment was successful, then log into your selected VM with Bastion. For the most up-to-date information for Bastion regional availability, please see: <https://docs.microsoft.com/en-us/azure/bastion/bastion-overview#faq>.
 
 2. If you use the Azure CLI (bash) method, then you will need to use your browser to authenticate to your subscription from <https://portal.azure.com> and click connect icon from the AZRDEV##01 VM overview blade in the portal, then select
    either the RDP, SSH or Bastion method as necessary.
