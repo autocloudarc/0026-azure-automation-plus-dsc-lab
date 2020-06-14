@@ -153,6 +153,9 @@ The username to use is: adm.infra.user@dev.adatum.com
 
 ## 6.0 After Deploying the Template (Usage)
 
+To log into your any of your lab virtual machines, use Azure bastion by logging into the portal at <https://portal.azure.com>, select the virtual machine, and click connect in the overview pane,
+then select the 'bastion' option and login with your credentials.
+
 Although particular scenarios or specific sets of excercises are not provided as part of this project to practice these skills, listed here is the recommended outline of training objectives as a basic guide.
 You may deviate, ommit, add or re-sequence these steps as necessary to meet your test/dev/training requirements.
 Please NOTE that this project is primarily for training and NOT recommended for production.
