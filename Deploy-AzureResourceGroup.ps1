@@ -23,7 +23,6 @@ Exclude web servers from deployment to reduce total deployment cost and deployme
 
 .PARAMETER excludeSql
 Exclude SQL servers from deployment to reduce total deployment cost and deployment time.
-# TASK-ITEM: Use actual SQL 2019 Server images
 
 .PARAMETER excludeAds
 Exclude the two additional domain controllers that will just be provisioned initially as member servers to reduce total deployment cost and deployment time.
@@ -36,10 +35,6 @@ Include a CentOS server for this deployment.
 
 .PARAMETER includeUbuntu
 Inclue an Ubuntu server for this deployment.
-
-TASK-ITEM: New parameter to add.
-PARAMETER removeJumpServerPubIp
-Remove the jump server public IP address to reduce the attack surface if you know that the Azure bastion deployment will be successful.
 
 .EXAMPLE
 .\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -includeUbuntu yes -Verbose
@@ -368,7 +363,6 @@ New-AzResourceGroupDeployment -ResourceGroupName $rg `
 -Force -Verbose `
 -ErrorVariable ErrorMessages
 
-# TASK-ITEM: Remove jump server public IP address after Azure Bastion is fully implemented.
 $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
 $fqdnDev = (Get-AzPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
 
@@ -589,7 +583,9 @@ else
         # Provide Bastion connection message
 
 $connectionMessage = @"
-To log into your any of your lab virtual machines, use Azure bastion by logging into the portal at https://portal.azure.com, select the virtual machine, and click connect in the overview pane, then select the 'bastion' option and login with your credentials.
+To log into your any of your lab virtual machines, use Azure bastion by logging into the portal at https://portal.azure.com, select the virtual machine, and click connect in the overview pane, then select the 'bastion' option
+and login with your credentials.
+
 The user name is: $adminUserName and specify the corresponding password you entered at the begining of this script.
 You can now use this lab to practice Windows PowerShell, Windows Desired State Configuration (push/pull), PowerShell core, Linux Desired State Configuration, Azure Automation and Azure Automation DSC tasks to develop these skills.
 For more details on what types of excercises you can practice, see the readme.md file in this GitHub repository at: https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab.
@@ -634,7 +630,7 @@ Happy scripting...
 # $basResource = New-AzBastion -ResourceGroupName $rg -Name $basName -PublicIpAddressId $basPubIpId -VirtualNetwork $vnet -Verbose
 <#
 TASK-ITEM: See: https://github.com/MicrosoftDocs/azure-docs/issues/56580
-TASK-ITEM: As a workaround, deploy bastion resource using ARM template.
+TASK-ITEM: As a workaround in the meantime, we are deploying bastion resource using ARM template.
 New-AzBastion : Cannot parse the request.
 StatusCode: 400
 ReasonPhrase: Bad Request
