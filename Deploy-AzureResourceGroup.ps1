@@ -55,7 +55,7 @@ This example deploys the infrastructure WITHOUT the web, sql, additional 2019 co
 explicity provision the CentOS server as well. The PKI server will not be deployed due to the default parameter value that is set in the paramater block as [string]$excludePki = "no".
 
 .EXAMPLE
-.\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -includeCentOS no -includeUbuntu no -artifactsLocation 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/' -Verbose
+. .\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -includeCentOS no -includeUbuntu no -artifactsLocation 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/' -Verbose
 
 This example deploys the infrastructure WITHOUT the web, sql, additional 2019 core domain controllers and the Linux servers, and also excludes the PKI server. In addition, the artifacts location for the dev branch will be used. The default is to use the master branch.
 
