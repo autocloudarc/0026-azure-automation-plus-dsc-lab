@@ -208,12 +208,13 @@ Here are some references for Azure Automation, PowerShell and Desired State Conf
 
 LINKS
 
-1. Azure Automation: [Azure Automation Overview](https://docs.microsoft.com/en-us/azure/automation/automation-intro)
-2. Desired State Configuration: [Windows PowerShell Desired State Configuration](https://docs.microsoft.com/en-us/powershell/scripting/dsc/overview/overview?view=powershell-7)
-3. Desired State Configuration for Linux: [Get started with Desired State Configuration for Linux](https://docs.microsoft.com/en-us/powershell/scripting/dsc/getting-started/lnxGettingStarted?view=powershell-7)
-4. Powershell: [PowerShell 7.x](https://docs.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.x)
-5. DSC on Linux in Azure Example Scenario: [DSC on Linux in Azure](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/windows-powershell-and-dsc-on-linux-in-microsoft-azure/ba-p/259199)
-6. Install SQL with DSC Example Scenario: [Install SQL with DSC](https://blogs.msdn.microsoft.com/powersql/2017/12/13/install-sql-server-2017-using-powershell-desired-state-configuration-and-sqlserverdsc/)
+1. How to Build an Azure Automation Lab [Build an Azure Automation Lab (https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/how-to-build-an-azure-automation-lab/ba-p/1289755)]
+2. Azure Automation: [Azure Automation Overview](https://docs.microsoft.com/en-us/azure/automation/automation-intro)
+3. Desired State Configuration: [Windows PowerShell Desired State Configuration](https://docs.microsoft.com/en-us/powershell/scripting/dsc/overview/overview?view=powershell-7)
+4. Desired State Configuration for Linux: [Get started with Desired State Configuration for Linux](https://docs.microsoft.com/en-us/powershell/scripting/dsc/getting-started/lnxGettingStarted?view=powershell-7)
+5. Powershell: [PowerShell 7.x](https://docs.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.x)
+6. DSC on Linux in Azure Example Scenario: [DSC on Linux in Azure](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/windows-powershell-and-dsc-on-linux-in-microsoft-azure/ba-p/259199)
+7. Install SQL with DSC Example Scenario: [Install SQL with DSC](https://blogs.msdn.microsoft.com/powersql/2017/12/13/install-sql-server-2017-using-powershell-desired-state-configuration-and-sqlserverdsc/)
 
 BOOKS
 
