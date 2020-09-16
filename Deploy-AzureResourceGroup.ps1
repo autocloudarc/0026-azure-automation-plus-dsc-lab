@@ -163,11 +163,11 @@ else
 Import-Module -Name $ARMDeployModule -Verbose
 #endregion MODULES
 
-#region Environment setup
+#region TLS1.2
 # Use TLS 1.2 to support Nuget provider
 Write-Output "Configuring security protocol to use TLS 1.2 for Nuget support when installing modules." -Verbose
 [ServicePointManager]::SecurityProtocol = [SecurityProtocolType]::Tls12
-#endregion
+#endregion TLS1.2
 
 #region FUNCTIONS
 
@@ -277,6 +277,7 @@ Set-Location -Path $PSScriptRoot -Verbose
 Write-Output "Current directory has been changed to script root: $PSScriptRoot" -Verbose
 #endregion PATH
 
+#region Prompt to proceed or terminate
 [string]$proceed = $null
 Write-Output ""
 $proceed = Read-Host -Prompt @"
@@ -290,15 +291,19 @@ if ($proceed -eq "N" -OR $proceed -eq "NO")
     PAUSE
     EXIT
 } #end if ne Y
+#endregion Prompt to proceed or terminate
+
+#region Proceed with deployment
 elseif ($proceed -eq "Y" -OR $proceed -eq "YES")
 {
-[string]$azurePreferredModule = "Az"
-[string]$azureNonPreferredModule = "AzureRM"
-# https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-1.1.0
-Remove-ARMDeployPSModule -ModuleToRemove $azureNonPreferredModule -Verbose
-# Get required PowerShellGallery.com modules.
-Get-ARMDeployPSModule -ModulesToInstall $azurePreferredModule -PSRepository $PSModuleRepository -Verbose
-
+    #region Remove legacy Az modules
+    [string]$azurePreferredModule = "Az"
+    [string]$azureNonPreferredModule = "AzureRM"
+    # https://docs.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-1.1.0
+    Remove-ARMDeployPSModule -ModuleToRemove $azureNonPreferredModule -Verbose
+    # Get required PowerShellGallery.com modules.
+    Get-ARMDeployPSModule -ModulesToInstall $azurePreferredModule -PSRepository $PSModuleRepository -Verbose
+    #endregion Remove legacy Az modules
 #region AUTHENTICATE-TO-AZURE
 Write-Output "Your browser authentication prompt for your subscription may be opened in the background. Please resize this window to see it and log in."
 # Clear any possible cached credentials for other subscriptions
@@ -306,6 +311,7 @@ Clear-AzContext
 Connect-AzAccount -Environment AzureCloud -Verbose
 #endregion
 
+#region Select subscription
 Do
 {
     (Get-AzSubscription).Name
@@ -314,17 +320,21 @@ Do
 } #end Do
 Until ($Subscription -in (Get-AzSubscription).Name)
 Select-AzSubscription -SubscriptionName $Subscription -Verbose
+#endregion
 
+#region Specify student number
 Do
 {
     # Student number
     [int]$studentNumber = Read-Host "Please enter your student number, which must be a number from [10-26]. NOTE: Your resource group name will be rg##, where ## represents the number you entered."
 } #end Do
 Until (($studentNumber -is [int]) -and ($studentNumber -match '\d{2}') -and ([int]$studentNumber -ge 10) -and ([int]$studentNumber -le 26))
+#endregion
 
 # Resource Group name
 [string]$rg = "rg" + [int]$studentNumber
 
+#region Select Azure Region
 Do
 {
     # The location refers to a geographic region of an Az data center
@@ -340,15 +350,21 @@ Do
     Write-Output ""
 } #end Do
 Until ($region -in $regions)
+#endregion
 
+# Create resource group
 New-AzResourceGroup -Name $rg -Location $region -Verbose
+
+#region Prompt for credentials
 $adminUserName = "adm.infra.user"
 $adminCred = Get-Credential -UserName $adminUserName -Message "Enter password for user: $adminUserName"
 $adminPassword = $adminCred.GetNetworkCredential().password
+#endregion
 
 # Ensure that the storage account name is globally unique in DNS
 $studentRandomInfix = (New-Guid).Guid.Replace("-","").Substring(0,8)
 
+#region Assemble parameters
 $parameters = @{}
 $parameters.Add("_artifactsLocation",$artifactsLocation)
 $parameters.Add("studentNumber",$studentNumber)
@@ -360,7 +376,9 @@ $parameters.Add("excludeSql",$excludeSql)
 $parameters.Add("excludeAds",$excludeAds)
 $parameters.Add("excludePki",$excludePki)
 $parameters.Add("includeCentOS",$includeCentOS)
+#endregion
 
+#region Deploy Solution
 $rgDeployment = 'azuredeploy-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')
 New-AzResourceGroupDeployment -ResourceGroupName $rg `
 -TemplateUri $templateUri `
@@ -368,18 +386,26 @@ New-AzResourceGroupDeployment -ResourceGroupName $rg `
 -TemplateParameterObject $parameters `
 -Force -Verbose `
 -ErrorVariable ErrorMessages
+#endregion
 
+#region Identify jump server (Get jump server name and public IP)
 $jumpDevMachine = "AZRDEV" + $studentNumber + "01"
 $fqdnDev = (Get-AzPublicIpAddress -ResourceGroupName $rg | Where-Object { $_.Name -like 'azrdev*pip*'}).DnsSettings.fqdn
+#endregion
 
+#region Get deployment errors if any
 if ($ErrorMessages)
 {
     Write-Output '', 'Template deployment returned the following errors:', @(@($ErrorMessages) | ForEach-Object { $_.Exception.Message.TrimEnd("`r`n") })
-}
+} # end if
+#endregion
+elseif ($addBastion)
+{
+    # TASK-ITEM: Add bastion logic here.
+} # end elseif
 else
 {
     #region Availability Sets
-
     # Construct availability sets array
     Write-Output "Cleaning up unused availability sets."
     Write-Output "Retrieving list of availability sets."
@@ -567,10 +593,11 @@ else
     # Check if bastion host deployed properly
     $isBastionNsgAssociated = (Get-AzVirtualNetwork -ResourceGroupName $rg -Verbose).Subnets.NetworkSecurityGroup.Id | Split-Path -leaf | Where-Object {$_ -match 'AzureBastionSubnet'}
     $isBastionHostProvisioned = (Get-AzResource -ResourceGroupName $rg -ResourceType 'Microsoft.Network/bastionHosts')
+    #endregion
 
+    #region REMOVE Jump/Dev server public IP
     if ($isBastionNsgAssociated -and $isBastionHostProvisioned)
     {
-        #region REMOVE Jump/Dev server public IP
         # Disconnect jump server public IP
         # https://docs.microsoft.com/en-us/azure/virtual-network/remove-public-ip-address-vm
         # Disassociate public IP from NIC
@@ -599,8 +626,9 @@ If you like this script, follow me on GitHub at https://github.com/autocloudarc,
 Happy scripting...
 "@
         Write-Output $connectionMessage
-        #endregion
-    }
+    } # end if
+    #endregion
+
     else
     {
         $connectionMessage = @"
@@ -653,15 +681,19 @@ At C:\OneDrivePersonal\OneDrive\02.00.00.GENERAL\repos\git\0026-azure-automation
     + FullyQualifiedErrorId : Microsoft.Azure.Commands.Network.Bastion.NewAzBastionCommand
 #>
 
+#region Show time
 $StopTimer = Get-Date -Verbose
 Write-Output "Calculating elapsed time..."
 $ExecutionTime = New-TimeSpan -Start $BeginTimer -End $StopTimer
 $Footer = "TOTAL SCRIPT EXECUTION TIME: $ExecutionTime"
 Write-Output ""
 Write-Output $Footer
+#endregion Show time
 
 } # end else if
+#endregion Proceed with deployment
 
+#region Terminate
 # Resource group and log files cleanup messages
 $labResourceGroupFilter = "rg??"
 Write-Warning "The list of PoC resource groups are:"
@@ -675,6 +707,7 @@ Write-Warning "To examine, archive or remove old log files to recover storage sp
 Write-Warning "You may change the value of the `$modulePath variable in this script, currently at: $modulePath to a common file server hosted share if you prefer, i.e. \\<server.domain.com>\<share>\<log-directory>"
 
 Stop-Transcript -Verbose
+#endregion Terminate
 
 #region OPEN-TRANSCRIPT
 # Create prompt and response objects for continuing script and opening logs.
