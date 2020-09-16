@@ -36,6 +36,9 @@ Include a CentOS server for this deployment.
 .PARAMETER includeUbuntu
 Inclue an Ubuntu server for this deployment.
 
+.PARAMETER addBastion
+Add the bastion service to this solution
+
 .EXAMPLE
 .\Deploy-AzureResourceGroup.ps1 -excludeWeb yes -excludeSql yes -excludeAds yes -excludePki yes -includeUbuntu yes -Verbose
 
@@ -124,9 +127,12 @@ param
     [ValidateSet('https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/','https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/')]
     [string]$artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/',
     [string]$templateUri = ($artifactsLocation + $templateFile),
-    [string]$bastionUri = ($artifactsLocation + $bastionFile)
+    [string]$bastionUri = ($artifactsLocation + $bastionFile),
+    [switch]$addBastion
     #>
 ) # end param
+
+# TASK-ITEM: Implement addBastion switch parameter
 
 $BeginTimer = Get-Date -Verbose
 
