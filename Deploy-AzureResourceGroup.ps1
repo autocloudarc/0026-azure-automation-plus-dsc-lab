@@ -124,7 +124,7 @@ param
     [ValidateSet('https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/','https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/')]
     [string]$artifactsLocation = 'https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/master/',
     [string]$templateUri = ($artifactsLocation + $templateFile),
-    [string]$bastionUri = ($artifactsLocation + $bastionFile),
+    [string]$bastionUri = ($artifactsLocation + $bastionFile)
     #>
 ) # end param
 
