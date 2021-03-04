@@ -303,7 +303,6 @@ elseif ($proceed -eq "Y" -OR $proceed -eq "YES")
 #region AUTHENTICATE-TO-AZURE
 Write-Output "Your browser authentication prompt for your subscription may be opened in the background. Please resize this window to see it and log in."
 # Clear any possible cached credentials for other subscriptions
-Clear-AzContext
 Connect-AzAccount -Environment AzureCloud -Verbose
 #endregion
 
