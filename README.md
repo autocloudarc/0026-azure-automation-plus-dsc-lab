@@ -55,6 +55,10 @@ The lab infrastructure includes the following components:
 
 ## 4.0 Deploying The Template
 
+Azure Portal
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fautocloudarc%2F0026-azure-automation-plus-dsc-lab%2Fdev%2Fazuredeploy.json)
+
 Windows PowerShell
 
 1. Clone or download the Deploy-AzureResourceGroup.ps1 to a directory where you want to execute the script from.
