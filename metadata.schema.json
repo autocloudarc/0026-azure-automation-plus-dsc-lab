@@ -3,7 +3,7 @@
       "$schema": {
         "type": "string",
         "enum": [
-          "https://github.com/autocloudarc/0026-azure-automation-plus-dsc-lab/blob/dev/metadata.schema.json#"
+          "https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/metadata.schema.json#"
         ],
         "description": "JSON schema reference"
       },
@@ -41,7 +41,7 @@
           "Automated"
         ]
       },
-      "type": {
+      "deploymentType": {
         "type": "string",
         "enum": [
           "QuickStart",

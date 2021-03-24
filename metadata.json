@@ -1,6 +1,6 @@
 ﻿{
-    // "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",
-    "type": "SubscriptionDeployment",
+    "$schema": "https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/metadata.schema.json#",
+    "deploymentType": "SubscriptionDeployment",
     "itemDisplayName": "Azure Automation Lab",
     "summary": "Azure Automation",
     "description": "This template deploys a new Azure Automation lab environment.",
