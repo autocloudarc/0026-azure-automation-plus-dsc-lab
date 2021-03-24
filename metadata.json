@@ -1,22 +1,9 @@
 ﻿{
-  "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",
-  "type": "QuickStart",
-  "itemDisplayName": "VM Scale Set with autoscale running an IIS WebApp",
-  "description": "Deploys a Windows VM Scale Set running IIS and a very basic .NET MVC web app. The VMSS PowerShell DSC Extension is leveraged to do the IIS install and WebDeploy package deployment.",
-  "summary": "Deploys a Windows VM Scale Set running IIS and a very basic .NET MVC web app. The VMSS PowerShell DSC Extension is leveraged to do the IIS install and WebDeploy package deployment.",
-  "githubUsername": "testUser1242",
-  "docOwner": "testUser1242",
-  "dateUpdated": "2021-02-01"
-}
-
-/*
-{
-    "$schema": "https://raw.githubusercontent.com/autocloudarc/0026-azure-automation-plus-dsc-lab/dev/metadata.schema.json#",
-    // "deploymentType": "SubscriptionDeployment",
+    "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",
+    "type": "SubscriptionDeployment",
     "itemDisplayName": "Azure Automation Lab",
     "summary": "Azure Automation",
     "description": "This template deploys a new Azure Automation lab environment.",
     "githubUsername": "placeholder",
     "dateUpdated": "2021-03-24"
 }
-*/
