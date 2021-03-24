@@ -1,5 +1,5 @@
 ﻿{
-    "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",
+    // "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",
     "type": "SubscriptionDeployment",
     "itemDisplayName": "Azure Automation Lab",
     "summary": "Azure Automation",
