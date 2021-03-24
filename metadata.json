@@ -1,6 +1,6 @@
 ﻿{
     "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",
-    "type": "SubscriptionDeployment",
+    "type": "ManagedApplication",
     "itemDisplayName": "Azure Automation Lab",
     "summary": "Azure Automation",
     "description": "This template deploys a new Azure Automation lab environment.",

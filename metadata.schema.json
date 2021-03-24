@@ -3,7 +3,7 @@
       "$schema": {
         "type": "string",
         "enum": [
-            "https://aka.ms/azure-quickstart-templates-metadata-schema#",
+            "https://aka.ms/azure-quickstart-templates-metadata-schema#"
         ],
         "description": "JSON schema reference"
       },
