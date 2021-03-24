@@ -1,8 +1,9 @@
 ﻿{
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "itemDisplayName": "Azure Automation Plus DSC Lab",
-    "description": "This template creates an automation and DSC lab infrastructure consisting of 8 Widnows 2016 and 1 Linux CentOS 7 VM, 1 automation account and 1 OMS workspace ",
-    "summary": "Create an automation and DSC lab infrastructure in which you can learn and practice Azure automation and DSC concepts.",
-    "githubUsername": "autocloudarc",
-    "dateUpdated": "2018-06-03"
- }
+    "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",
+    "type": "SubscriptionDeployment",
+    "itemDisplayName": "Azure Automation Lab",
+    "summary": "Azure Automation",
+    "description": "This template deploys a new Azure Automation lab environment.",
+    "githubUsername": "placeholder",
+    "dateUpdated": "2021-03-24"
+}
