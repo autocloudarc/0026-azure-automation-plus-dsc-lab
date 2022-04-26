@@ -176,7 +176,7 @@
     ],
     "createNSGUri": "[uri(parameters('_artifactsLocation'),concat('nested/06.06.00.createNSG.json',parameters('_artifactsLocationSasToken')))]",
     "netPrefix": "10.20.",
-    "netSuffixVNET": ".0/26",
+    "netSuffixVNET": ".0/24",
     "netSuffixADDS": ".0/28",
     "netSuffixSRVS": ".16/28",
     "vnet1Name": "[concat('AdatumDev-VNET',parameters('studentNumber'))]",
