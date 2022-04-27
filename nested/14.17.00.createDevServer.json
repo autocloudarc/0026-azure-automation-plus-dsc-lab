@@ -41,10 +41,10 @@
   },
   "variables": {
     "dev01name": "[concat(parameters('devPrefix'),1)]",
-    "devVmSize": "Standard_DS1_v2",
-    "imagePublisher": "MicrosoftVisualStudio",
-    "imageOffer": "visualstudio2019latest",
-    "imageSku": "vs-2019-comm-latest-ws2019",
+    "devVmSize": "Standard_DS2_v3",
+    "imagePublisher": "microsoft-dsvm",
+    "imageOffer": "dsvm-win-2019",
+    "imageSku": "winserver-2019",
     /*
     "imageOffer": "visualstudio2019latest" | "VisualStudio",
     "imageSku": "vs-2019-comm-latest-ws2019" | "VS-2017-Comm-Latest-WS2016",
