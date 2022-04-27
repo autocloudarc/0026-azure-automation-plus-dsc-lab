@@ -436,7 +436,7 @@ else
     $nsgPrefix = "NSG-"
     $basSubName = "AzureBastionSubnet"
     $nsgBasName = $nsgPrefix + $basSubName
-    $basSubSuffix = ".32/26"
+    $basSubSuffix = ".64/26"
     $basSubPrefix = $vnetAddrTwoOctetPrefix + $studentNumber + $basSubSuffix
     $basSubnet = New-AzVirtualNetworkSubnetConfig -Name $basSubName -AddressPrefix $basSubPrefix
     Add-AzVirtualNetworkSubnetConfig -Name $basSubName -VirtualNetwork $vnet -AddressPrefix $basSubPrefix -Verbose
