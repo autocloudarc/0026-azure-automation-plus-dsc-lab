@@ -34,7 +34,7 @@ We grant You a nonexclusive, royalty-free right to use and modify the Sample Cod
 This posting is provided "AS IS" with no warranties, and confers no rights.
 
 .LINK
-
+1. https://stackoverflow.com/questions/35773299/how-can-you-export-the-visual-studio-code-extension-list
 
 .COMPONENT
 Azure Infrastructure, PowerShell, ARM, JSON
@@ -62,3 +62,8 @@ Invoke-Expression ((new-object net.webclient).DownloadString('https://chocolatey
 choco install powershell-core
 choco install terraform
 code --install-extension hashicorp.terraform --force
+code --install-extension adamvoss.vscode-languagetool
+code --install-extension adamvoss.vscode-languagetool-en
+code --install-extension 4ops.terraform
+code --install-extension alefragnani.numbered-bookmarks
+code --install-extension hashicorp.terraform
