@@ -87,6 +87,7 @@ This posting is provided "AS IS" with no warranties, and confers no rights.
 7. https://github.com/Azure/azure-quickstart-templates/tree/master/101-azure-bastion
 8. https://github.com/ans-rfroggatt/Imperial-POC/blob/master/Networking/Networking-NSG.json
 9. http://sql.pawlikowski.pro/2020/01/22/azure-bastion-creating-proper-nsg-rules/
+10.  az vm image list --offer WindowsServer --all --query [].urn -o tsv
 
 .COMPONENT
 Azure Infrastructure, PowerShell, ARM, JSON

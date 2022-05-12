@@ -37,8 +37,8 @@
     "sqlVmSize": "Standard_DS1_v2",
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
-    "imageSku": "2019-Datacenter",
-    // "imageSku": "2016-Datacenter",
+    "imageSku": "2022-Datacenter",
+    // urn: MicrosoftWindowsServer:WindowsServer:2022-datacenter:20348.707.220505, MicrosoftWindowsServer:WindowsServer:2022-datacenter-azure-edition:20348.166.2110151129
     "pkiServerName": "[concat(parameters('pkiPrefix'),1)]"
   },
   "resources": [
