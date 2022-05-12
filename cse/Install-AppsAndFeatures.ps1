@@ -58,15 +58,13 @@ TASK-ITEMS:
 Install-WindowsFeature -Name RSAT-AD-PowerShell
 Install-WindowsFeature -Name RSAT-ADDS -IncludeAllSubFeature -IncludeManagementTools
 Install-WindowsFeature -Name GPMC
-<#
 Invoke-Expression ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
-choco install powershell-core --yes --verbose
-choco install terraform --yes --verbose
-choco install git --yes --verbose
-choco install vscode.install --yes --verbose
-code --install-extension hashicorp.terraform --force
+choco install powershell-core --yes
+choco install terraform --yes
+choco install git --yes
+choco install vscode.install --yes
+code --install-extension hashicorp.terraform
 code --install-extension 4ops.terraform
 code --install-extension alefragnani.numbered-bookmarks
 code --install-extension hashicorp.terraform
 code --install-extension ms-vscode.powershell
-#>
