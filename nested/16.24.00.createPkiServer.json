@@ -31,6 +31,12 @@
     },
     "domainJoinOptions": {
       "type": "string"
+    },
+    "devScriptUri": {
+      "type": "string"
+    },
+    "InstallAppsAndFeaturesScript": {
+      "type": "string"
     }
   },
   "variables": {
@@ -128,6 +134,29 @@
         },
         "protectedSettings": {
           "Password": "[parameters('adminPassword')]"
+        }
+      }
+    },
+        {
+      "comments": "14.17.02.installAppsAndFeatures",
+      "name": "[concat(variables('pkiServerName'),'/14.17.02.installAppsAndFeatures')]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2019-07-01",
+      "location": "[resourceGroup().location]",
+      "tags": {},
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/',variables('pkiServerName'),'/extensions/joindomain')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.9",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[parameters('devScriptUri')]"
+          ],
+          "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ',parameters('InstallAppsAndFeaturesScript'))]"
         }
       }
     }

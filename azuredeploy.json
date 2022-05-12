@@ -187,7 +187,7 @@
     "subnet2Name": "[concat(variables('subnet02'),parameters('studentNumber'))]",
     "subnet2Prefix": "[concat(variables('netPrefix'),parameters('studentNumber'),variables('netSuffixSRVS'))]",
     "createVnetUri": "[uri(parameters('_artifactsLocation'),concat('nested/07.03.00.createVnet.json',parameters('_artifactsLocationSasToken')))]",
-     "vnet": {
+    "vnet": {
       "name": "[variables('vnet1Name')]",
       "location": "[variables('vnet1Location')]",
       "addressPrefix": "[variables('vnet1AddressPrefix')]"
@@ -575,7 +575,7 @@
           },
           "diagStorageUri": {
             "value": "[variables('diagStorageUri')]"
-            },
+          },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
@@ -663,7 +663,7 @@
           },
           "diagStorageUri": {
             "value": "[variables('diagStorageUri')]"
-            },
+          },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
@@ -722,7 +722,7 @@
           },
           "diagStorageUri": {
             "value": "[variables('diagStorageUri')]"
-            },
+          },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
@@ -775,7 +775,7 @@
           },
           "diagStorageUri": {
             "value": "[variables('diagStorageUri')]"
-            },
+          },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
@@ -828,12 +828,18 @@
           },
           "diagStorageUri": {
             "value": "[variables('diagStorageUri')]"
-            },
+          },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
           "domainJoinOptions": {
             "value": "[variables('domainJoinOptions')]"
+          },
+          "devScriptUri": {
+            "value": "[variables('installAppsAndFeaturesUri')]"
+          },
+          "InstallAppsAndFeaturesScript": {
+            "value": "./Install-AppsAndFeatures.ps1"
           }
         },
         "mode": "Incremental",
@@ -881,7 +887,7 @@
           },
           "diagStorageUri": {
             "value": "[variables('diagStorageUri')]"
-            },
+          },
           "domainName": {
             "value": "[variables('fqdnAdatumDev')]"
           },
@@ -934,7 +940,7 @@
           },
           "diagStorageUri": {
             "value": "[variables('diagStorageUri')]"
-            }
+          }
         },
         "mode": "Incremental",
         "debugSetting": {
@@ -984,7 +990,7 @@
           },
           "diagStorageUri": {
             "value": "[variables('diagStorageUri')]"
-            }
+          }
         },
         "mode": "Incremental",
         "debugSetting": {
