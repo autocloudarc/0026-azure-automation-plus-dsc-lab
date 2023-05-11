@@ -41,7 +41,7 @@
   },
   "variables": {
     "dev01name": "[concat(parameters('devPrefix'),1)]",
-    "devVmSize": "Standard_D2_v3",
+    "devVmSize": "Standard_DC1s_v3",
     "imagePublisher": "microsoft-dsvm",
     "imageOffer": "dsvm-win-2019",
     "imageSku": "winserver-2019",

@@ -38,7 +38,7 @@
   },
   "variables": {
     "ads03name": "[concat(parameters('adsPrefix'),3)]",
-    "adsVmSize": "Standard_DS1_v2",
+    "adsVmSize": "Standard_DC1s_v3",
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "imageSku": "2019-datacenter-core-smalldisk-g2",
