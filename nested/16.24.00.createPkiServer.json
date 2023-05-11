@@ -34,7 +34,7 @@
     }
   },
   "variables": {
-    "sqlVmSize": "Standard_DS1_v2",
+    "sqlVmSize": "Standard_DC1s_v3",
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "imageSku": "2019-Datacenter",

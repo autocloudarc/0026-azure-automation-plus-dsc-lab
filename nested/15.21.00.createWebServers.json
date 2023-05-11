@@ -34,7 +34,7 @@
     }
   },
   "variables": {
-    "webVmSize": "Standard_DS1_v2",
+    "webVmSize": "Standard_DC1s_v3",
     "webServerInstances": 2,
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",

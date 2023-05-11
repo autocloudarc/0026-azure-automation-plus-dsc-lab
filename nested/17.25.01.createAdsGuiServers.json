@@ -34,7 +34,7 @@
     }
   },
   "variables": {
-    "adsVmSize": "Standard_DS1_v2",
+    "adsVmSize": "Standard_DC1s_v3",
     "adsServerInstances": 2,
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",

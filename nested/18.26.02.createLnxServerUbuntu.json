@@ -32,7 +32,7 @@
   },
   "variables": {
     "lnx02name": "[concat(parameters('lnxPrefix'),2)]",
-    "lnxVmSize": "Standard_DS1_v2",
+    "lnxVmSize": "Standard_DC1s_v3",
     "imagePublisher": "Canonical",
     "imageOffer": "UbuntuServer",
     "imageSku": "18.04-LTS",
