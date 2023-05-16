@@ -22,7 +22,7 @@
       "properties": {
         "source": "Azure",
         "sku": {
-          "name": "Free"
+          "name": "pergb2018"
         }
       },
       "resources": []
